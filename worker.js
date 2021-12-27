@@ -14,7 +14,7 @@ function loadMainJS() {
 
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", function () {
-        let worker_url = "arcade_puzzler.js?v=" + service_working_version;
+        let worker_url = "service_worker?v=" + service_working_version + ".js?";
         this.navigator.serviceWorker.register(worker_url).then((reg) => {
             function waitForActivation(service) {
                 service.addEventListener("statechange", () => {
@@ -46,8 +46,6 @@ if ("serviceWorker" in navigator) {
                     loadMainJS();
                 }
             }, 4000);
-        }).catch(() => {
-            loadMainJS();        
         });
     });
 } else {
