@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" is-main-page>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+        <meta name="description" content="Love the old arcade puzzles that you'll usually get in mini toys? Revive those moments here!">
+        <meta name="keywords" content="videogame, arcade, old school">
+        <meta name="theme-color" content="#9CBEF2">
+        <meta name="apple-mobile-web-app-title" content="Arcade Puzzler">
+        <meta name="application-name" content="Arcade Puzzler">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#9CBEF2">
+        <meta name="msapplication-TileColor" content="#9CBEF2">
+        <meta name="msapplication-TileImage" content="assets/icons/game-icon-144.png">
+        <meta name="msapplication-tap-highlight" content="no">
+        <link rel="msapplication-starturl" href="/index.html">
+        <title>Arcade Puzzler - Main</title>
+
+        <!-- Page icons. -->
+        <link rel="shortcut icon" href="assets/icons/game-icon.ico" type="image/x-icon">
+        <link rel="icon" href="assets/icons/game-icon-16.png" sizes="16x16">
+        <link rel="icon" href="assets/icons/game-icon-32.png" sizes="32x32">
+        <link rel="icon" href="assets/icons/game-icon-48.png" sizes="48x48">
+        <link rel="icon" href="assets/icons/game-icon-96.png" sizes="96x96">
+        <link rel="icon" href="assets/icons/game-icon-144.png" sizes="144x144">
+        <link rel="icon" href="assets/icons/game-icon-512.png" sizes="512x512">
+        <link rel="apple-touch-icon" href="assets/icons/game-icon-180.png" sizes="180x180">
+
+        <!-- Manifest. -->
+        <link rel="manifest" href="assets/manifest.webmanifest" crossorigin="use-credentials">
+
+        <!-- CSS. -->
+        <link rel="stylesheet" href="CSS/game.css">
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="Arcade Puzzler">
+        <meta name="twitter:description" content="Love the old arcade puzzles that you'll usually get in mini toys? Revive those moments here!">
+        <meta name="twitter:image" content="assets/icons/game-icon-144.png">
+        <meta name="twitter:site" content="">
+
+        <!-- OG types. -->
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Arcade Puzzler">
+        <meta property="og:description" content="Love the old arcade puzzles that you'll usually get in mini toys? Revive those moments here!">
+        <meta property="og:url" content="">
+        <meta property="og:image" content="assets/icons/game-icon-144.png">
+        <meta property="og:locale" content="en_GB">
+
+        <!-- JS. -->
+        <!-- <script src="JS/main.js" type="module"></script> -->
+        <script src="worker.js" defer="defer"></script>
+    </head>
+    <body>
+        <div id="intro-cutscene" aria-hidden="true">
+            <p class="for-screen-readers">Sunfly Studios</p>
+            <div class="animated-text-container" aria-hidden="true">
+                <div class="text-wrapper">
+                    <span>S</span>
+                    <span>u</span>
+                    <span>n</span>
+                    <span>f</span>
+                    <span>l</span>
+                    <span>y</span>
+                </div>
+                <div class="text-wrapper">
+                    <span>S</span>
+                    <span>t</span>
+                    <span>u</span>
+                    <span>d</span>
+                    <span>i</span>
+                    <span>o</span>
+                    <span>s</span>
+                </div>
+                <div class="fire"></div>
+            </div>
+        </div>
+        <main id="swup" class="main-content transition-move-and-fade-down">
+            <div id="title-group">
+                <ol id="title-mini-grid" aria-hidden="true">
+                    <li>1</li>
+                    <li>2</li>
+                    <li>3</li>
+                    <li>4</li>
+                    <li>5</li>
+                    <li>6</li>
+                    <li>7</li>
+                </ol>
+                <h1 id="game-title" data-i18n-id="game__title"></h1>
+            </div>
+            <div class="link-group" role="group">
+                <a id="game_btn" class="btn" data-i18n-id="game__goto_play" href="/game.html"></a>
+                <a id="settings_btn" class="btn" data-i18n-id="game__goto_settings" href="#"></a>
+                <a id="exit_btn" class="btn" data-i18n-id="game__goto_exit" href="#"></a>
+            </div>
+        </main>
+        <div id="a11y-alert" class="for-screen-readers" aria-live="polite" role="alert"></div>
+    </body>
+</html>

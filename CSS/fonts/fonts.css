@@ -1,0 +1,28 @@
+@font-face {
+    font-family: "Peaberry";
+    src: url("../../assets/fonts/Peaberry-Font-v2.0/Family/PeaberryBase/PeaberryBase.woff2") format("woff2"),
+    url("../../assets/fonts/Peaberry-Font-v2.0/Family/PeaberryBase/PeaberryBase.woff") format("woff"),
+    url("../../assets/fonts/Peaberry-Font-v2.0/Family/PeaberryBase/PeaberryBase.ttf") format("truetype"),
+    url("../../assets/fonts/Peaberry-Font-v2.0/Family/PeaberryBase/PeaberryBase.svg") format("svg"),
+    url("../../assets/fonts/Peaberry-Font-v2.0/Family/PeaberryBase/PeaberryBase.eot"),
+    url("../../assets/fonts/Peaberry-Font-v2.0/Family/PeaberryBase/PeaberryBase.eot?#iefix") format("embedded-opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* Noto Sans. */
+@font-face {
+    font-family: "Noto Sans Mono";
+    src:
+        url("../../assets/fonts/Noto_Sans_Mono/NotoSansMono-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Noto Sans Mono";
+    src:
+        url("../../assets/fonts/Noto_Sans_Mono/NotoSansMono-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+}

@@ -1,0 +1,58 @@
+{
+    "name": "Arcade Puzzle",
+    "short_name": "Arcade Puzzle",
+    "background_color": "#9CBEF2",
+    "display": "fullscreen",
+    "start_url": ".",
+    "scope": "/",
+    "icons": [
+        {
+            "src": "./icons/game-icon-16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        },
+        {
+            "src": "./icons/game-icon-32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "./icons/game-icon-48.png",
+            "sizes": "48x48",
+            "type": "image/png"
+        },
+        {
+            "src": "./icons/game-icon-96.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "./icons/game-icon-144.png",
+            "sizes": "96x96",
+            "type": "image/png"
+        },
+        {
+            "src": "./icons/game-icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "theme_color": "#9CBEF2",
+    "related_applications": [],
+    "capture_links": "none",
+    "description": "Love the old arcade puzzles that you'll usually get in mini toys? Revive those moments here!",
+    "shortcuts": [
+        {
+            "name": "New game",
+            "url": "/game.html",
+            "icons": [
+                {
+                    "src": "./icons/shortcuts/game-icon-new-game-512",
+                    "sizes": "512x512",
+                    "type": "image/png"
+                }
+            ]
+        }
+    ]
+}

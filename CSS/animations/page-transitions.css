@@ -1,0 +1,33 @@
+/* Define animation classes. */
+.move-and-fade-left,
+.move-and-fade-right,
+.move-and-fade-up,
+.transition-move-and-fade-down
+{
+    transition: transform var(--game-page-transition-duration) ease, opacity var(--game-page-transition-duration) linear;
+}
+
+/* Process animation at page transition. */
+html.is-animating .transition-move-and-fade-down
+{
+    opacity: 0;
+    transform: translateY(4rem);
+}
+
+html.is-animating .move-and-fade-left
+{
+    opacity: 0;
+    transform: translateX(-100%);
+}
+
+html.is-animating .move-and-fade-right
+{
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+html.is-animating .move-and-fade-up
+{
+    opacity: 0;
+    transform: translateY(-4rem);
+}

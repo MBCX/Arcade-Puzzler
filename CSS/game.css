@@ -1,0 +1,297 @@
+@import url("./fonts/fonts.css");
+@import url("./defaults.css");
+@import url("./a11y/a11y.css");
+@import url("./animations/animations.css");
+@import url("./icons/icons.css");
+@import url("./animations/page-transitions.css");
+
+body::before
+{
+    z-index: -1;
+    background-size: 4rem;
+    animation: moveBG 40000ms linear infinite;
+}
+
+/* The cutscene only at the start of the game. */
+html[is-main-page] #intro-cutscene
+{
+    position: fixed;
+    background-color: #000000;
+    color: #FFFFFF;
+    font-family: "Peaberry";
+    font-size: 1.8rem;
+    width: 100%;
+    height: 100%;
+
+    display: grid;
+
+    -webkit-place-items: center;
+    place-items: center;
+    z-index: 100;
+}
+
+html[is-main-page] #intro-cutscene .animated-text-container
+{
+    position: relative;
+    animation: generic_fadeout 1000ms linear 3100ms forwards;
+}
+
+html[is-main-page] #intro-cutscene .animated-text-container .text-wrapper:nth-child(2)
+{
+    margin-left: 9ch;
+}
+
+html[is-main-page] #intro-cutscene .animated-text-container .text-wrapper span
+{
+    display: inline-block;
+    opacity: 0;
+    animation: generic_floatUp 800ms linear calc(var(--delay) * 50ms) forwards;
+}
+
+/* Fire "i". */
+html[is-main-page] #intro-cutscene .animated-text-container .fire
+{
+    --anim-delay: calc(800ms * 13);
+    position: absolute;
+    right: 2.8rem;
+    top: 0.58rem;
+    width: 33px;
+    height: 2rem;
+    background-image: url("../assets/images/animated/sEffect_strip9.png");
+    opacity: 0;
+
+    /* 9 is total frames. */
+    animation:
+        animateiFire 1000ms steps(9) 1690ms reverse forwards,
+        generic_fadeout 800ms linear 1760ms forwards;
+}
+
+/* Time above the board. */
+#data-container
+{
+    position: absolute;
+    top: 0;
+    font-weight: bold;
+    font-size: 1rem;
+
+    display: -webkit-flex;
+    display: flex;
+
+    -webkit-gap: 5em;
+    gap: 5em;
+    
+    z-index: 10;
+}
+
+#time-container,
+#turn-container
+{
+    background-color: hsl(var(--game-board-background-colour));
+    outline: 2px solid hsl(var(--game-board-text-colour));
+    color: hsl(var(--game-board-text-colour));
+    padding: 0.5em;
+}
+
+/* Game board. */
+#number-container,
+#title-mini-grid
+{
+    --block-size: clamp(5.5rem, 8vw, 7rem);
+    --button-font-size: clamp(0.7em, 2vw, 2em);
+
+    background-color: hsl(var(--game-board-background-colour));
+    font-weight: bold;
+    font-size: 2rem;
+    list-style: none;
+    text-align: -webkit-center;
+    text-align: center;
+
+    height: auto;
+
+    padding: 0.5em;
+    outline: 2px solid hsl(var(--game-board-text-colour));
+    display: grid;
+    grid-template-columns: repeat(var(--game-board-grid-size), 1fr);
+    gap: 0.25em;
+
+    animation: floatUpBoardEl 650ms cubic-bezier(0.41, 0.3, 0.11, 0.99);
+}
+
+#number-container li,
+#title-mini-grid li
+{
+    position: relative;
+    width: -webkit-min(10vw, var(--block-size));
+    width: min(10vw, var(--block-size));
+
+    height: -webkit-min(12vh, var(--block-size));
+    height: min(12vh, var(--block-size));
+    opacity: 1;
+}
+
+li#blank
+{
+    background-color: transparent;
+}
+
+#number-container li button,
+#title-mini-grid li
+{
+    background-color: transparent;
+    border: 2px solid hsl(var(--game-board-text-colour));
+    color: hsl(var(--game-board-text-colour));
+    width: inherit;
+    height: inherit;
+    font-family: inherit;
+    font-size: var(--button-font-size);
+    font-weight: inherit;
+    cursor: pointer;
+}
+
+
+/* Writing modes (game winning condition configurations). */
+#number-container.config-standard
+{
+    -webkit-writing-mode: horizontal-tb;
+    writing-mode: horizontal-tb;
+}
+
+#number-container.config-standard-reversed
+{
+    -webkit-writing-mode: tb;
+    writing-mode: tb;
+}
+
+#number-container.config-vertical
+{
+    -webkit-writing-mode: vertical-lr;
+    writing-mode: vertical-lr;
+}
+
+#number-container.config-vertical-reversed
+{
+    -webkit-writing-mode: vertical-rl;
+    writing-mode: vertical-rl;
+}
+
+/* Game back button. */
+#back-to-main-menu
+{
+    --button-w-h: 3rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 2rem;
+    border: 0.2px solid hsl(var(--game-board-text-colour));
+    background-color: hsl(var(--game-board-background-colour));
+    color: hsl(var(--game-board-text-colour));
+
+    width: var(--button-w-h);
+    height: var(--button-w-h);
+
+    -webkit-border-radius: 100rem;
+    border-radius: 100rem;
+    cursor: pointer;
+}
+
+#back-to-main-menu .material-icons
+{
+    font-size: 1.7rem;
+}
+
+
+/* Main menu styles. */
+#game-title
+{
+    text-align: -webkit-right;
+    text-align: right;
+    font-size: -webkit-max(3rem, calc(5vw + 1vh));
+    font-size: max(3rem, calc(5vw + 1vh));
+    color: #FFFFFF;
+    text-shadow: 
+        0.05em 0.05em #000000,
+        0.05em 0.05em #000000
+}
+
+#title-group
+{
+    position: relative;
+}
+
+#title-mini-grid
+{
+    --block-size: 0.58rem;
+    --button-font-size: 0.45em;
+    position: absolute;
+    left: -8rem;
+    bottom: 2rem;
+    gap: 0.10em;
+    width: 100%;
+    height: 100%;
+    padding: 0.2em;
+    z-index: -1;
+    animation: none;
+}
+
+#title-mini-grid li
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#title-mini-grid li:nth-child(4)
+{
+    animation: animateMoveMiniBoardSquare 5000ms ease-in-out infinite;
+}
+
+#title-mini-grid li:nth-child(3)
+{
+    animation: animateMoveMiniBoardSquare_2 5000ms ease-in-out infinite;
+}
+
+#title-mini-grid li:nth-child(7)
+{
+    animation: animateMoveMiniBoardSquare_3 5000ms ease-in-out infinite;
+}
+
+.main-content .link-group
+{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+}
+
+.link-group a:focus-visible
+{
+    outline-offset: 0.35em;
+}
+
+@media only screen and (max-width: 50em)
+{
+    #number-container
+    {
+        --block-size: clamp(5.5rem, 8vw, 7rem);
+    }
+    
+    #number-container li
+    {
+        width: min(18vw, var(--block-size))
+    }
+
+    #title-mini-grid
+    {
+        left: 0;
+        bottom: 4rem;
+    }
+
+    #back-to-main-menu
+    {
+        margin: 0;
+        left: 50%;
+        top: min(20%, 10vh);
+
+        transform: translate(-50%, -50%);
+    }
+}

@@ -1,0 +1,6 @@
+.for-screen-readers
+{
+    position: fixed;
+    display: inline-block;
+    clip: rect(0px, 0px, 0px, 0px);
+}

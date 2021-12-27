@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+        <meta name="description" content="Love the old arcade puzzles that you'll usually get in mini toys? Revive those moments here!">
+        <meta name="keywords" content="videogame, arcade, old school">
+        <meta name="theme-color" content="rgba(86, 66, 244, 1)">
+        <title>Arcade Puzzler - Game</title>
+
+        <!-- Page icons. -->
+        <link rel="shortcut icon" href="assets/icons/game-icon.ico" type="image/x-icon">
+        <link rel="icon" href="assets/icons/game-icon-32.png">
+        <link rel="icon" href="assets/icons/game-icon-48.png">
+        <link rel="icon" href="assets/icons/game-icon-96.png">
+        <link rel="icon" href="assets/icons/game-icon-144.png">
+
+        <!-- Manifest. -->
+        <link rel="manifest" href="assets/manifest.webmanifest" crossorigin="use-credentials">
+
+        <!-- CSS. -->
+        <link rel="stylesheet" href="CSS/game.css">
+
+        <!-- JS. -->
+        <script src="JS/main.js" type="module"></script>
+        <script src="worker.js" defer="defer"></script>
+    </head>
+    <body>
+        <main id="swup" class="main-content">
+            <a href="/index.html" class="btn move-and-fade-left" id="back-to-main-menu" data-i18n-id="game__back_to_main_menu_button">
+                <i class="material-icons" aria-hidden="true">arrow_back</i>
+            </a>
+            <div id="data-container" aria-hidden="true" class="move-and-fade-up">
+                <div id="time-container">
+                    <span class="time" data-i18n-id="game__time"></span>
+                </div>
+                <div id="turn-container">
+                    <span data-i18n-id="game__moves"></span>
+                </div>
+            </div>
+            <ol id="number-container" class="config-standard"></ol>
+        </main>
+        <div id="a11y-alert" class="for-screen-readers" aria-live="polite" role="alert"></div>
+    </body>
+</html>

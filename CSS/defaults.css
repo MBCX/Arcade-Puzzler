@@ -1,0 +1,138 @@
+*, *::before, *::after
+{
+    margin: 0;
+    padding: 0;
+
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+
+    -webkit-user-select: none;
+    user-select: none;
+
+    outline: none;
+}
+
+*:focus-visible
+{
+    outline: 3px solid hsl(var(--game-board-text-colour), 0.9);
+    outline-offset: 0.10rem;
+}
+
+:root
+{
+    --game-font: "Noto Sans Mono", "system-ui", -apple-system, BlinkMacSystemFont, sans-serif;
+
+    --game-background-colour: hsl(216, 75%, 78%);
+    --game-background-image-invert: 0;
+    --game-board-font: var(--game-font);
+    --game-board-grid-size: 4;
+
+    /* HSL format. */
+    --game-board-background-colour: 0, 0%, 97%;
+    --game-board-text-colour: 0, 0%, 0%;
+
+    --game-page-transition-duration: 400ms;
+}
+
+html, body
+{
+    -webkit-user-select: none;
+    user-select: none;
+    overflow: hidden;
+}
+
+body
+{
+    position: relative;
+    background-color: var(--game-background-colour);
+    min-height: 100vh;
+}
+
+body::before
+{
+    content: '';
+    position: absolute;
+    background-image: url("../assets/images/GameBG.png");
+    width: 100%;
+    min-height: inherit;
+    z-index: -1;
+    opacity: 0.5;
+
+    -webkit-filter: invert(var(--game-background-image-invert));
+    filter: invert(var(--game-background-image-invert));
+}
+
+body::after
+{
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    min-height: inherit;
+
+    -webkit-box-shadow: inset 0px 0px 2px 1rem hsl(var(--game-board-background-colour));
+    box-shadow: inset 0px 0px 2px 1rem hsl(var(--game-board-background-colour));
+    z-index: -1;
+}
+
+.main-content
+{
+    display: grid;
+    place-items: center;
+    min-height: inherit;
+    font-family: var(--game-font);
+}
+
+a[class]
+{
+    text-decoration: none;
+}
+
+
+.btn
+{
+    font-size: 1.25rem;
+    padding: 0.5em;
+    background-color: hsl(var(--game-board-background-colour));
+    color: hsl(var(--game-board-text-colour));
+    border: 2px solid hsl(var(--game-board-text-colour));
+}
+
+/* Disable all animations. */
+@media only screen and (prefers-reduced-motion: reduce)
+{
+    *, *::before, *::after
+    {
+        -webkit-animation-delay: -1ms !important;
+        animation-delay: -1ms !important;
+        
+        -webkit-animation-duration: 1ms !important;
+        animation-duration: 1ms !important;
+        
+        -webkit-animation-iteration-count: 1 !important;
+        animation-iteration-count: 1 !important;
+
+        background-attachment: initial !important;
+        scroll-behavior: auto !important;
+        
+        -webkit-transition-duration: 0ms !important;
+        transition-duration: 0ms !important;
+
+        -webkit-transition-delay: 0ms !important;
+        transition-delay: 0ms !important;
+    }
+}
+
+/* Dark mode. */
+html.dark-mode
+{
+    --game-background-image-invert: 0.8;
+    --game-background-colour: hsl(216, 39%, 65%);
+
+    /* HSL format. */
+    --game-board-background-colour: 0, 0%, 10%;
+    --game-board-text-colour: 0, 0%, 100%;
+}

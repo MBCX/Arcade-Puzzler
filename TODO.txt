@@ -1,0 +1,9 @@
+[] Juego
+    [] Preguntar como quisiera ganar (configuracion antes del juego (horizontal - vertical))
+    [] Calcular y guardar el tiempo de cada partida y presentarlo.
+
+[] Estadisticas
+    [] Calcular la cantidad minima de pasos por partida.
+
+[] ERRORES CONOCIDOS (DAR A DECIR ANTES DE LANZAR)
+    [] A veces el moviemiento del teclado en el grid no es preciso.

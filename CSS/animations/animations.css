@@ -1,0 +1,60 @@
+@keyframes generic_floatUp
+{
+    from { opacity: 0; transform: translateY(110%); }
+    to { opacity: 1; transform: translateY(0%);}
+}
+
+@keyframes floatUpBoardEl
+{
+    from
+    {
+        opacity: 0;
+        transform: translateY(3rem);
+    }
+
+    to
+    {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes generic_fadeout
+{
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes animateiFire
+{
+    to { background-position-x: 297px; }
+}
+
+@keyframes moveBG
+{
+    to { background-position: 100%; }
+}
+
+@keyframes animateMoveMiniBoardSquare
+{
+    from, to { transform: translate(0%, 0%); }
+    25% { transform: translate(0%, 105%); }
+    50% { transform: translate(-106%, 105%); }
+    75% { transform: translate(-106%, 0%); }
+}
+
+@keyframes animateMoveMiniBoardSquare_2
+{
+    from, to { transform: translate(0%, 0%); }
+    25% { transform: translate(106%, 0%); }
+    50% { transform: translate(106%, 106%); }
+    75% { transform: translate(0%, 106%);}
+}
+
+@keyframes animateMoveMiniBoardSquare_3
+{
+    from, to { transform: translate(0%, 0%); }
+    25% { transform: translate(0%, -106%); }
+    50% { transform: translate(106%, -106%); }
+    75% { transform: translate(106%, 0%);}
+}
