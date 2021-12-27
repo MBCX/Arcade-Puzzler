@@ -48,7 +48,7 @@
             "url": "/game.html",
             "icons": [
                 {
-                    "src": "./icons/shortcuts/game-icon-new-game-512",
+                    "src": "./icons/shortcuts/game-icon-new-game-512.png",
                     "sizes": "512x512",
                     "type": "image/png"
                 }
