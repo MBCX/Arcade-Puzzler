@@ -25,7 +25,7 @@
     to { opacity: 0; }
 }
 
-@keyframes animateiFire
+@keyframes animate_fire
 {
     to { background-position-x: 297px; }
 }
@@ -35,7 +35,7 @@
     to { background-position: 100%; }
 }
 
-@keyframes animateMoveMiniBoardSquare
+@keyframes animate_move_mini_board_square
 {
     from, to { transform: translate(0%, 0%); }
     25% { transform: translate(0%, 105%); }
@@ -43,7 +43,7 @@
     75% { transform: translate(-106%, 0%); }
 }
 
-@keyframes animateMoveMiniBoardSquare_2
+@keyframes animate_move_mini_board_square_2
 {
     from, to { transform: translate(0%, 0%); }
     25% { transform: translate(106%, 0%); }
@@ -51,7 +51,7 @@
     75% { transform: translate(0%, 106%);}
 }
 
-@keyframes animateMoveMiniBoardSquare_3
+@keyframes animate_move_mini_board_square_3
 {
     from, to { transform: translate(0%, 0%); }
     25% { transform: translate(0%, -106%); }

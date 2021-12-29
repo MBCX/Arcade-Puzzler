@@ -25,11 +25,14 @@ export function setGameLanguageBasedOn(lang)
         case "en-GB":
         case "en-AU":
         case "en-IN":
+        case "en-NZ":
+        case "en-ZA":
             return "en-GB";  
         
         case "en-US":
         case "en":
         case "en-CA":
+        case "en-GB-oxendict":
             return "en";
         default:
             return "en";
@@ -39,7 +42,6 @@ export function setGameLanguageBasedOn(lang)
 export function setDarkMode(enable)
 {
     document.documentElement.classList.toggle("dark-mode", enable);
-    window.localStorage.setItem("usingDarkTheme", enable);
 }
 
 export function updateA11yAlert(text, force_reset)

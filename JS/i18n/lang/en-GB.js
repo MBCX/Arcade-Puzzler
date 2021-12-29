@@ -1,13 +1,16 @@
 import { loadTimeData } from "../../utils/loadTimeData.js";
 loadTimeData.data = {
     "test": "This is a test of localisation.",
+    "game__sound_please_enable_desktop": "Please let us play sound by clicking anywhere or pressing any key.",
+    "game__sound_please_enable_mobile": "Please tap anywhere in this screen to allow the game to play sound.",
     "game__time": "Time: $1",
     "game__moves": "Moves: $1",
-    "game__title": "Arcade \n Puzzler",
+    "game__title": "Arcade Puzzle",
     "game__back_to_main_menu_button": "Back to main menu.",
     "game__goto_play": "Start game",
-    "game__goto_settings": "Game settings",
+    "game__goto_origins": "Game origins",
     "game__goto_exit": "Exit game",
+    "game__goto_feedback": "Give feedback",
     "game__start_dialogue_title": "Pick a game style",
     "game__start_dialouge_subtitle": "Choose how you want to organise the table of numbers.",
     "game__satrt_dialouge_option_standard": "Standard",

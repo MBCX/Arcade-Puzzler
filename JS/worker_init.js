@@ -17,7 +17,7 @@ if ("serviceWorker" in navigator) {
         } else {
             reg.addEventListener("updatefound", (e) => {
                 reg.installing.addEventListener("statechange", (e) => {
-                    if (event.target.state === "installed")
+                    if (e.target.state === "installed")
                     {
                         if (reg.active)
                         {
@@ -33,7 +33,7 @@ if ("serviceWorker" in navigator) {
         }
         
         this.navigator.serviceWorker.register(sw_url.url).then((reg) => {
-            console.log("Arcade Puzzler PWA service worker ready.");
+            console.log("Arcade Puzzle PWA service worker ready.");
             loadMainJS();
             reg.update();
         }).catch((err) => {

@@ -4,17 +4,20 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
-        <meta name="description" content="Love the old arcade puzzles that you'll usually get in mini toys? Revive those moments here!">
-        <meta name="keywords" content="videogame, arcade, old school">
+        <meta name="description" content="A 15 numbered puzzle minigame in honour of the original puzzle desk accessory design for the original Macintosh in 1983. ">
+        <meta name="keywords" content="videogame, arcade, old school, mac, minigame">
         <meta name="theme-color" content="#9CBEF2">
-        <meta name="apple-mobile-web-app-title" content="Arcade Puzzler">
-        <meta name="application-name" content="Arcade Puzzler">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="Arcade Puzzle">
+        <meta name="application-name" content="Arcade Puzzle">
         <meta name="apple-mobile-web-app-status-bar-style" content="#9CBEF2">
         <meta name="msapplication-TileColor" content="#9CBEF2">
         <meta name="msapplication-TileImage" content="assets/icons/game-icon-144.png">
         <meta name="msapplication-tap-highlight" content="no">
         <link rel="msapplication-starturl" href="/index.html">
-        <title>Arcade Puzzler - Main</title>
+        <meta name="battery-savings" content="allow-reduced-framerate">
+        <meta name="color-scheme" content="light dark">
+        <title>Arcade Puzzle - Main</title>
 
         <!-- Page icons. -->
         <link rel="shortcut icon" href="assets/icons/game-icon.ico" type="image/x-icon">
@@ -34,24 +37,25 @@
 
         <!-- Twitter -->
         <meta name="twitter:card" content="summary">
-        <meta name="twitter:title" content="Arcade Puzzler">
-        <meta name="twitter:description" content="Love the old arcade puzzles that you'll usually get in mini toys? Revive those moments here!">
+        <meta name="twitter:title" content="Arcade Puzzle">
+        <meta name="twitter:description" content="A 15 numbered puzzle minigame in honour of the original puzzle desk accessory design for the original Macintosh in 1983. ">
         <meta name="twitter:image" content="assets/icons/game-icon-144.png">
         <meta name="twitter:site" content="">
 
         <!-- OG types. -->
         <meta property="og:type" content="website">
-        <meta property="og:title" content="Arcade Puzzler">
-        <meta property="og:description" content="Love the old arcade puzzles that you'll usually get in mini toys? Revive those moments here!">
+        <meta property="og:title" content="Arcade Puzzle">
+        <meta property="og:description" content="A 15 numbered puzzle minigame in honour of the original puzzle desk accessory design for the original Macintosh in 1983. ">
         <meta property="og:url" content="">
         <meta property="og:image" content="assets/icons/game-icon-144.png">
         <meta property="og:locale" content="en_GB">
 
         <!-- JS. -->
-        <!-- <script src="JS/main.js" type="module"></script> -->
-        <script src="JS/worker_init.js" defer="defer"></script>
+        <script src="JS/main.js" type="module"></script>
+        <!-- <script src="JS/worker_init.js" defer="defer"></script> -->
     </head>
     <body>
+        <span id="enable-sound" data-i18n-id="game__sound_please_enable_desktop"></span>
         <div id="intro-cutscene" aria-hidden="true">
             <p class="for-screen-readers">Sunfly Studios</p>
             <div class="animated-text-container" aria-hidden="true">
@@ -90,8 +94,9 @@
             </div>
             <div class="link-group" role="group">
                 <a id="game_btn" class="btn" data-i18n-id="game__goto_play" href="/game.html"></a>
-                <a id="settings_btn" class="btn" data-i18n-id="game__goto_settings" href="#"></a>
+                <a id="settings_btn" class="btn" data-i18n-id="game__goto_origins" href="https://www.folklore.org/StoryView.py?story=Puzzle.txt" rel="noopener noreferrer"></a>
                 <a id="exit_btn" class="btn" data-i18n-id="game__goto_exit" href="#"></a>
+                <a id="feedback_btn" class="btn" data-i18n-id="game__goto_feedback" href="https://docs.google.com/forms/d/e/1FAIpQLSdiReg96NuVeabHgNfyDlkgw-bea-3mlOB7StAZCwUQVjRm3A/viewform?usp=sf_link" rel="noopener noreferrer"></a>
             </div>
         </main>
         <div id="a11y-alert" class="for-screen-readers" aria-live="polite" role="alert"></div>

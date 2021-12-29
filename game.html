@@ -4,17 +4,29 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
-        <meta name="description" content="Love the old arcade puzzles that you'll usually get in mini toys? Revive those moments here!">
+        <meta name="description" content="A 15 numbered puzzle minigame in honour of the original puzzle desk accessory design for the original Macintosh in 1983. ">
         <meta name="keywords" content="videogame, arcade, old school">
-        <meta name="theme-color" content="rgba(86, 66, 244, 1)">
-        <title>Arcade Puzzler - Game</title>
+        <meta name="theme-color" content="#9CBEF2">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="Arcade Puzzle">
+        <meta name="application-name" content="Arcade Puzzle">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#9CBEF2">
+        <meta name="msapplication-TileColor" content="#9CBEF2">
+        <meta name="msapplication-TileImage" content="assets/icons/game-icon-144.png">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="battery-savings" content="allow-reduced-framerate">
+        <meta name="color-scheme" content="light dark">
+        <title>Arcade Puzzle - Main</title>
 
         <!-- Page icons. -->
         <link rel="shortcut icon" href="assets/icons/game-icon.ico" type="image/x-icon">
-        <link rel="icon" href="assets/icons/game-icon-32.png">
-        <link rel="icon" href="assets/icons/game-icon-48.png">
-        <link rel="icon" href="assets/icons/game-icon-96.png">
-        <link rel="icon" href="assets/icons/game-icon-144.png">
+        <link rel="icon" href="assets/icons/game-icon-16.png" sizes="16x16">
+        <link rel="icon" href="assets/icons/game-icon-32.png" sizes="32x32">
+        <link rel="icon" href="assets/icons/game-icon-48.png" sizes="48x48">
+        <link rel="icon" href="assets/icons/game-icon-96.png" sizes="96x96">
+        <link rel="icon" href="assets/icons/game-icon-144.png" sizes="144x144">
+        <link rel="icon" href="assets/icons/game-icon-512.png" sizes="512x512">
+        <link rel="apple-touch-icon" href="assets/icons/game-icon-180.png" sizes="180x180">
 
         <!-- Manifest. -->
         <link rel="manifest" href="assets/manifest.webmanifest" crossorigin="use-credentials">
@@ -22,9 +34,24 @@
         <!-- CSS. -->
         <link rel="stylesheet" href="CSS/game.css">
 
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="Arcade Puzzle">
+        <meta name="twitter:description" content="A 15 numbered puzzle minigame in honour of the original puzzle desk accessory design for the original Macintosh in 1983. ">
+        <meta name="twitter:image" content="assets/icons/game-icon-144.png">
+        <meta name="twitter:site" content="">
+
+        <!-- OG types. -->
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Arcade Puzzle">
+        <meta property="og:description" content="A 15 numbered puzzle minigame in honour of the original puzzle desk accessory design for the original Macintosh in 1983. ">
+        <meta property="og:url" content="">
+        <meta property="og:image" content="assets/icons/game-icon-144.png">
+        <meta property="og:locale" content="en_GB">
+
         <!-- JS. -->
         <script src="JS/main.js" type="module"></script>
-        <script src="worker.js" defer="defer"></script>
+        <!-- <script src="JS/worker_init.js" defer="defer"></script> -->
     </head>
     <body>
         <main id="swup" class="main-content">
@@ -39,7 +66,59 @@
                     <span data-i18n-id="game__moves"></span>
                 </div>
             </div>
-            <ol id="number-container" class="config-standard"></ol>
+            <div id="config-dialouge" role="dialog" class="transition-move-and-fade-down">
+                <h1>Pick a configuration</h1>
+                <p>Pick how you want to organise the table</p>
+                <div class="carousel" role="group">
+                    <button class="carousel__btn last" id="carousel-btn-prev" aria-label="Pick a previous game configuration">
+                        <i class="material-icons" aria-hidden="true">chevron_left</i>
+                    </button>
+                    <div class="carousel__item selected">
+                        <h2 class="carousel__title">Standard</h2>
+                        <img src="" alt="">
+                        <p class="carousel__desc">
+                            In this configuration, you have to organise the numbers from 1 to 15
+                            horizontally from left to right. It's indeed a universal reading style
+                            understood by almost everyone.
+                        </p>
+                        <button class="carousel__begin"> Start </button>
+                    </div>
+                    <div class="carousel__item">
+                        <h2 class="carousel__title">Vertical</h2>
+                        <img src="" alt="">
+                        <p class="carousel__desc">
+                            In this configuration, unlike standard, you have to organise the numbers from 1 to 15
+                            vertically. This type of reading style is more common at countries like
+                            China, Japan, Korea and Mongolia.
+                        </p>
+                        <button class="carousel__begin"> Start </button>
+                    </div>
+                    <div class="carousel__item">
+                        <h2 class="carousel__title">Standard reversed</h2>
+                        <img src="" alt="">
+                        <p class="carousel__desc">
+                            Here you need to organise the numbers from 1 to 15 horizontally
+                            but from right to left. This type of reading style is more common
+                            at countries like Saudi Arabia and United Arab Emirates.
+                        </p>
+                        <button class="carousel__begin"> Start </button>
+                    </div>
+                    <div class="carousel__item">
+                        <h2 class="carousel__title">Vertical reversed</h2>
+                        <img src="" alt="">
+                        <p class="carousel__desc">
+                            This configuration is quite similar to vertical, but now
+                            you need to organise the numbers vertically from right to
+                            left. For those who prefer reading this reading style.
+                        </p>
+                        <button class="carousel__begin"> Start </button>
+                    </div>
+                    <button class="carousel__btn" id="carousel-btn-next" aria-label="Pick the next game configuration">
+                        <i class="material-icons" aria-hidden="true">chevron_right</i>
+                    </button>
+                </div>
+            </div>
+            <!-- <ol id="number-container" class="config-standard transition-move-and-fade-down"></ol> -->
         </main>
         <div id="a11y-alert" class="for-screen-readers" aria-live="polite" role="alert"></div>
     </body>

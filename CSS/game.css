@@ -9,7 +9,26 @@ body::before
 {
     z-index: -1;
     background-size: 4rem;
-    animation: moveBG 40000ms linear infinite;
+    animation: moveBG 49000ms linear infinite
+}
+
+.link-group a:focus-visible
+{
+    outline-offset: 0.35em;
+}
+
+#enable-sound
+{
+    position: absolute;
+    font-family: var(--game-font);
+    font-weight: bold;
+    color: #FFFFFF;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
 }
 
 /* The cutscene only at the start of the game. */
@@ -27,13 +46,12 @@ html[is-main-page] #intro-cutscene
 
     -webkit-place-items: center;
     place-items: center;
-    z-index: 100;
+    z-index: 1;
 }
 
 html[is-main-page] #intro-cutscene .animated-text-container
 {
     position: relative;
-    animation: generic_fadeout 1000ms linear 3100ms forwards;
 }
 
 html[is-main-page] #intro-cutscene .animated-text-container .text-wrapper:nth-child(2)
@@ -45,7 +63,6 @@ html[is-main-page] #intro-cutscene .animated-text-container .text-wrapper span
 {
     display: inline-block;
     opacity: 0;
-    animation: generic_floatUp 800ms linear calc(var(--delay) * 50ms) forwards;
 }
 
 /* Fire "i". */
@@ -59,11 +76,6 @@ html[is-main-page] #intro-cutscene .animated-text-container .fire
     height: 2rem;
     background-image: url("../assets/images/animated/sEffect_strip9.png");
     opacity: 0;
-
-    /* 9 is total frames. */
-    animation:
-        animateiFire 1000ms steps(9) 1690ms reverse forwards,
-        generic_fadeout 800ms linear 1760ms forwards;
 }
 
 /* Time above the board. */
@@ -148,6 +160,95 @@ li#blank
     cursor: pointer;
 }
 
+/* Game configuration carousel dialogue. */
+#config-dialouge
+{
+    background-color: hsl(var(--game-board-background-colour));
+    color: hsl(var(--game-board-text-colour));
+    outline: 2px solid hsl(var(--game-board-text-colour));
+    max-width: 80vw;
+    text-align: -webkit-center;
+    text-align: center;
+    overflow: hidden;
+}
+
+#config-dialouge .carousel
+{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    margin-top: 0.75rem;
+}
+
+.carousel .carousel__item
+{
+    position: absolute;
+    opacity: 0;
+    max-width: 50%;
+    transition: opacity 250ms linear;
+}
+
+.carousel__item.selected
+{
+    position: relative;
+    opacity: 1;
+}
+
+.carousel__btn
+{
+    position: absolute;
+    background-color: hsl(var(--game-board-background-colour));
+    border-radius: 100rem;
+    border: 0;
+    opacity: 1;
+    border: 2px solid hsl(var(--game-board-text-colour));
+    color: hsl(var(--game-board-text-colour));
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+    z-index: 20;
+    transition: opacity 250ms linear;
+}
+
+.carousel__btn.last
+{
+    opacity: 0;
+    cursor: default;
+}
+
+#carousel-btn-prev,
+#carousel-btn-next
+{
+    bottom: 50%;
+    transform: translateY(-10%);
+}
+
+#carousel-btn-prev
+{
+    left: 1.5em;
+}
+
+#carousel-btn-next
+{
+    right: 1.5em;
+}
+
+.carousel__item button
+{
+    font-family: inherit;
+    font-weight: bold;
+    font-size: 1.125rem;
+    padding: 0.40em 1em;
+    margin: 0.75em;
+    background-color: transparent;
+    border: 2px solid hsl(var(--game-board-text-colour));
+}
+
+.carousel__item button:focus-visible,
+.carousel__btn:focus-visible
+{
+    outline-offset: 0.35em;
+}
 
 /* Writing modes (game winning condition configurations). */
 #number-container.config-standard
@@ -203,8 +304,8 @@ li#blank
 /* Main menu styles. */
 #game-title
 {
-    text-align: -webkit-right;
-    text-align: right;
+    text-align: -webkit-center;
+    text-align: center;
     font-size: -webkit-max(3rem, calc(5vw + 1vh));
     font-size: max(3rem, calc(5vw + 1vh));
     color: #FFFFFF;
@@ -216,20 +317,28 @@ li#blank
 #title-group
 {
     position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    align-items: center;
+}
+
+#game-title
+{
+    margin-bottom: 0.45em;
 }
 
 #title-mini-grid
 {
     --block-size: 0.58rem;
-    --button-font-size: 0.45em;
-    position: absolute;
-    left: -8rem;
-    bottom: 2rem;
+    --button-font-size: 1em;
+    position: relative;
     gap: 0.10em;
-    width: 100%;
-    height: 100%;
     padding: 0.2em;
     z-index: -1;
+    max-width: calc(32rem - 7vw);
+    width: 100%;
     animation: none;
 }
 
@@ -242,34 +351,58 @@ li#blank
 
 #title-mini-grid li:nth-child(4)
 {
-    animation: animateMoveMiniBoardSquare 5000ms ease-in-out infinite;
+    animation: animate_move_mini_board_square 5000ms ease-in-out infinite;
 }
 
 #title-mini-grid li:nth-child(3)
 {
-    animation: animateMoveMiniBoardSquare_2 5000ms ease-in-out infinite;
+    animation: animate_move_mini_board_square_2 5000ms ease-in-out infinite;
 }
 
 #title-mini-grid li:nth-child(7)
 {
-    animation: animateMoveMiniBoardSquare_3 5000ms ease-in-out infinite;
+    animation: animate_move_mini_board_square_3 5000ms ease-in-out infinite;
 }
 
-.main-content .link-group
+/* Modification of game config dialogue. */
+@media only screen and (min-width: 100em) and (min-height: 40em)
 {
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    gap: 1rem;
+    #config-dialouge
+    {
+        max-height: fit-content;
+        max-height: 60vh;
+        padding: 2rem;
+    }
+
+    .carousel .carousel__item
+    {
+        position: relative;
+        opacity: 1;
+    }
+
+    #carousel-btn-prev,
+    #carousel-btn-next
+    {
+        display: none;
+    }
 }
 
-.link-group a:focus-visible
-{
-    outline-offset: 0.35em;
-}
-
+/* Primarly modifies the main menu. */
 @media only screen and (max-width: 50em)
 {
+    .main-content .link-group
+    {
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+
+    #game-title
+    {
+        margin-bottom: 0;
+    }
+        
     #number-container
     {
         --block-size: clamp(5.5rem, 8vw, 7rem);
@@ -280,12 +413,6 @@ li#blank
         width: min(18vw, var(--block-size))
     }
 
-    #title-mini-grid
-    {
-        left: 0;
-        bottom: 4rem;
-    }
-
     #back-to-main-menu
     {
         margin: 0;
@@ -293,5 +420,13 @@ li#blank
         top: min(20%, 10vh);
 
         transform: translate(-50%, -50%);
+    }
+
+    @media only screen and (max-height: 60em)
+    {
+        #title-mini-grid
+        {
+            display: none;
+        }
     }
 }
