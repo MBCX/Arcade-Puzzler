@@ -11,32 +11,19 @@ loadTimeData.data = {
     "game__goto_origins": "Game origins",
     "game__goto_exit": "Exit game",
     "game__goto_feedback": "Give feedback",
-    "game__start_dialogue_title": "Pick a game style",
-    "game__start_dialouge_subtitle": "Choose how you want to organise the table of numbers.",
-    "game__satrt_dialouge_option_standard": "Standard",
-    "game__start_dialouge_option_standard_desc": `
-        In this configuration, you have to organise the numbers from 1 to 15
-        horizontally from left to right. It's indeed a universal reading style
-        understood by almost everyone.
-    `,
-    "game__satrt_dialouge_option_vertical": "Vertical",
-    "game__start_dialouge_option_vertical_desc": `
-        In this configuration, unlike standard, you have to organise the numbers from 1 to 15
-        vertically. This type of reading style is more common at countries like
-        China, Japan, Korea and Mongolia.
-    `,
-    "game__satrt_dialouge_option_standard_reverse": "Standard reversed",
-    "game__start_dialouge_option_standard_reverse_desc": `
-        Here you need to organise the numbers from 1 to 15 horizontally
-        but from right to left. This type of reading style is more common
-        at countries like Saudi Arabia and United Arab Emirates.
-    `,
-    "game__satrt_dialouge_option_vertical_reverse": "Vertical reversed",
-    "game__start_dialouge_option_vertical_reverse_desc": `
-        This configuration is quite similar to vertical, but now
-        you need to organise the numbers vertically from right to
-        left. For those who prefer reading this reading style.
-    `,
+    "game__start_dialogue_title": "Pick a configuration",
+    "game__start_dialogue_subtitle": "How do you want to organise the table?",
+    "game__start_dialogue_option_standard": "Standard",
+    "game__start_dialogue_option_standard_desc": "In this configuration, you have to organise the numbers from 1 to 15 horizontally from left to right. It's indeed a universal reading style understood by almost everyone.",
+    "game__start_dialogue_option_vertical": "Vertical",
+    "game__start_dialogue_option_vertical_desc": "In this configuration, unlike standard, you have to organise the numbers from 1 to 15 vertically. This type of reading style is more common at countries like China, Japan, Korea and Mongolia.",
+    "game__start_dialogue_option_standard_reverse": "Standard reversed",
+    "game__start_dialogue_option_standard_reverse_desc": "Here you need to organise the numbers from 1 to 15 horizontally but from right to left. This type of reading style is more common at countries like Saudi Arabia and United Arab Emirates.",
+    "game__start_dialogue_option_vertical_reverse": "Vertical reversed",
+    "game__start_dialogue_option_vertical_reverse_desc": "This configuration is quite similar to vertical, but now you need to organise the numbers vertically from right to left. For those who prefer reading this reading style.",
+    "game__start_dialgoue_prev_config_btn": "Pick the previous game configuration.",
+    "game__start_dialgoue_next_config_btn": "Pick the next game configuration.",
+    "game__start_dialogue_start_game": "Start",
     "a11y__generating_grid_numbers": "Generating grid numbers...",
     "a11y__generated_grid_numbers": "Numbers generated!",
     "a11y__how_to_play": `
@@ -58,4 +45,13 @@ loadTimeData.data = {
     "a11y__button_moved_left": "Button with id $1 moved to the left.",
     "a11y__button_moved_right": "Button with id $1 moved to the right.",
     "a11y__button_with_id": "Button with id $1",
+    "a11y__start_dialogue_selected": "Current game configuration $1, selected.",
+    "a11y__start_dialogue_btn_aria_standard": "Start the game with the default configuration.",
+    "a11y__start_dialogue_btn_aria_vertical": "Start the game with a vertical configuration.",
+    "a11y__start_dialogue_btn_aria_standard_rev": "Start the game with the reversed standard configuration.",
+    "a11y__start_dialogue_btn_aria_standard_rev": "Start the game with the reversed vertical configuration.",
+    "a11y__start_dialogue_alt_picture_standard": "A organised table of numbers from 1 to 15 horizontally.",
+    "a11y__start_dialogue_alt_picture_vertical": "A organised table of numbers from 1 to 15 verticallly.",
+    "a11y__start_dialogue_alt_picture_standard_reverse": "A reversed, organised table of numbers from 1 to 15 horizontally.",
+    "a11y__start_dialogue_alt_picture_vertical_reverse": "A reversed, organised table of numbers from 1 to 15 vertically.",
 };

@@ -7,6 +7,7 @@ export const ARIA_TYPES = {
     NONE: 0,
     ARIA_LABEL: 1,
     TITLE: 2,
+    ALT_IMAGES: 3,
     INSIDE_ELEMENT: -1
 }
 export const AUDIO_TYPES = {
@@ -14,7 +15,9 @@ export const AUDIO_TYPES = {
         TITLE: "sn_title_screen.wav",
         MOVE_PIECE: "sn_move_piece.wav",
         BAD_MOVE_PIECE: "sn_bad_move_piece.wav",
-        MOVE_IN_GRID: "sn_move_grid.wav"
+        MOVE_IN_GRID: "sn_move_grid.wav",
+        WIN: "sn_win.wav",
+        ENTER: "sn_enter_click.wav"
     },
     MUSIC: {
 

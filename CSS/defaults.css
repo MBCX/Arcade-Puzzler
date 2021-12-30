@@ -91,7 +91,6 @@ a[class]
     text-decoration: none;
 }
 
-
 .btn
 {
     font-size: 1.25rem;
@@ -99,6 +98,20 @@ a[class]
     background-color: hsl(var(--game-board-background-colour));
     color: hsl(var(--game-board-text-colour));
     border: 2px solid hsl(var(--game-board-text-colour));
+}
+
+button,
+.btn
+{
+    transition: transform 300ms ease;
+}
+
+button:hover,
+button:focus-visible,
+.btn:hover,
+.btn:focus-visible
+{
+    transform: scale(1.1);
 }
 
 /* Disable all animations. */

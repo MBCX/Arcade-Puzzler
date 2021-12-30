@@ -48,16 +48,24 @@ export function updatei18nAria(element, aria_type = ARIA_TYPES.NONE)
     }
 
     const i18n_id_data = element.getAttribute("data-i18n-id");
-    const i18n_result = i18nmanager.i18n(i18n_id_data);
+    let i18n_result = '';
+    let multi_data = element.getAttribute("data-i18n-id").split(',');
 
     switch (aria_type) {
         case ARIA_TYPES.ARIA_LABEL:
+            i18n_result = i18nmanager.i18n(i18n_id_data);
             element.setAttribute("aria-label", i18n_result);
             break;
         case ARIA_TYPES.TITLE:
+            i18n_result = i18nmanager.i18n(i18n_id_data);
             element.setAttribute("title", i18n_result);
             break;
+        case ARIA_TYPES.ALT_IMAGES:
+            i18n_result = i18nmanager.i18n(i18n_id_data);
+            element.setAttribute("alt", i18n_result);
+            break;
         case ARIA_TYPES.INSIDE_ELEMENT:
+            i18n_result = i18nmanager.i18n(i18n_id_data);
             element.innerText = i18n_result;
             break;
     }

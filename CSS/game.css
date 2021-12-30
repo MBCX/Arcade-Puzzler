@@ -161,18 +161,19 @@ li#blank
 }
 
 /* Game configuration carousel dialogue. */
-#config-dialouge
+#config-dialogue
 {
     background-color: hsl(var(--game-board-background-colour));
     color: hsl(var(--game-board-text-colour));
     outline: 2px solid hsl(var(--game-board-text-colour));
+    max-height: 70vh;
     max-width: 80vw;
     text-align: -webkit-center;
     text-align: center;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
-#config-dialouge .carousel
+#config-dialogue .carousel
 {
     position: relative;
     display: flex;
@@ -183,31 +184,40 @@ li#blank
 .carousel .carousel__item
 {
     position: absolute;
-    opacity: 0;
     max-width: 50%;
-    transition: opacity 250ms linear;
+    display: none;
+}
+
+.carousel .carousel__desc
+{
+    margin: 0;
 }
 
 .carousel__item.selected
 {
     position: relative;
-    opacity: 1;
+    display: block;
+    animation: generic_fadein 300ms linear forwards;
 }
 
 .carousel__btn
 {
     position: absolute;
     background-color: hsl(var(--game-board-background-colour));
-    border-radius: 100rem;
-    border: 0;
     opacity: 1;
     border: 2px solid hsl(var(--game-board-text-colour));
+    border-radius: 100rem;
     color: hsl(var(--game-board-text-colour));
     width: 2.5rem;
     height: 2.5rem;
     cursor: pointer;
     z-index: 20;
-    transition: opacity 250ms linear;
+    transition: opacity 250ms linear, transform 100ms ease;
+}
+
+.carousel__btn:active
+{
+    transform: scale(1.2);
 }
 
 .carousel__btn.last
@@ -219,18 +229,17 @@ li#blank
 #carousel-btn-prev,
 #carousel-btn-next
 {
-    bottom: 50%;
-    transform: translateY(-10%);
+    bottom: 45%;
 }
 
 #carousel-btn-prev
 {
-    left: 1.5em;
+    left: 8rem;
 }
 
 #carousel-btn-next
 {
-    right: 1.5em;
+    right: 8rem;
 }
 
 .carousel__item button
@@ -242,12 +251,20 @@ li#blank
     margin: 0.75em;
     background-color: transparent;
     border: 2px solid hsl(var(--game-board-text-colour));
+    color: inherit;
+    cursor: pointer;
 }
 
 .carousel__item button:focus-visible,
 .carousel__btn:focus-visible
 {
     outline-offset: 0.35em;
+}
+
+.carousel__item img
+{
+    width: 12rem;
+    margin: 0.75em 0;
 }
 
 /* Writing modes (game winning condition configurations). */
@@ -257,10 +274,14 @@ li#blank
     writing-mode: horizontal-tb;
 }
 
-#number-container.config-standard-reversed
+#number-container.config-standard-reverse
 {
-    -webkit-writing-mode: tb;
-    writing-mode: tb;
+    transform: scaleX(-1);
+}
+
+#number-container.config-standard-reverse li button
+{
+    transform: scaleX(-1);
 }
 
 #number-container.config-vertical
@@ -269,7 +290,7 @@ li#blank
     writing-mode: vertical-lr;
 }
 
-#number-container.config-vertical-reversed
+#number-container.config-vertical-reverse
 {
     -webkit-writing-mode: vertical-rl;
     writing-mode: vertical-rl;
@@ -367,17 +388,23 @@ li#blank
 /* Modification of game config dialogue. */
 @media only screen and (min-width: 100em) and (min-height: 40em)
 {
-    #config-dialouge
+    #config-dialogue
     {
         max-height: fit-content;
-        max-height: 60vh;
         padding: 2rem;
+        overflow: hidden;
+    }
+
+    #config-dialogue p
+    {
+        margin-bottom: 1em;
     }
 
     .carousel .carousel__item
     {
         position: relative;
         opacity: 1;
+        display: block;
     }
 
     #carousel-btn-prev,

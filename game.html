@@ -66,57 +66,54 @@
                     <span data-i18n-id="game__moves"></span>
                 </div>
             </div>
-            <div id="config-dialouge" role="dialog" class="transition-move-and-fade-down">
-                <h1>Pick a configuration</h1>
-                <p>Pick how you want to organise the table</p>
+            <div id="config-dialogue" role="dialog" class="transition-move-and-fade-down">
+                <h1 data-i18n-id="game__start_dialogue_title"></h1>
+                <p data-i18n-id="game__start_dialogue_subtitle"></p>
+                <button class="carousel__btn last" id="carousel-btn-prev" data-i18n-id="game__start_dialgoue_prev_config_btn">
+                    <i class="material-icons" aria-hidden="true">chevron_left</i>
+                </button>
                 <div class="carousel" role="group">
-                    <button class="carousel__btn last" id="carousel-btn-prev" aria-label="Pick a previous game configuration">
-                        <i class="material-icons" aria-hidden="true">chevron_left</i>
-                    </button>
                     <div class="carousel__item selected">
-                        <h2 class="carousel__title">Standard</h2>
-                        <img src="" alt="">
-                        <p class="carousel__desc">
-                            In this configuration, you have to organise the numbers from 1 to 15
-                            horizontally from left to right. It's indeed a universal reading style
-                            understood by almost everyone.
-                        </p>
-                        <button class="carousel__begin"> Start </button>
+                        <h2 class="carousel__title" data-i18n-id="game__start_dialogue_option_standard"></h2>
+                        <picture>
+                            <source media="(prefers-color-scheme: dark)" srcset="assets/images/game_configs/dark/config_standard_dark.PNG">
+                            <img src="assets/images/game_configs/config_standard.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard">
+                        </picture>
+                        <p class="carousel__desc" data-i18n-id="game__start_dialogue_option_standard_desc"></p>
+                        <button id="config-standard" class="carousel__begin" data-i18n-id="game__start_dialogue_start_game"></button>
                     </div>
                     <div class="carousel__item">
-                        <h2 class="carousel__title">Vertical</h2>
-                        <img src="" alt="">
-                        <p class="carousel__desc">
-                            In this configuration, unlike standard, you have to organise the numbers from 1 to 15
-                            vertically. This type of reading style is more common at countries like
-                            China, Japan, Korea and Mongolia.
-                        </p>
-                        <button class="carousel__begin"> Start </button>
+                        <h2 class="carousel__title" data-i18n-id="game__start_dialogue_option_vertical"></h2>
+                        <picture>
+                            <source media="(prefers-color-scheme: dark)" srcset="assets/images/game_configs/dark/config_vertical_dark.PNG">
+                            <img src="assets/images/game_configs/config_vertical.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical">
+                        </picture>
+                        <p class="carousel__desc" data-i18n-id="game__start_dialogue_option_vertical_desc"></p>
+                        <button id="config-vertical" class="carousel__begin" data-i18n-id="game__start_dialogue_start_game"></button>
                     </div>
                     <div class="carousel__item">
-                        <h2 class="carousel__title">Standard reversed</h2>
-                        <img src="" alt="">
-                        <p class="carousel__desc">
-                            Here you need to organise the numbers from 1 to 15 horizontally
-                            but from right to left. This type of reading style is more common
-                            at countries like Saudi Arabia and United Arab Emirates.
+                        <h2 class="carousel__title" data-i18n-id="game__start_dialogue_option_standard_reverse"></h2>
+                        <picture>
+                            <source media="(prefers-color-scheme: dark)" srcset="assets/images/game_configs/dark/config_standard_reverse_dark.PNG">
+                            <img src="assets/images/game_configs/config_standard_reverse.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard_reverse">
+                        </picture>
+                        <p class="carousel__desc" data-i18n-id="game__start_dialogue_option_standard_reverse_desc">
                         </p>
-                        <button class="carousel__begin"> Start </button>
+                        <button id="config-standard-reverse" class="carousel__begin" data-i18n-id="game__start_dialogue_start_game"></button>
                     </div>
                     <div class="carousel__item">
-                        <h2 class="carousel__title">Vertical reversed</h2>
-                        <img src="" alt="">
-                        <p class="carousel__desc">
-                            This configuration is quite similar to vertical, but now
-                            you need to organise the numbers vertically from right to
-                            left. For those who prefer reading this reading style.
-                        </p>
-                        <button class="carousel__begin"> Start </button>
+                        <h2 class="carousel__title" data-i18n-id="game__start_dialogue_option_vertical_reverse"></h2>
+                        <picture>
+                            <source media="(prefers-color-scheme: dark)" srcset="assets/images/game_configs/dark/config_vertical_reverse_dark.PNG">
+                            <img src="assets/images/game_configs/config_vertical_reverse.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical_reverse">
+                        </picture>
+                        <p class="carousel__desc" data-i18n-id="game__start_dialogue_option_vertical_reverse_desc"></p>
+                        <button id="config-vertical-reverse" class="carousel__begin" data-i18n-id="game__start_dialogue_start_game"></button>
                     </div>
-                    <button class="carousel__btn" id="carousel-btn-next" aria-label="Pick the next game configuration">
-                        <i class="material-icons" aria-hidden="true">chevron_right</i>
-                    </button>
                 </div>
+                <button class="carousel__btn" id="carousel-btn-next" data-i18n-id="game__start_dialgoue_next_config_btn">
+                    <i class="material-icons" aria-hidden="true">chevron_right</i>
+                </button>
             </div>
             <!-- <ol id="number-container" class="config-standard transition-move-and-fade-down"></ol> -->
         </main>

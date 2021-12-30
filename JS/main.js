@@ -22,8 +22,8 @@ const MOVE_RQST = {
 const CONFIG_MODE = {
     STANDARD: 0, // 1 - 15 horizontal.
     VERTICAL: 1, // 1 - 15 vertical.
-    STANDARD_INVERTED: 2, // 15 - 1 horizontal.
-    VERTICAL_INVERTED: 3, // 15 - 1 vertical.
+    STANDARD_REVERSE: 2, // 15 - 1 horizontal.
+    VERTICAL_REVERSE: 3, // 15 - 1 vertical.
 };
 
 // Grid amount + blank grid.
@@ -43,8 +43,8 @@ let element_up_blank_btn;
 let element_down_blank_btn;
 let a11y_btn_say_delay;
 let blank_btn_at_grid;
-let config_mode;
 let config_dialogue_selected_config = 0;
+let player_won;
 
 // Used for moving with the arrow or
 // W or S in the main menu buttons.
@@ -69,7 +69,50 @@ function checkWinningCondition()
     
     // Player has won!
     can_play = false;
-    console.log("PLAYER HAS WON THE GAME!!!!")
+    if (!player_won) {
+
+        number_container_lis.forEach((li, i) => {
+            li.animate([
+                { transform: "translateY(0px)" },
+                { transform: "translateY(-5px)" },
+                { transform: "translateY(-10px)" },
+                { transform: "translateY(-15px)" },
+                { transform: "translateY(-20px)" },
+                { transform: "translateY(-25px)" },
+                { transform: "translateY(-30px)" },
+                { transform: "translateY(-25px)" },
+                { transform: "translateY(-20px)" },
+                { transform: "translateY(-15px)" },
+                { transform: "translateY(-10px)" },
+                { transform: "translateY(-5px)" },
+                { transform: "translateY(0px)" },
+                { transform: "translateY(-5px)" },
+                { transform: "translateY(-10px)" },
+                { transform: "translateY(-15px)" },
+                { transform: "translateY(-20px)" },
+                { transform: "translateY(-15px)" },
+                { transform: "translateY(-10px)" },
+                { transform: "translateY(-5px)" },
+                { transform: "translateY(0px)" },
+                { transform: "translateY(-10px)" },
+                { transform: "translateY(-5px)" },
+                { transform: "translateY(0px)" },
+                { transform: "translateY(-5px)" },
+                { transform: "translateY(0px)" },
+            ], {
+                duration: 750,
+                easing: "ease",
+                delay: (i + 1) * 35,
+                fill: "auto"
+            });
+        });
+        playSound(AUDIO_TYPES.FX.WIN);
+        
+        window.setTimeout(() => {
+            window.location.assign("../results.html");
+        }, 4000);
+        player_won = true;
+    }
 }
 
 function reset() {
@@ -89,7 +132,7 @@ function reset() {
     element_down_blank_btn = null;
     a11y_btn_say_delay = 0;
     blank_btn_at_grid = GRID_POSITION.LAST_ROW_COLUMN;
-    config_mode = CONFIG_MODE.STANDARD;
+    player_won = false;
 
     if (document.querySelector("#number-container")) {
         // Allow keyboard play and navigation of grid.
@@ -342,6 +385,7 @@ function gameUpdateLoop(time) {
                 }, true);
                 playSound(AUDIO_TYPES.FX.BAD_MOVE_PIECE);
             }
+            checkWinningCondition();
         }
     }
 
@@ -359,13 +403,34 @@ function gameUpdateLoop(time) {
             setAndUpdatei18nString(true, "a11y__generating_grid_numbers");
             let li_slot = roll_dice(1, 15);
 
-            if (!list_of_grid_numbers.includes(li_slot)) {
+            // if (!list_of_grid_numbers.includes(li_slot)) {
+            //     const new_li = document.createElement("li");
+            //     const new_btn = document.createElement("button");
+            //     new_li.setAttribute("btn-pos", li_slot - 1);
+            //     number_container.append(new_li);
+            //     new_li.append(new_btn);
+            //     new_btn.innerText = li_slot;
+            //     new_btn.addEventListener("click", handleButtonMovement);
+            //     new_li.animate([{
+            //         transform: "translateY(100%)",
+            //         opacity: 0,
+            //     }, {
+            //         transform: "translateY(0)",
+            //         opacity: 1,
+            //     }, ], {
+            //         duration: 500,
+            //         easing: "ease",
+            //         fill: "forwards",
+            //     });
+            //     list_of_grid_numbers.push(li_slot);
+            // }
+            for (let i = 0; MAX_AMOUNT_ITEMS_GRID > i; ++i) {
                 const new_li = document.createElement("li");
                 const new_btn = document.createElement("button");
-                new_li.setAttribute("btn-pos", li_slot - 1);
+                new_li.setAttribute("btn-pos", i);
                 number_container.append(new_li);
                 new_li.append(new_btn);
-                new_btn.innerText = li_slot;
+                new_btn.innerText = i + 1;
                 new_btn.addEventListener("click", handleButtonMovement);
                 new_li.animate([{
                     transform: "translateY(100%)",
@@ -378,7 +443,6 @@ function gameUpdateLoop(time) {
                     easing: "ease",
                     fill: "forwards",
                 });
-                list_of_grid_numbers.push(li_slot);
             }
         } else {
             can_play = true;
@@ -403,24 +467,16 @@ function gameUpdateLoop(time) {
         return "00:00:00";
     }
 
-    if (null != last_time_render) {
+    if (!player_won && null != last_time_render) {
         let time_amount = "";
         delta_time = time - last_time_render;
-
         time_amount = calculateTimeAmount(delta_time);
-
-        // Set light or dark mode.
-        setDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
         generateGridButtons();
 
         blank_btn = document.querySelector("#blank");
 
         setAndUpdatei18nString(false, time_amount, false, document.querySelector(`[data-i18n-id="game__time"]`));
         setAndUpdatei18nString(false, move_amount, false, document.querySelector(`[data-i18n-id="game__moves"]`));
-
-        // Aria labels.
-        updatei18nAria(document.querySelector("#back-to-main-menu"), ARIA_TYPES.ARIA_LABEL);
-        updatei18nAria(document.querySelector("#back-to-main-menu"), ARIA_TYPES.TITLE);
 
         if (a11y_btn_say_delay > 0) {
             a11y_btn_say_delay -= 1 / delta_time;
@@ -464,9 +520,7 @@ function enableSoundByClicking()
 
 function initMainMenu()
 {
-    game_i18n_lang.then(()=>{
-        // Set language.
-        setDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
+    game_i18n_lang.then(() => {
         document.documentElement.lang = setGameLanguageBasedOn(navigator.language);
     
         if (document.querySelector("[is-main-page]")) {
@@ -541,52 +595,112 @@ function addAgainEventListenerForMenuGroup()
 
 function controlGameConfigDialogue()
 {
+    function handleGameConfig(e)
+    {
+        const btn_config_id = e.target.getAttribute("id");
+        const dialogue_container = document.querySelector("#config-dialogue");
+        const num_container = document.createElement("ul");
+
+        num_container.setAttribute("id", "number-container");
+        num_container.classList.add("transition-move-and-fade-down");
+
+        if (btn_config_id === "config-standard") {
+            num_container.classList.add("config-standard");
+        } else if (btn_config_id === "config-vertical") {
+            num_container.classList.add("config-vertical");
+        } else if (btn_config_id === "config-standard-reverse") {
+            num_container.classList.add("config-standard-reverse");
+        } else if (btn_config_id === "config-vertical-reverse") {
+            num_container.classList.add("config-vertical-reverse");
+        }
+
+        dialogue_container.animate([
+            { opacity: 0, transform: "translateY(48px)" }
+        ], {
+            duration: 400,
+            easing: "ease",
+            fill: "forwards"
+        }).addEventListener("finish", () => {
+            dialogue_container.remove();
+            document.querySelector("#swup").append(num_container);
+            reset();
+            window.requestAnimationFrame(gameUpdateLoop);
+        });
+        playSound(AUDIO_TYPES.FX.ENTER);
+    }
+    
     const dialogue_btn_prev = document.querySelector("#carousel-btn-prev");
     const dialogue_btn_next = document.querySelector("#carousel-btn-next");
     const all_dialogues_amount = document.querySelectorAll(".carousel__item").length;
+    const all_images = document.querySelectorAll("#config-dialogue picture img");
 
+    // Set element aria labels and i18n strings.
+    updatei18nAria(document.querySelector("#back-to-main-menu"), ARIA_TYPES.ARIA_LABEL);
+    updatei18nAria(document.querySelector("#back-to-main-menu"), ARIA_TYPES.TITLE);
+    updatei18nAria(document.querySelector("#config-dialogue h1"), ARIA_TYPES.INSIDE_ELEMENT);
+    updatei18nAria(document.querySelector("#config-dialogue p"), ARIA_TYPES.INSIDE_ELEMENT);
+
+    updatei18nAria(document.querySelector("#carousel-btn-prev"), ARIA_TYPES.ARIA_LABEL);
+    updatei18nAria(document.querySelector("#carousel-btn-prev"), ARIA_TYPES.TITLE);
+    updatei18nAria(document.querySelector("#carousel-btn-next"), ARIA_TYPES.ARIA_LABEL);
+    updatei18nAria(document.querySelector("#carousel-btn-next"), ARIA_TYPES.TITLE);
+
+    // Sadly, need to update the alt desc of each individual image.
+    updatei18nAria(all_images[0], ARIA_TYPES.ALT_IMAGES);
+    updatei18nAria(all_images[1], ARIA_TYPES.ALT_IMAGES);
+    updatei18nAria(all_images[2], ARIA_TYPES.ALT_IMAGES);
+    updatei18nAria(all_images[3], ARIA_TYPES.ALT_IMAGES);
+
+    document.querySelectorAll(".carousel__title").forEach((title) => {
+        updatei18nAria(title, ARIA_TYPES.INSIDE_ELEMENT);
+    });
+
+    document.querySelectorAll(".carousel__desc").forEach((desc) => {
+        updatei18nAria(desc, ARIA_TYPES.INSIDE_ELEMENT);
+    });
+    
+    document.querySelectorAll(".carousel__begin").forEach((btn) => {
+        updatei18nAria(btn, ARIA_TYPES.INSIDE_ELEMENT);
+        btn.addEventListener("click", handleGameConfig);
+    });
+    
     dialogue_btn_next.addEventListener("click", () => {
         const current_carousel = document.querySelector(".carousel__item.selected");
         config_dialogue_selected_config++;
-        config_dialogue_selected_config = clamp(config_dialogue_selected_config, 0, all_dialogues_amount);
-        
         dialogue_btn_prev.classList.remove("last");
         
-        if (
-            all_dialogues_amount - 1 === config_dialogue_selected_config ||
-            all_dialogues_amount === config_dialogue_selected_config
-        ) {
+        if (all_dialogues_amount - 1 === config_dialogue_selected_config) {
             dialogue_btn_next.classList.add("last");
         }
-
-        if (current_carousel.nextElementSibling.classList.contains("carousel__item")) {
+        
+        if (null != current_carousel.nextElementSibling && current_carousel.nextElementSibling.classList.contains("carousel__item")) {
             current_carousel.classList.remove("selected");
             current_carousel.nextElementSibling.classList.add("selected");
         }
+        config_dialogue_selected_config = clamp(config_dialogue_selected_config, 0, all_dialogues_amount);
     });
 
     dialogue_btn_prev.addEventListener("click", () => {
         const current_carousel = document.querySelector(".carousel__item.selected");
         config_dialogue_selected_config--;
-        config_dialogue_selected_config = clamp(config_dialogue_selected_config, 0, all_dialogues_amount);
         dialogue_btn_next.classList.remove("last");
         
-        if (
-            1 === config_dialogue_selected_config ||
-            0 === config_dialogue_selected_config
-        ) {
+        if (0 >= config_dialogue_selected_config) {
             dialogue_btn_prev.classList.add("last");
         }
 
-        if (current_carousel.previousElementSibling.classList.contains("carousel__item")) {
+        if (null != current_carousel.previousElementSibling && current_carousel.previousElementSibling.classList.contains("carousel__item")) {
             current_carousel.classList.remove("selected");
             current_carousel.previousElementSibling.classList.add("selected");
         }
+        config_dialogue_selected_config = clamp(config_dialogue_selected_config, 0, all_dialogues_amount);
     });
 }
 
 // Swup specific listeners.
 document.addEventListener("swup:pageView", function() {
+    // Set light or dark mode.
+    setDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
     if ("/game.html" === window.location.pathname) {
         controlGameConfigDialogue();
         // reset();
@@ -614,6 +728,8 @@ document.addEventListener("swup:contentReplaced", function() {
 });
 
 if (document.querySelector("#enable-sound")) {
+    // Set light or dark mode.
+    setDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
     game_i18n_lang.then(() => {
         if (navigator.userAgent.includes("Mobile")) {
             document.querySelector("#enable-sound").setAttribute("data-i18n-id", "game__sound_please_enable_mobile");
@@ -624,5 +740,13 @@ if (document.querySelector("#enable-sound")) {
         updatei18nAria(document.querySelector("#enable-sound"), ARIA_TYPES.INSIDE_ELEMENT);
         document.addEventListener("click", enableSoundByClicking);
         document.addEventListener("keydown", enableSoundByClicking);
+    });
+
+    document.querySelector("#enable-sound").animate([
+        { opacity: 0, transform: "translateY(30px) " },
+        { opacity: 1, transform: "translateY(0px) " }
+    ], {
+        duration: 500,
+        easing: "ease"
     });
 }

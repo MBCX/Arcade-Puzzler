@@ -1,5 +1,3 @@
-import { AUDIO_TYPES } from "../shared/shared.js";
-
 let current_a11y_string = '';
 
 export function clamp(value, min, max)
@@ -79,7 +77,7 @@ export function roll_dice(roll_amount, sides)
 
 export function playSound(sound_type)
 {
-    console.assert(sound_type != '', "Must pick a audio type.");
+    console.assert(sound_type !== '', "Must pick a audio type.");
     const audio_file = new Audio(`../../assets/audio/${sound_type}`);
     audio_file.volume = 0.5;
 

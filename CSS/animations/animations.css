@@ -25,6 +25,12 @@
     to { opacity: 0; }
 }
 
+@keyframes generic_fadein
+{
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 @keyframes animate_fire
 {
     to { background-position-x: 297px; }
