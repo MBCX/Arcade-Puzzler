@@ -52,6 +52,9 @@ let time_amount;
 let menu_button_index = 0;
 
 export const swup = new Swup({
+    linkSelector: 'a[href^="' +
+    window.location.origin +
+    '"]:not([data-no-swup]), a[href^="/"]:not([data-no-swup]), a[href^="#"]:not([data-no-swup]), a[href^="./"]:not([data-no-swup])',
     plugins: [new SwupA11yPlugin(), new SwupDebugPlugin()],
     cache: false,
 });
