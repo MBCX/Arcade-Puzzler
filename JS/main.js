@@ -566,9 +566,6 @@ function initMainMenu()
     
             // Intro buttons.
             updatei18nAria(document.querySelector("#game_btn"), ARIA_TYPES.INSIDE_ELEMENT);
-            updatei18nAria(document.querySelector("#settings_btn"), ARIA_TYPES.INSIDE_ELEMENT);
-            updatei18nAria(document.querySelector("#exit_btn"), ARIA_TYPES.INSIDE_ELEMENT);
-            updatei18nAria(document.querySelector("#feedback_btn"), ARIA_TYPES.INSIDE_ELEMENT);
             document.querySelector(".link-group").addEventListener("keydown", moveBetweenMenuButtons);
             document.querySelector(".link-group").addEventListener("click", playEnterSound);
         }
