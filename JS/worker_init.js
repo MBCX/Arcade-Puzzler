@@ -10,32 +10,24 @@ function loadMainJS()
 
 if ("serviceWorker" in navigator) {
     window.addEventListener("load", async function () {
-        const reg = await navigator.serviceWorker.register(sw_url.url);
+        const regist = await navigator.serviceWorker.register(sw_url.url);
         
-        if (reg.waiting && reg.active) {
-            console.log("Please close all tabs to get updates.");
-        } else {
-            reg.addEventListener("updatefound", (e) => {
-                reg.installing.addEventListener("statechange", (e) => {
-                    if (e.target.state === "installed")
-                    {
-                        if (reg.active)
-                        {
-                            console.log("Please close all tabs to get updates.");
-                        }
-                        else
-                        {
-                            console.log("Content is cached for the first time.");
-                        }
-                    }
-                });
-            });
+        while (regist.waiting && regist.active) {
+            console.log("Waiting for user to close all tabs.");
         }
-        
+
+        regist.addEventListener("updatefound", (e) => {
+            regist.installing.addEventListener("statechange", (e) => {
+                if (e.target.state === "installed") {
+                    console.log("Content is cached for the first time.");
+                }
+            });
+        });
+
         this.navigator.serviceWorker.register(sw_url.url).then((reg) => {
             console.log("Arcade Puzzle PWA service worker ready.");
-            loadMainJS();
             reg.update();
+            loadMainJS();
         }).catch((err) => {
             console.error("PWA Registration failed with error: " + err);
             loadMainJS();

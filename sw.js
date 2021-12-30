@@ -1,13 +1,29 @@
-const cache_name = this.origin + "arcade-puzzler.comv1.0.1";
-const start_page = this.origin + "/index.html";
-const game_page = this.origin + "/game.html";
-const options_page = this.origin + "/options.html";
-const results_page = this.origin + "/results.html";
+const cache_name = "arcade-puzzler.comv1.0.11";
+const start_page = "index.html";
+const main_css = "CSS/game.css";
+
+
+// Audio.
+// const sn_back_button_click = "assets/audio/sn_back_button_click.wav";
+// const sn_bad_move_piece = "assets/audio/sn_bad_move_piece.wav";
+// const sn_enter_click = "assets/audio/sn_enter_click.wav";
+// const sn_move_grid = "assets/audio/sn_move_grid.wav";
+// const sn_move_piece = "assets/audio/sn_move_piece.wav";
+// const sn_select = "assets/audio/sn_select.wav";
+// const sn_title_screen = "assets/audio/sn_title_screen.wav";
+// const sn_win = "assets/audio/sn_win.wav";
+
 const files_to_cache = [
     start_page,
-    game_page,
-    options_page,
-    results_page
+    main_css,
+    // sn_back_button_click,
+    // sn_bad_move_piece,
+    // sn_enter_click,
+    // sn_move_grid,
+    // sn_move_piece,
+    // sn_select,
+    // sn_title_screen,
+    // sn_win
 ];
 
 // Installation of SW.
@@ -17,8 +33,9 @@ self.addEventListener("install", (e) => {
         caches.open(cache_name).then((cache) => {
             console.log("SW caching dependencies");
             files_to_cache.map(async (url) => {
+                console.log("Trying to add: " + url);
                 return cache.add(url).catch((reason) => {
-                    return console.log("Arcade Puzzle SW: " + String(reason) + ' ' + url);
+                    return console.error("Arcade Puzzle SW: " + String(reason) + ' ' + url);
                 });
             })
         })
@@ -28,17 +45,15 @@ self.addEventListener("install", (e) => {
 // Activation of SW.
 self.addEventListener("activate", (e) => {
     console.log("Arcade Puzzle service activation.");
-    e.waitUntil(
-        caches.keys().then((keylist) => {
-            return Promise.all(keylist.map((key) => {
-                if (key !== cache_name) {
-                    console.log("Arcade Puzzle SW old cache removed", key);
-                    return caches.delete(key);
-                }
-            }));
-        })
-    );
-    return self.clients.claim();
+    e.waitUntil(caches.keys().then((keys) => {
+		return Promise.all(keys.filter((key) => {
+			return !files_to_cache.includes(key);
+		}).map((key) => {
+			return caches.delete(key);
+		}));
+	}).then(() => {
+		return self.clients.claim();
+	}));
 });
 
 // Fecth of SW.
