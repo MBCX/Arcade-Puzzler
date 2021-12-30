@@ -63,7 +63,6 @@ function checkWinningCondition()
     for (let i = 0; MAX_AMOUNT_ITEMS_GRID > i; ++i) {
         const li_pos_value = Number(number_container_lis[i].getAttribute("btn-pos"));
         if (li_pos_value !== i) {
-            console.log("Player has not won, yet.");
             return;
         }
     }
@@ -71,7 +70,6 @@ function checkWinningCondition()
     // Player has won!
     can_play = false;
     if (!player_won) {
-
         number_container_lis.forEach((li, i) => {
             li.animate([
                 { transform: "translateY(0px)" },
@@ -329,6 +327,7 @@ function gameUpdateLoop(time) {
                 });
                 playSound(AUDIO_TYPES.FX.MOVE_PIECE);
                 blank_btn_at_grid -= 1;
+                checkWinningCondition();
             } else if (checkIfWeCanMove(MOVE_RQST.RIGHT, li_target)) {
                 li_target.after(blank_btn);
                 move_amount++;
@@ -338,6 +337,7 @@ function gameUpdateLoop(time) {
                 a11y_btn_say_delay = A11Y_DELAY_BETWEEN_BTN_NUMBERS;
                 playSound(AUDIO_TYPES.FX.MOVE_PIECE);
                 blank_btn_at_grid += 1;
+                checkWinningCondition();
             } else if (checkIfWeCanMove(MOVE_RQST.UP, li_target)) {
                 // Up and down movement.
                 const new_blank_btn = document.createElement("li");
@@ -358,6 +358,7 @@ function gameUpdateLoop(time) {
                 e.target.focus();
                 playSound(AUDIO_TYPES.FX.MOVE_PIECE);
                 correctCurrentIndexGrid("down");
+                checkWinningCondition();
             } else if (checkIfWeCanMove(MOVE_RQST.DOWN, li_target)) {
                 const new_blank_btn = document.createElement("li");
                 const new_li_target = document.querySelector(`[btn-pos="${parseInt(e.target.innerText - 1)}"] + [btn-pos]`);
@@ -383,13 +384,13 @@ function gameUpdateLoop(time) {
                 e.target.focus();
                 playSound(AUDIO_TYPES.FX.MOVE_PIECE);
                 correctCurrentIndexGrid("up");
+                checkWinningCondition();
             } else {
                 setAndUpdatei18nString(true, {
                     a11y__button_cant_move: e.target.innerText,
                 }, true);
                 playSound(AUDIO_TYPES.FX.BAD_MOVE_PIECE);
             }
-            checkWinningCondition();
         }
     }
 

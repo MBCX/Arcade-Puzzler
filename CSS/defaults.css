@@ -107,11 +107,14 @@ button,
 }
 
 button:hover,
-button:focus-visible,
-.btn:hover,
-.btn:focus-visible
+.btn:hover
 {
     transform: scale(1.1);
+}
+
+#number-container li button:hover
+{
+    transform: scale(1.0);
 }
 
 /* Disable all animations. */

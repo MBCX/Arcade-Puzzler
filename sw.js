@@ -61,6 +61,8 @@ self.addEventListener("fetch", (e) => {
     if (!e.request.url.match(/^(http|https):\/\//i))
         return;
     
+    if (e.request.method != 'GET') return;
+    
 	e.respondWith(
 		caches.match(e.request).then((response) => {
 			return response || fetch(e.request).then(async (res) => {

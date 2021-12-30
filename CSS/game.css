@@ -532,3 +532,27 @@ html[results-page] #config-dialogue .carousel
         }
     }
 }
+
+@media only screen and (max-width: 31.25em)
+{
+    #carousel-btn-prev
+    {
+        left: 1em;
+    }
+
+    .carousel .carousel__item
+    {
+        max-width: 70%;
+    }
+
+    #carousel-btn-next
+    {
+        right: 1em;
+    }
+
+    #enable-sound
+    {
+        text-align: center;
+        font-size: 0.8em;
+    }
+}
