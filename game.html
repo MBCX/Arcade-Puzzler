@@ -14,26 +14,26 @@
         <title>Arcade Puzzle - Main</title>
 
         <!-- Page icons. -->
-        <link rel="shortcut icon" href="assets/icons/game-icon.ico" type="image/x-icon">
-        <link rel="icon" href="assets/icons/game-icon-16.png" sizes="16x16">
-        <link rel="icon" href="assets/icons/game-icon-32.png" sizes="32x32">
-        <link rel="icon" href="assets/icons/game-icon-48.png" sizes="48x48">
-        <link rel="icon" href="assets/icons/game-icon-96.png" sizes="96x96">
-        <link rel="icon" href="assets/icons/game-icon-144.png" sizes="144x144">
-        <link rel="icon" href="assets/icons/game-icon-512.png" sizes="512x512">
-        <link rel="apple-touch-icon" href="assets/icons/game-icon-180.png" sizes="180x180">
+        <link rel="shortcut icon" href="./assets/icons/game-icon.ico" type="image/x-icon">
+        <link rel="icon" href="./assets/icons/game-icon-16.png" sizes="16x16">
+        <link rel="icon" href="./assets/icons/game-icon-32.png" sizes="32x32">
+        <link rel="icon" href="./assets/icons/game-icon-48.png" sizes="48x48">
+        <link rel="icon" href="./assets/icons/game-icon-96.png" sizes="96x96">
+        <link rel="icon" href="./assets/icons/game-icon-144.png" sizes="144x144">
+        <link rel="icon" href="./assets/icons/game-icon-512.png" sizes="512x512">
+        <link rel="apple-touch-icon" href="./assets/icons/game-icon-180.png" sizes="180x180">
 
         <!-- Manifest. -->
-        <link rel="manifest" href="assets/manifest.webmanifest" crossorigin="use-credentials">
+        <link rel="manifest" href="./assets/manifest.webmanifest" crossorigin="use-credentials">
 
         <!-- CSS. -->
-        <link rel="stylesheet" href="CSS/game.css">
+        <link rel="stylesheet" href="./CSS/game.css">
 
         <!-- Twitter -->
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="Arcade Puzzle">
         <meta name="twitter:description" content="A 15 numbered puzzle minigame in honour of the original puzzle desk accessory design for the original Macintosh in 1983.">
-        <meta name="twitter:image" content="assets/icons/game-icon-144.png">
+        <meta name="twitter:image" content="./assets/icons/game-icon-144.png">
         <meta name="twitter:site" content="">
 
         <!-- OG types. -->
@@ -41,13 +41,13 @@
         <meta property="og:title" content="Arcade Puzzle">
         <meta property="og:description" content="A 15 numbered puzzle minigame in honour of the original puzzle desk accessory design for the original Macintosh in 1983.">
         <meta property="og:url" content="">
-        <meta property="og:image" content="assets/icons/game-icon-144.png">
+        <meta property="og:image" content="./assets/icons/game-icon-144.png">
         <meta property="og:locale" content="en_GB">
         
         <!-- Obselete Microsoft meta tags. -->
-        <link rel="msapplication-starturl" href="/index.html">
+        <link rel="msapplication-starturl" href="./index.html">
         <meta name="msapplication-TileColor" content="#9CBEF2">
-        <meta name="msapplication-TileImage" content="assets/icons/game-icon-144.png">
+        <meta name="msapplication-TileImage" content="./assets/icons/game-icon-144.png">
         <meta name="msapplication-tap-highlight" content="no">
 
         <!-- Apple tags. -->
@@ -57,12 +57,11 @@
         <meta name="HandheldFriendly" content="true">
 
         <!-- JS. -->
-        <script src="JS/worker_init.js" defer="defer"></script>
-        <!-- <script src="JS/main.js" type="module"></script> -->
+        <script src="./JS/main.js" type="module"></script>
     </head>
     <body>
         <main id="swup" class="main-content">
-            <a href="/index.html" class="btn move-and-fade-left" id="back-to-main-menu" data-i18n-id="game__back_to_main_menu_button">
+            <a href="./index.html" class="btn move-and-fade-left" id="back-to-main-menu" data-i18n-id="game__back_to_main_menu_button">
                 <i class="material-icons" aria-hidden="true">arrow_back</i>
             </a>
             <div id="data-container" aria-hidden="true" class="move-and-fade-up">
@@ -84,8 +83,8 @@
                         <h2 class="carousel__title" data-i18n-id="game__start_dialogue_option_standard"></h2>
                         <i class="material-icons carousel__guide-icon">east</i>
                         <picture>
-                            <source media="(prefers-color-scheme: dark)" srcset="assets/images/game_configs/dark/config_standard_dark.PNG">
-                            <img src="assets/images/game_configs/config_standard.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard">
+                            <source media="(prefers-color-scheme: dark)" srcset="./assets/images/game_configs/dark/config_standard_dark.PNG">
+                            <img src="./assets/images/game_configs/config_standard.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard">
                         </picture>
                         <p class="carousel__desc" data-i18n-id="game__start_dialogue_option_standard_desc"></p>
                         <button id="config-standard" class="carousel__begin" data-i18n-id="game__start_dialogue_start_game"></button>
@@ -94,8 +93,8 @@
                         <h2 class="carousel__title" data-i18n-id="game__start_dialogue_option_vertical"></h2>
                         <i class="material-icons carousel__guide-icon">south</i>
                         <picture>
-                            <source media="(prefers-color-scheme: dark)" srcset="assets/images/game_configs/dark/config_vertical_dark.PNG">
-                            <img src="assets/images/game_configs/config_vertical.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical">
+                            <source media="(prefers-color-scheme: dark)" srcset="./assets/images/game_configs/dark/config_vertical_dark.PNG">
+                            <img src="./assets/images/game_configs/config_vertical.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical">
                         </picture>
                         <p class="carousel__desc" data-i18n-id="game__start_dialogue_option_vertical_desc"></p>
                         <button id="config-vertical" class="carousel__begin" data-i18n-id="game__start_dialogue_start_game"></button>
@@ -104,8 +103,8 @@
                         <h2 class="carousel__title" data-i18n-id="game__start_dialogue_option_standard_reverse"></h2>
                         <i class="material-icons carousel__guide-icon">west</i>
                         <picture>
-                            <source media="(prefers-color-scheme: dark)" srcset="assets/images/game_configs/dark/config_standard_reverse_dark.PNG">
-                            <img src="assets/images/game_configs/config_standard_reverse.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard_reverse">
+                            <source media="(prefers-color-scheme: dark)" srcset="./assets/images/game_configs/dark/config_standard_reverse_dark.PNG">
+                            <img src="./assets/images/game_configs/config_standard_reverse.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard_reverse">
                         </picture>
                         <p class="carousel__desc" data-i18n-id="game__start_dialogue_option_standard_reverse_desc">
                         </p>
@@ -116,8 +115,8 @@
                         <i class="material-icons carousel__guide-icon">south</i>
                         <i class="material-icons carousel__guide-icon">west</i>
                         <picture>
-                            <source media="(prefers-color-scheme: dark)" srcset="assets/images/game_configs/dark/config_vertical_reverse_dark.PNG">
-                            <img src="assets/images/game_configs/config_vertical_reverse.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical_reverse">
+                            <source media="(prefers-color-scheme: dark)" srcset="./assets/images/game_configs/dark/config_vertical_reverse_dark.PNG">
+                            <img src="./assets/images/game_configs/config_vertical_reverse.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical_reverse">
                         </picture>
                         <p class="carousel__desc" data-i18n-id="game__start_dialogue_option_vertical_reverse_desc"></p>
                         <button id="config-vertical-reverse" class="carousel__begin" data-i18n-id="game__start_dialogue_start_game"></button>
