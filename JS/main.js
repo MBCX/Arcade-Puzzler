@@ -112,7 +112,7 @@ function checkWinningCondition()
         
         window.setTimeout(() => {
             swup.loadPage({
-                url: "/results.html"
+                url: "./results.html"
             });
         }, 4000);
         player_won = true;
@@ -593,7 +593,7 @@ function handleGameExit(e)
             e.target.setAttribute("href", '#');
             return false;
         } else {
-            e.target.setAttribute("href", "/index.html");
+            e.target.setAttribute("href", "./index.html");
         }
     });
 }
@@ -707,12 +707,12 @@ function controlGameConfigDialogue()
 document.addEventListener("swup:pageView", function() {
     // Set light or dark mode.
     setDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
-    if ("/game.html" === window.location.pathname) {
+    if (window.location.pathname.includes("/game.html")) {
         controlGameConfigDialogue();
         document.querySelector("#back-to-main-menu").addEventListener("click", handleGameExit);
         document.documentElement.removeAttribute("is-main-page");
         document.documentElement.removeAttribute("results-page");
-    } else if ("/" === window.location.pathname || "/index.html" === window.location.pathname) {
+    } else if (window.location.pathname.includes('/') || window.location.pathname.includes("/index.html")) {
         window.cancelAnimationFrame(gameUpdateLoop);
         document.documentElement.removeAttribute("results-page");
         document.documentElement.setAttribute("is-main-page", '');
@@ -726,7 +726,7 @@ document.addEventListener("swup:pageView", function() {
             updatei18nAria(document.querySelector("#feedback_btn"), ARIA_TYPES.INSIDE_ELEMENT);
             addAgainEventListenerForMenuGroup();
         });
-    } else if ("/results.html" === window.location.pathname) {
+    } else if (window.location.pathname.includes("/results.html")) {
         window.cancelAnimationFrame(gameUpdateLoop);
         document.documentElement.setAttribute("results-page", '');
         setAndUpdatei18nString(false, time_amount, false, document.querySelector(".carousel__title"));
@@ -740,7 +740,7 @@ document.addEventListener("swup:pageView", function() {
 });
 
 document.addEventListener("swup:contentReplaced", function() {
-    if ("/" === window.location.pathname || "/index.html" === window.location.pathname) {
+    if (window.location.pathname.includes('/') || window.location.pathname.includes("/index.html")) {
         document.documentElement.setAttribute("is-main-page", '');
         window.cancelAnimationFrame(gameUpdateLoop);
         addAgainEventListenerForMenuGroup();
