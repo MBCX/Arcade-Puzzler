@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" results-page>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+        <meta name="description" content="A 15 numbered puzzle minigame in honour of the original puzzle desk accessory design for the original Macintosh in 1983.">
+        <meta name="keywords" content="videogame, arcade, old school">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="Arcade Puzzle">
+        <meta name="application-name" content="Arcade Puzzle">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#9CBEF2">
+        <meta name="battery-savings" content="allow-reduced-framerate">
+        <meta name="color-scheme" content="light dark">
+        <title>Arcade Puzzle - Main</title>
+
+        <!-- Page icons. -->
+        <link rel="shortcut icon" href="assets/icons/game-icon.ico" type="image/x-icon">
+        <link rel="icon" href="assets/icons/game-icon-16.png" sizes="16x16">
+        <link rel="icon" href="assets/icons/game-icon-32.png" sizes="32x32">
+        <link rel="icon" href="assets/icons/game-icon-48.png" sizes="48x48">
+        <link rel="icon" href="assets/icons/game-icon-96.png" sizes="96x96">
+        <link rel="icon" href="assets/icons/game-icon-144.png" sizes="144x144">
+        <link rel="icon" href="assets/icons/game-icon-512.png" sizes="512x512">
+        <link rel="apple-touch-icon" href="assets/icons/game-icon-180.png" sizes="180x180">
+
+        <!-- Manifest. -->
+        <link rel="manifest" href="assets/manifest.webmanifest" crossorigin="use-credentials">
+
+        <!-- CSS. -->
+        <link rel="stylesheet" href="CSS/game.css">
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="Arcade Puzzle">
+        <meta name="twitter:description" content="A 15 numbered puzzle minigame in honour of the original puzzle desk accessory design for the original Macintosh in 1983.">
+        <meta name="twitter:image" content="assets/icons/game-icon-144.png">
+        <meta name="twitter:site" content="">
+
+        <!-- OG types. -->
+        <meta property="og:type" content="website">
+        <meta property="og:title" content="Arcade Puzzle">
+        <meta property="og:description" content="A 15 numbered puzzle minigame in honour of the original puzzle desk accessory design for the original Macintosh in 1983.">
+        <meta property="og:url" content="">
+        <meta property="og:image" content="assets/icons/game-icon-144.png">
+        <meta property="og:locale" content="en_GB">
+        
+        <!-- Obselete Microsoft meta tags. -->
+        <link rel="msapplication-starturl" href="/index.html">
+        <meta name="msapplication-TileColor" content="#9CBEF2">
+        <meta name="msapplication-TileImage" content="assets/icons/game-icon-144.png">
+        <meta name="msapplication-tap-highlight" content="no">
+
+        <!-- Apple tags. -->
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-title" content="Arcade Puzzle">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#9CBEF2">
+        <meta name="HandheldFriendly" content="true">
+
+        <!-- JS. -->
+        <script src="JS/main.js" type="module"></script>
+        <!-- <script src="JS/worker_init.js" defer="defer"></script> -->
+    </head>
+    <body>
+        <main id="swup" class="main-content transition-move-and-fade-down">
+            <div id="config-dialogue" role="dialog">
+                <h1>Game results</h1>  
+                <div class="carousel" role="group">
+                    <div class="carousel__item selected">
+                        <h2 class="carousel__title" data-i18n-id="game__goto_results_total_time"></h2>
+                        <p class="carousel__desc" data-i18n-id="game__goto_results_total_moves"></p>
+                    </div>
+                </div>
+                <div class="btn-container">
+                    <a class="btn" href="/game.html" data-i18n-id="game__goto_results_play_again"></a>
+                    <a class="btn" href="/index.html" data-i18n-id="game__goto_results_back_to_main_menu"></a>
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

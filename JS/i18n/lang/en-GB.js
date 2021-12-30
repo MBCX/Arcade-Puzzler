@@ -1,6 +1,5 @@
 import { loadTimeData } from "../../utils/loadTimeData.js";
 loadTimeData.data = {
-    "test": "This is a test of localisation.",
     "game__sound_please_enable_desktop": "Please let us play sound by clicking anywhere or pressing any key.",
     "game__sound_please_enable_mobile": "Please tap anywhere in this screen to allow the game to play sound.",
     "game__time": "Time: $1",
@@ -11,6 +10,11 @@ loadTimeData.data = {
     "game__goto_origins": "Game origins",
     "game__goto_exit": "Exit game",
     "game__goto_feedback": "Give feedback",
+    "game__goto_main_menu_confirm": "Are you sure you want to exit the game and go back to the main menu?",
+    "game__goto_results_total_time": "Total time: $1",
+    "game__goto_results_total_moves": "Total moves: $1",
+    "game__goto_results_play_again": "Play again",
+    "game__goto_results_back_to_main_menu": "Back to main menu",
     "game__start_dialogue_title": "Pick a configuration",
     "game__start_dialogue_subtitle": "How do you want to organise the table?",
     "game__start_dialogue_option_standard": "Standard",

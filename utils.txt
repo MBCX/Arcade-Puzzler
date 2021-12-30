@@ -1,0 +1,22 @@
+
+// Organised number table from 1 to 15.
+for (let i = 0; MAX_AMOUNT_ITEMS_GRID > i; ++i) {
+    const new_li = document.createElement("li");
+    const new_btn = document.createElement("button");
+    new_li.setAttribute("btn-pos", i);
+    number_container.append(new_li);
+    new_li.append(new_btn);
+    new_btn.innerText = i + 1;
+    new_btn.addEventListener("click", handleButtonMovement);
+    new_li.animate([{
+        transform: "translateY(100%)",
+        opacity: 0,
+    }, {
+        transform: "translateY(0)",
+        opacity: 1,
+    }, ], {
+        duration: 500,
+        easing: "ease",
+        fill: "forwards",
+    });
+}

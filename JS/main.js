@@ -45,6 +45,7 @@ let a11y_btn_say_delay;
 let blank_btn_at_grid;
 let config_dialogue_selected_config = 0;
 let player_won;
+let time_amount;
 
 // Used for moving with the arrow or
 // W or S in the main menu buttons.
@@ -109,7 +110,9 @@ function checkWinningCondition()
         playSound(AUDIO_TYPES.FX.WIN);
         
         window.setTimeout(() => {
-            window.location.assign("../results.html");
+            swup.loadPage({
+                url: "/results.html"
+            });
         }, 4000);
         player_won = true;
     }
@@ -133,6 +136,7 @@ function reset() {
     a11y_btn_say_delay = 0;
     blank_btn_at_grid = GRID_POSITION.LAST_ROW_COLUMN;
     player_won = false;
+    time_amount = '';
 
     if (document.querySelector("#number-container")) {
         // Allow keyboard play and navigation of grid.
@@ -403,34 +407,13 @@ function gameUpdateLoop(time) {
             setAndUpdatei18nString(true, "a11y__generating_grid_numbers");
             let li_slot = roll_dice(1, 15);
 
-            // if (!list_of_grid_numbers.includes(li_slot)) {
-            //     const new_li = document.createElement("li");
-            //     const new_btn = document.createElement("button");
-            //     new_li.setAttribute("btn-pos", li_slot - 1);
-            //     number_container.append(new_li);
-            //     new_li.append(new_btn);
-            //     new_btn.innerText = li_slot;
-            //     new_btn.addEventListener("click", handleButtonMovement);
-            //     new_li.animate([{
-            //         transform: "translateY(100%)",
-            //         opacity: 0,
-            //     }, {
-            //         transform: "translateY(0)",
-            //         opacity: 1,
-            //     }, ], {
-            //         duration: 500,
-            //         easing: "ease",
-            //         fill: "forwards",
-            //     });
-            //     list_of_grid_numbers.push(li_slot);
-            // }
-            for (let i = 0; MAX_AMOUNT_ITEMS_GRID > i; ++i) {
+            if (!list_of_grid_numbers.includes(li_slot)) {
                 const new_li = document.createElement("li");
                 const new_btn = document.createElement("button");
-                new_li.setAttribute("btn-pos", i);
+                new_li.setAttribute("btn-pos", li_slot - 1);
                 number_container.append(new_li);
                 new_li.append(new_btn);
-                new_btn.innerText = i + 1;
+                new_btn.innerText = li_slot;
                 new_btn.addEventListener("click", handleButtonMovement);
                 new_li.animate([{
                     transform: "translateY(100%)",
@@ -443,6 +426,7 @@ function gameUpdateLoop(time) {
                     easing: "ease",
                     fill: "forwards",
                 });
+                list_of_grid_numbers.push(li_slot);
             }
         } else {
             can_play = true;
@@ -468,7 +452,6 @@ function gameUpdateLoop(time) {
     }
 
     if (!player_won && null != last_time_render) {
-        let time_amount = "";
         delta_time = time - last_time_render;
         time_amount = calculateTimeAmount(delta_time);
         generateGridButtons();
@@ -494,7 +477,6 @@ function gameUpdateLoop(time) {
 
 function moveBetweenMenuButtons(e) {
     const all_links = document.querySelectorAll(".link-group a");
-
     if (
         ("ArrowUp" === e.key || "W" === e.key || "w" === e.key) ||
         ("ArrowLeft" === e.key || "A" === e.key || "a" === e.key)
@@ -502,10 +484,12 @@ function moveBetweenMenuButtons(e) {
         menu_button_index--;
     } else if (
         ("ArrowDown" === e.key || "S" === e.key || "s" === e.key) ||
-        ("ArrowRight" === e.key || "D" === e.key || "d" === e.key)
+        ("ArrowRight" === e.key || "D" === e.key || "d" === e.key) ||
+        ("Tab" === e.key)
     ) {
         menu_button_index++;
     }
+    playSound(AUDIO_TYPES.FX.SELECTING);
     menu_button_index = wrap(menu_button_index, 0, all_links.length);
     all_links[menu_button_index].focus();
 }
@@ -582,15 +566,35 @@ function initMainMenu()
             updatei18nAria(document.querySelector("#exit_btn"), ARIA_TYPES.INSIDE_ELEMENT);
             updatei18nAria(document.querySelector("#feedback_btn"), ARIA_TYPES.INSIDE_ELEMENT);
             document.querySelector(".link-group").addEventListener("keydown", moveBetweenMenuButtons);
+            document.querySelector(".link-group").addEventListener("click", playEnterSound);
         }
-    });    
+    });
+}
+
+function playEnterSound()
+{
+    playSound(AUDIO_TYPES.FX.ENTER);
 }
 
 function addAgainEventListenerForMenuGroup()
 {
     menu_button_index = 0;
     document.querySelector(".link-group").removeEventListener("keydown", moveBetweenMenuButtons);
+    document.querySelector(".link-group").removeEventListener("click", playEnterSound);
     document.querySelector(".link-group").addEventListener("keydown", moveBetweenMenuButtons);
+    document.querySelector(".link-group").addEventListener("click", playEnterSound);
+}
+
+function handleGameExit(e)
+{
+    game_i18n_lang.then(() => {
+        if (false === window.confirm(i18nmanager.i18n("game__goto_main_menu_confirm"))) {
+            e.target.setAttribute("href", '#');
+            return false;
+        } else {
+            e.target.setAttribute("href", "/index.html");
+        }
+    });
 }
 
 function controlGameConfigDialogue()
@@ -618,8 +622,7 @@ function controlGameConfigDialogue()
             { opacity: 0, transform: "translateY(48px)" }
         ], {
             duration: 400,
-            easing: "ease",
-            fill: "forwards"
+            easing: "ease"
         }).addEventListener("finish", () => {
             dialogue_container.remove();
             document.querySelector("#swup").append(num_container);
@@ -676,6 +679,7 @@ function controlGameConfigDialogue()
         if (null != current_carousel.nextElementSibling && current_carousel.nextElementSibling.classList.contains("carousel__item")) {
             current_carousel.classList.remove("selected");
             current_carousel.nextElementSibling.classList.add("selected");
+            playSound(AUDIO_TYPES.FX.SELECTING);
         }
         config_dialogue_selected_config = clamp(config_dialogue_selected_config, 0, all_dialogues_amount);
     });
@@ -692,6 +696,7 @@ function controlGameConfigDialogue()
         if (null != current_carousel.previousElementSibling && current_carousel.previousElementSibling.classList.contains("carousel__item")) {
             current_carousel.classList.remove("selected");
             current_carousel.previousElementSibling.classList.add("selected");
+            playSound(AUDIO_TYPES.FX.SELECTING);
         }
         config_dialogue_selected_config = clamp(config_dialogue_selected_config, 0, all_dialogues_amount);
     });
@@ -703,10 +708,13 @@ document.addEventListener("swup:pageView", function() {
     setDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
     if ("/game.html" === window.location.pathname) {
         controlGameConfigDialogue();
-        // reset();
-        // window.requestAnimationFrame(gameUpdateLoop);
+        document.querySelector("#back-to-main-menu").addEventListener("click", handleGameExit);
+        document.documentElement.removeAttribute("is-main-page");
+        document.documentElement.removeAttribute("results-page");
     } else if ("/" === window.location.pathname || "/index.html" === window.location.pathname) {
         window.cancelAnimationFrame(gameUpdateLoop);
+        document.documentElement.removeAttribute("results-page");
+        document.documentElement.setAttribute("is-main-page", '');
         game_i18n_lang.then(()=>{
             updatei18nAria(document.querySelector("#game-title"), ARIA_TYPES.INSIDE_ELEMENT);
 
@@ -717,11 +725,22 @@ document.addEventListener("swup:pageView", function() {
             updatei18nAria(document.querySelector("#feedback_btn"), ARIA_TYPES.INSIDE_ELEMENT);
             addAgainEventListenerForMenuGroup();
         });
+    } else if ("/results.html" === window.location.pathname) {
+        window.cancelAnimationFrame(gameUpdateLoop);
+        document.documentElement.setAttribute("results-page", '');
+        setAndUpdatei18nString(false, time_amount, false, document.querySelector(".carousel__title"));
+        setAndUpdatei18nString(false, move_amount, false, document.querySelector(".carousel__desc"));
+        
+        document.querySelectorAll(".btn-container .btn").forEach((btn_link) => {
+            updatei18nAria(btn_link, ARIA_TYPES.INSIDE_ELEMENT);
+            btn_link.addEventListener("click", playEnterSound);
+        });
     }
 });
 
 document.addEventListener("swup:contentReplaced", function() {
     if ("/" === window.location.pathname || "/index.html" === window.location.pathname) {
+        document.documentElement.setAttribute("is-main-page", '');
         window.cancelAnimationFrame(gameUpdateLoop);
         addAgainEventListenerForMenuGroup();
     }
@@ -735,18 +754,25 @@ if (document.querySelector("#enable-sound")) {
             document.querySelector("#enable-sound").setAttribute("data-i18n-id", "game__sound_please_enable_mobile");
             document.addEventListener("click", enableSoundByClicking);
             updatei18nAria(document.querySelector("#enable-sound"), ARIA_TYPES.INSIDE_ELEMENT);
+            document.querySelector("#enable-sound").animate([
+                { opacity: 0, transform: "translateY(30px) " },
+                { opacity: 1, transform: "translateY(0px) " }
+            ], {
+                duration: 500,
+                easing: "ease"
+            });
             return;
         }
         updatei18nAria(document.querySelector("#enable-sound"), ARIA_TYPES.INSIDE_ELEMENT);
         document.addEventListener("click", enableSoundByClicking);
         document.addEventListener("keydown", enableSoundByClicking);
-    });
 
-    document.querySelector("#enable-sound").animate([
-        { opacity: 0, transform: "translateY(30px) " },
-        { opacity: 1, transform: "translateY(0px) " }
-    ], {
-        duration: 500,
-        easing: "ease"
+        document.querySelector("#enable-sound").animate([
+            { opacity: 0, transform: "translateY(30px) " },
+            { opacity: 1, transform: "translateY(0px) " }
+        ], {
+            duration: 500,
+            easing: "ease"
+        });
     });
 }

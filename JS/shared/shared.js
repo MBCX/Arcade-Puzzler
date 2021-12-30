@@ -17,7 +17,9 @@ export const AUDIO_TYPES = {
         BAD_MOVE_PIECE: "sn_bad_move_piece.wav",
         MOVE_IN_GRID: "sn_move_grid.wav",
         WIN: "sn_win.wav",
-        ENTER: "sn_enter_click.wav"
+        ENTER: "sn_enter_click.wav",
+        SELECTING: "sn_select.wav",
+        BACK_BUTTON: "sn_back_button_click.wav",
     },
     MUSIC: {
 
