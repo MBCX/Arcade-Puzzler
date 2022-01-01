@@ -580,10 +580,12 @@ function playEnterSound()
 function addAgainEventListenerForMenuGroup()
 {
     menu_button_index = 0;
-    document.querySelector(".link-group").removeEventListener("keydown", moveBetweenMenuButtons);
-    document.querySelector(".link-group").removeEventListener("click", playEnterSound);
-    document.querySelector(".link-group").addEventListener("keydown", moveBetweenMenuButtons);
-    document.querySelector(".link-group").addEventListener("click", playEnterSound);
+    if (null != document.querySelector(".link-group")) {
+        document.querySelector(".link-group").removeEventListener("keydown", moveBetweenMenuButtons);
+        document.querySelector(".link-group").removeEventListener("click", playEnterSound);
+        document.querySelector(".link-group").addEventListener("keydown", moveBetweenMenuButtons);
+        document.querySelector(".link-group").addEventListener("click", playEnterSound);
+    }
 }
 
 function handleGameExit(e)
