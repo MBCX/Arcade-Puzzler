@@ -78,7 +78,10 @@ export function roll_dice(roll_amount, sides)
 export function playSound(sound_type)
 {
     console.assert(sound_type !== '', "Must pick a audio type.");
-    const audio_file = new Audio(`../../assets/audio/${sound_type}`);
+    const full_url = window.location.href.split('/');
+    const audio_file = new Audio(
+        `${full_url[0]}//${full_url[2]}/${full_url[3]}/${full_url[4]}/${full_url[5]}/assets/audio/${sound_type}`
+    );
     audio_file.volume = 0.5;
 
     audio_file.play();
