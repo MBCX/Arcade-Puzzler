@@ -714,7 +714,7 @@ document.addEventListener("swup:pageView", function() {
         document.querySelector("#back-to-main-menu").addEventListener("click", handleGameExit);
         document.documentElement.removeAttribute("is-main-page");
         document.documentElement.removeAttribute("results-page");
-    } else if (window.location.pathname.includes('/') || window.location.pathname.includes("/index.html")) {
+    } else if (window.location.pathname.includes("/index.html")) {
         window.cancelAnimationFrame(gameUpdateLoop);
         document.documentElement.removeAttribute("results-page");
         document.documentElement.setAttribute("is-main-page", '');
