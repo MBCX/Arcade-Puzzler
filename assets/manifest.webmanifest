@@ -1,7 +1,7 @@
 {
     "name": "Arcade Puzzle",
     "short_name": "Arcade Puzzle",
-    "background_color": "#9CBEF2",
+    "background_color": "#5642F4",
     "display": "fullscreen",
     "start_url": "../index.html",
     "scope": "/",
@@ -38,10 +38,10 @@
             "purpose": "any maskable"
         }
     ],
-    "theme_color": "#9CBEF2",
+    "theme_color": "#5642F4",
     "related_applications": [],
     "capture_links": "none",
-    "description": "A 15 numbered puzzle minigame in honour of the original puzzle desk accessory design for the original Macintosh in 1983.",
+    "description": "A 15 numbered puzzle minigame in honour of the original puzzle desk accessory design for the original Macintosh from 1983.",
     "shortcuts": [
         {
             "name": "New game",

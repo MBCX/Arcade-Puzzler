@@ -106,15 +106,21 @@ button,
     transition: transform 300ms ease;
 }
 
-button:hover,
+button.can-animate-hover:hover,
 .btn:hover
 {
     transform: scale(1.1);
 }
 
-#number-container li button:hover
+.divider
 {
-    transform: scale(1.0);
+    position: relative;
+    margin-top: 0.25em;
+    margin-bottom: 1.25em;
+    border: none;
+    height: 2px;
+    border-radius: 100rem;
+    background-color: hsl(var(--game-board-text-colour));
 }
 
 /* Disable all animations. */

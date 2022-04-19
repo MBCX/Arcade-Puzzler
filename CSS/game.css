@@ -4,6 +4,7 @@
 @import url("./animations/animations.css");
 @import url("./icons/icons.css");
 @import url("./animations/page-transitions.css");
+@import url("./utils.css");
 
 body::before
 {
@@ -89,14 +90,15 @@ html[is-main-page] #intro-cutscene .animated-text-container .fire
     display: -webkit-flex;
     display: flex;
 
-    -webkit-gap: 5em;
-    gap: 5em;
+    -webkit-gap: 4rem;
+    gap: 4rem;
     
     z-index: 10;
 }
 
 #time-container,
-#turn-container
+#turn-container,
+#game-config-container
 {
     background-color: hsl(var(--game-board-background-colour));
     outline: 2px solid hsl(var(--game-board-text-colour));
@@ -184,8 +186,13 @@ li#blank
 .carousel .carousel__item
 {
     position: absolute;
-    max-width: 50%;
     display: none;
+    max-width: 50%;
+}
+
+.carousel__desc
+{
+    animation: generic_floatUp 500ms ease forwards;
 }
 
 .carousel .carousel__desc
@@ -200,7 +207,8 @@ li#blank
     animation: generic_fadein 300ms linear forwards;
 }
 
-.carousel__btn
+.carousel__btn-floaty,
+.carousel__info
 {
     position: absolute;
     background-color: hsl(var(--game-board-background-colour));
@@ -215,15 +223,25 @@ li#blank
     transition: opacity 250ms linear, transform 100ms ease;
 }
 
-.carousel__btn:active
+.carousel__btn-floaty:active
 {
     transform: scale(1.2);
 }
 
-.carousel__btn.last
+.carousel__btn-floaty.last
 {
     opacity: 0;
     cursor: default;
+}
+
+.carousel__info
+{
+    top: 2em;
+    right: 0;
+    background-color: transparent;
+    border: none;
+    color: currentColor;
+    filter: drop-shadow(1px 1px 3px #424242);
 }
 
 #carousel-btn-prev,
@@ -234,12 +252,12 @@ li#blank
 
 #carousel-btn-prev
 {
-    left: 8rem;
+    left: 1rem;
 }
 
 #carousel-btn-next
 {
-    right: 8rem;
+    right: 1rem;
 }
 
 .carousel__guide-icon
@@ -250,7 +268,7 @@ li#blank
     display: none;
 }
 
-.carousel__item button
+.carousel__btn
 {
     font-family: inherit;
     font-weight: bold;
@@ -263,7 +281,6 @@ li#blank
     cursor: pointer;
 }
 
-.carousel__item button:focus-visible,
 .carousel__btn:focus-visible
 {
     outline-offset: 0.35em;
@@ -290,6 +307,7 @@ li#blank
 #number-container.config-standard-reverse
 {
     transform: scaleX(-1);
+    animation: generic_fadein 500ms linear;
 }
 
 #number-container.config-standard-reverse li button
@@ -455,6 +473,76 @@ html[results-page] #config-dialogue .carousel
     transform: translateY(-5rem);
 }
 
+
+/* Options page. */
+html[options-page] input[type="checkbox"]
+{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    position: relative;
+
+    border: 2px solid hsl(var(--game-board-text-colour));
+    width: 1.5rem;
+    height: 1.5rem;
+    cursor: pointer;
+}
+
+html[options-page] input[type="checkbox"]:checked
+{
+    background-color: hsl(var(--game-board-text-colour));
+}
+
+html[options-page] input[type="checkbox"]:checked::after
+{
+    content: '§';
+    display: block;
+    text-align: -webkit-center;
+    text-align: center;
+    color: hsl(var(--game-board-background-colour));
+    margin-top: 1px;
+}
+
+html[options-page] #config-dialogue
+{
+    padding: 1.75rem;
+}
+
+html[options-page] #config-dialogue h1
+{
+    margin-bottom: 1em;
+}
+
+html[options-page] #config-dialogue h2:not(:first-child)
+{
+    margin-top: 2em;
+}
+
+html[options-page] #config-dialogue .options-group
+{
+    margin: 0;
+    width: 100%;
+    display: flex;
+    gap: 1em;
+    align-items: center;
+}
+
+html[options-page] #config-dialogue .options-group > *
+{
+    font-weight: bold;
+}
+
+html[options-page] #config-dialogue .options-group.align-start
+{
+    align-items: flex-start;
+}
+
+html[options-page] #config-dialogue .options-group.flex-col .value-wrapper
+{
+    display: flex;
+    gap: 1em;
+}
+
 /* Modification of game config dialogue. */
 @media only screen and (min-width: 100em) and (min-height: 40em)
 {
@@ -478,11 +566,12 @@ html[results-page] #config-dialogue .carousel
     }
 
     #carousel-btn-prev,
-    #carousel-btn-next
+    #carousel-btn-next,
+    .carousel__info
     {
         display: none;
     }
-
+    
     .carousel__guide-icon
     {
         display: block;
@@ -513,6 +602,17 @@ html[results-page] #config-dialogue .carousel
     #number-container li
     {
         width: min(18vw, var(--block-size))
+    }
+
+    #game-config-container
+    {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        text-align: -webkit-center;
+        text-align: -moz-center;
+        text-align: center;
     }
 
     #back-to-main-menu
@@ -554,5 +654,37 @@ html[results-page] #config-dialogue .carousel
     {
         text-align: center;
         font-size: 0.8em;
+    }
+}
+
+@media only screen and (max-width: 32em)
+{
+    .carousel__desc
+    {
+        display: none;
+    }
+}
+
+@media only screen and (min-width: 32em)
+{
+    .carousel__info
+    {
+        display: none;
+    }
+
+    .carousel__desc
+    {
+        display: block !important;
+    }
+}
+
+/* Firefox solutions. */
+@supports (-moz-animation: none)
+{
+    #number-container.config-vertical li button div,
+    #number-container.config-vertical-reverse li button div
+    {
+        pointer-events: none;
+        transform: rotate(-90deg);
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" is-main-page>
+<html lang="en" options-page>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
@@ -42,7 +42,7 @@
         <meta property="og:locale" content="en_GB">
         
         <!-- Obselete Microsoft meta tags. -->
-        <link rel="msapplication-starturl" href="/index.html">
+        <link rel="msapplication-starturl" href="/options.html">
         <meta name="msapplication-TileColor" content="#5642F4">
         <meta name="msapplication-TileImage" content="assets/icons/game-icon-144.png">
         <meta name="msapplication-tap-highlight" content="no">
@@ -59,49 +59,38 @@
         <script src="JS/main.js" type="module"></script>
     </head>
     <body>
-        <span id="enable-sound" data-i18n-id="game__sound_please_enable_desktop"></span>
-        <div id="intro-cutscene" aria-hidden="true">
-            <p class="for-screen-readers">Sunfly Studios</p>
-            <div class="animated-text-container" aria-hidden="true">
-                <div class="text-wrapper">
-                    <span>S</span>
-                    <span>u</span>
-                    <span>n</span>
-                    <span>f</span>
-                    <span>l</span>
-                    <span>y</span>
+        <main id="swup" class="main-content">
+            <div id="config-dialogue" role="dialog">
+                <h1 data-i18n-id="game__goto_options"></h1>
+                <div>
+                    <h2 class="text-align-left" data-i18n-id="game__options_title_gameplay"></h2>
+                    <hr class="divider">
+                    <div class="options-group">
+                        <input type="checkbox" id="check-moving-titles">
+                        <p class="carousel__desc" data-i18n-id="game__options_animate_tiles"></p>
+                    </div>
+                    <h2 class="text-align-left" data-i18n-id="game__options_title_colour_skins"></h2>
+                    <hr class="divider">
+                    <div class="options-group flex-col align-start">
+                        <div class="value-wrapper">
+                            <input type="checkbox" id="check-colour-light">
+                            <p class="carousel__desc" data-i18n-id="game__options_colour_scheme_light"></p>
+                        </div>
+                        <div class="value-wrapper">
+                            <input type="checkbox" id="check-colour-dark">
+                            <p class="carousel__desc" data-i18n-id="game__options_colour_scheme_dark"></p>
+                        </div>
+                        <div class="value-wrapper">
+                            <input type="checkbox" id="check-colour-retro">
+                            <p class="carousel__desc" data-i18n-id="game__options_colour_scheme_retro"></p>
+                        </div>
+                        <div class="value-wrapper">
+                            <input type="checkbox" id="check-colour-auto">
+                            <p class="carousel__desc" data-i18n-id="game__options_colour_scheme_auto"></p>
+                        </div>
+                    </div>
                 </div>
-                <div class="text-wrapper">
-                    <span>S</span>
-                    <span>t</span>
-                    <span>u</span>
-                    <span>d</span>
-                    <span>i</span>
-                    <span>o</span>
-                    <span>s</span>
-                </div>
-                <div class="fire"></div>
-            </div>
-        </div>
-        <main id="swup" class="main-content transition-move-and-fade-down">
-            <div id="title-group">
-                <ol id="title-mini-grid" aria-hidden="true">
-                    <li>1</li>
-                    <li>2</li>
-                    <li>3</li>
-                    <li>4</li>
-                    <li>5</li>
-                    <li>6</li>
-                    <li>7</li>
-                </ol>
-                <h1 id="game-title" data-i18n-id="game__title"></h1>
-            </div>
-            <div class="link-group" role="group">
-                <a id="game_btn" class="btn" data-i18n-id="game__goto_play" href="/game.html"></a>
-                <a id="options_btn" class="btn" data-i18n-id="game__goto_options" href="/options.html"></a>
-                <a id="feedback_btn" class="btn" data-i18n-id="game__goto_feedback" href="https://docs.google.com/forms/d/e/1FAIpQLSdiReg96NuVeabHgNfyDlkgw-bea-3mlOB7StAZCwUQVjRm3A/viewform?usp=sf_link" rel="noopener noreferrer"></a>
             </div>
         </main>
-        <div id="a11y-alert" class="for-screen-readers" aria-live="polite" role="alert"></div>
     </body>
 </html>

@@ -8,7 +8,7 @@
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-title" content="Arcade Puzzle">
         <meta name="application-name" content="Arcade Puzzle">
-        <meta name="apple-mobile-web-app-status-bar-style" content="#9CBEF2">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#5642F4">
         <meta name="battery-savings" content="allow-reduced-framerate">
         <meta name="color-scheme" content="light dark">
         <title>Arcade Puzzle - Main</title>
@@ -45,20 +45,20 @@
         <meta property="og:locale" content="en_GB">
         
         <!-- Obselete Microsoft meta tags. -->
-        <link rel="msapplication-starturl" href="/index.html">
-        <meta name="msapplication-TileColor" content="#9CBEF2">
+        <link rel="msapplication-starturl" href="/game.html">
+        <meta name="msapplication-TileColor" content="#5642F4">
         <meta name="msapplication-TileImage" content="assets/icons/game-icon-144.png">
         <meta name="msapplication-tap-highlight" content="no">
 
         <!-- Apple tags. -->
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-title" content="Arcade Puzzle">
-        <meta name="apple-mobile-web-app-status-bar-style" content="#9CBEF2">
+        <meta name="apple-mobile-web-app-status-bar-style" content="#5642F4">
         <meta name="HandheldFriendly" content="true">
 
         <!-- JS. -->
-        <script src="JS/worker_init.js" defer="defer"></script>
-        <!-- <script src="JS/main.js" type="module"></script> -->
+        <!-- <script src="JS/worker_init.js" defer="defer"></script> -->
+        <script src="JS/main.js" type="module"></script>
     </head>
     <body>
         <main id="swup" class="main-content">
@@ -72,58 +72,68 @@
                 <div id="turn-container">
                     <span data-i18n-id="game__moves"></span>
                 </div>
+                <div id="game-config-container">
+                    <span data-i18n-id="game__config_mode"></span>
+                </div>
             </div>
             <div id="config-dialogue" role="dialog" class="transition-move-and-fade-down">
                 <h1 data-i18n-id="game__start_dialogue_title"></h1>
                 <p data-i18n-id="game__start_dialogue_subtitle"></p>
-                <button class="carousel__btn last" id="carousel-btn-prev" data-i18n-id="game__start_dialgoue_prev_config_btn">
+                <button class="carousel__btn-floaty last" id="carousel-btn-prev" data-i18n-id="game__start_dialgoue_prev_config_btn">
                     <i class="material-icons" aria-hidden="true">chevron_left</i>
                 </button>
                 <div class="carousel" role="group">
                     <div class="carousel__item selected">
-                        <h2 class="carousel__title" data-i18n-id="game__start_dialogue_option_standard"></h2>
-                        <i class="material-icons carousel__guide-icon">east</i>
+                        <h2 class="carousel__title" data-i18n-id="game__config_mode_standard"></h2>
+                        <button class="carousel__btn-floaty carousel__info">
+                            <i class="material-icons">info_outline</i>
+                        </button>
                         <picture>
                             <source media="(prefers-color-scheme: dark)" srcset="assets/images/game_configs/dark/config_standard_dark.PNG">
-                            <img src="assets/images/game_configs/config_standard.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard">
+                            <img src="assets/images/game_configs/config_standard.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard" class="img-mode-standard">
                         </picture>
                         <p class="carousel__desc" data-i18n-id="game__start_dialogue_option_standard_desc"></p>
-                        <button id="config-standard" class="carousel__begin" data-i18n-id="game__start_dialogue_start_game"></button>
+                        <button id="config-standard" class="carousel__begin carousel__btn can-animate-hover" data-i18n-id="game__start_dialogue_start_game"></button>
                     </div>
                     <div class="carousel__item">
-                        <h2 class="carousel__title" data-i18n-id="game__start_dialogue_option_vertical"></h2>
-                        <i class="material-icons carousel__guide-icon">south</i>
+                        <h2 class="carousel__title" data-i18n-id="game__config_mode_vertical"></h2>
+                        <button class="carousel__btn-floaty carousel__info">
+                            <i class="material-icons">info_outline</i>
+                        </button>
                         <picture>
                             <source media="(prefers-color-scheme: dark)" srcset="assets/images/game_configs/dark/config_vertical_dark.PNG">
-                            <img src="assets/images/game_configs/config_vertical.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical">
+                            <img src="assets/images/game_configs/config_vertical.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical" class="img-mode-vertical">
                         </picture>
                         <p class="carousel__desc" data-i18n-id="game__start_dialogue_option_vertical_desc"></p>
-                        <button id="config-vertical" class="carousel__begin" data-i18n-id="game__start_dialogue_start_game"></button>
+                        <button id="config-vertical" class="carousel__begin carousel__btn can-animate-hover" data-i18n-id="game__start_dialogue_start_game"></button>
                     </div>
                     <div class="carousel__item">
-                        <h2 class="carousel__title" data-i18n-id="game__start_dialogue_option_standard_reverse"></h2>
-                        <i class="material-icons carousel__guide-icon">west</i>
+                        <h2 class="carousel__title" data-i18n-id="game__config_mode_standard_reversed"></h2>
+                        <button class="carousel__btn-floaty carousel__info">
+                            <i class="material-icons">info_outline</i>
+                        </button>
                         <picture>
                             <source media="(prefers-color-scheme: dark)" srcset="assets/images/game_configs/dark/config_standard_reverse_dark.PNG">
-                            <img src="assets/images/game_configs/config_standard_reverse.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard_reverse">
+                            <img src="assets/images/game_configs/config_standard_reverse.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard_reverse" class="img-mode-standard-reversed">
                         </picture>
                         <p class="carousel__desc" data-i18n-id="game__start_dialogue_option_standard_reverse_desc">
                         </p>
-                        <button id="config-standard-reverse" class="carousel__begin" data-i18n-id="game__start_dialogue_start_game"></button>
+                        <button id="config-standard-reverse" class="carousel__begin carousel__btn can-animate-hover" data-i18n-id="game__start_dialogue_start_game"></button>
                     </div>
                     <div class="carousel__item">
-                        <h2 class="carousel__title" data-i18n-id="game__start_dialogue_option_vertical_reverse"></h2>
-                        <i class="material-icons carousel__guide-icon">south</i>
-                        <i class="material-icons carousel__guide-icon">west</i>
+                        <h2 class="carousel__title" data-i18n-id="game__config_mode_vertical_reversed"></h2>
+                        <button class="carousel__btn-floaty carousel__info">
+                            <i class="material-icons">info_outline</i>
+                        </button>
                         <picture>
                             <source media="(prefers-color-scheme: dark)" srcset="assets/images/game_configs/dark/config_vertical_reverse_dark.PNG">
-                            <img src="assets/images/game_configs/config_vertical_reverse.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical_reverse">
+                            <img src="assets/images/game_configs/config_vertical_reverse.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical_reverse" class="img-mode-vertical-reversed">
                         </picture>
                         <p class="carousel__desc" data-i18n-id="game__start_dialogue_option_vertical_reverse_desc"></p>
-                        <button id="config-vertical-reverse" class="carousel__begin" data-i18n-id="game__start_dialogue_start_game"></button>
+                        <button id="config-vertical-reverse" class="carousel__begin carousel__btn can-animate-hover" data-i18n-id="game__start_dialogue_start_game"></button>
                     </div>
                 </div>
-                <button class="carousel__btn" id="carousel-btn-next" data-i18n-id="game__start_dialgoue_next_config_btn">
+                <button class="carousel__btn-floaty" id="carousel-btn-next" data-i18n-id="game__start_dialgoue_next_config_btn">
                     <i class="material-icons" aria-hidden="true">chevron_right</i>
                 </button>
             </div>
