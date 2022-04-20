@@ -5,7 +5,17 @@ export const BROWSER_STRINGS = {
     FIREFOX: "Firefox",
     SAFARI: "Safari",
     SAFARI_MOBILE: "Safari Mobile",
-    IE: "Internet Explorer"
+    IE: "Internet Explorer",
+};
+export const COLOUR_THEMES = {
+    LIGHT: "light",
+    DARK: "dark",
+    RETRO: "retro",
+    AUTO: "automatic",
+};
+export const GAME_KEYS = {
+    THEME: "game-theme",
+    BLOCKS_ANIMATE: "animate-blocks",
 };
 
 export function clamp(value, min, max) {
@@ -43,23 +53,65 @@ export function setGameLanguageBasedOn(lang) {
     }
 }
 
-export function setDarkMode(enable) {
-    document.documentElement.classList.toggle("dark-mode", enable);
+export function setGameTheme(themeKey) {
+    switch (themeKey) {
+        case undefined:
+        case null:
+        case COLOUR_THEMES.AUTO:
+            setLocalStorageItem(GAME_KEYS.THEME, COLOUR_THEMES.AUTO);
+            document.documentElement.setAttribute(
+                "data-theme",
+                window.matchMedia("(prefers-color-scheme: dark)").matches
+                    ? COLOUR_THEMES.DARK
+                    : COLOUR_THEMES.LIGHT
+            );
+            break;
+        case COLOUR_THEMES.DARK:
+            setLocalStorageItem(GAME_KEYS.THEME, COLOUR_THEMES.DARK);
+            document.documentElement.setAttribute(
+                "data-theme",
+                COLOUR_THEMES.DARK
+            );
+            break;
+        case COLOUR_THEMES.LIGHT:
+            setLocalStorageItem(GAME_KEYS.THEME, COLOUR_THEMES.LIGHT);
+            document.documentElement.setAttribute(
+                "data-theme",
+                COLOUR_THEMES.LIGHT
+            );
+            break;
+        case COLOUR_THEMES.RETRO:
+            setLocalStorageItem(GAME_KEYS.THEME, COLOUR_THEMES.RETRO);
+            document.documentElement.setAttribute(
+                "data-theme",
+                COLOUR_THEMES.RETRO
+            );
+            break;
+    }
 }
 
-export function setLocalStorageItem(key, value)
-{
+export function setGameCubesAnimated(key) {
+    switch (key) {
+        case undefined:
+        case null:
+            setLocalStorageItem(GAME_KEYS.BLOCKS_ANIMATE, "true");
+            break;
+        case "false":
+            setLocalStorageItem(GAME_KEYS.BLOCKS_ANIMATE, "false");
+            break;
+    }
+}
+
+export function setLocalStorageItem(key, value) {
     window.localStorage.setItem(key, value);
 }
 
-export function removeLocalStorageKey(key)
-{
+export function removeLocalStorageKey(key) {
     window.localStorage.removeItem(key);
 }
 
-export function getLocalStorageKey(key)
-{
-    window.localStorage.getItem(key);
+export function getLocalStorageKey(key) {
+    return window.localStorage.getItem(key);
 }
 
 export function updateA11yAlert(text, force_reset) {
@@ -93,16 +145,32 @@ export function roll_dice(roll_amount, sides) {
 }
 
 export function playSound(sound_type, volume = 0.5) {
-    if (sound_type.includes("wav")) {
-        MASTER_AUDIO.src = `../../assets/audio/${sound_type}`;
-    } else {
-        MASTER_AUDIO.src = `../../assets/audio/${sound_type}.wav`;
-    }
-    MASTER_AUDIO.volume = volume;
-
-    MASTER_AUDIO.play().then(() => {
-        return Promise.resolve();
+    return new Promise((resolve, reject) => {
+        if (sound_type.includes("wav")) {
+            MASTER_AUDIO.src = `../../assets/audio/${sound_type}`;
+        } else {
+            MASTER_AUDIO.src = `../../assets/audio/${sound_type}.wav`;
+        }
+        MASTER_AUDIO.volume = volume;
+        MASTER_AUDIO.play()
+            .then(() => {
+                resolve(true);
+            })
+            .catch((err) => {
+                reject(err);
+            });
     });
+}
+
+export function stopAllAudio() {
+    MASTER_AUDIO.pause();
+    MASTER_AUDIO.currentTime = 0;
+}
+
+export function isAudioPlaying(audio) {
+    const time_curr = audio.currentTime;
+    const time_dur = audio.duration;
+    return 0 < time_curr && time_curr != time_dur;
 }
 
 export function detectBrowser() {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
@@ -88,10 +88,11 @@
                         <button class="carousel__btn-floaty carousel__info">
                             <i class="material-icons">info_outline</i>
                         </button>
-                        <picture>
-                            <source media="(prefers-color-scheme: dark)" srcset="assets/images/game_configs/dark/config_standard_dark.PNG">
-                            <img src="assets/images/game_configs/config_standard.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard" class="img-mode-standard">
-                        </picture>
+                        <div class="img-group">
+                            <img src="assets/images/game_configs/retro/config_standard.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard" class="img-mode-standard retro-img">
+                            <img src="assets/images/game_configs/dark/config_standard_dark.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard" class="img-mode-standard dark-img">
+                            <img src="assets/images/game_configs/config_standard.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard" class="img-mode-standard light-img">
+                        </div>
                         <p class="carousel__desc" data-i18n-id="game__start_dialogue_option_standard_desc"></p>
                         <button id="config-standard" class="carousel__begin carousel__btn can-animate-hover" data-i18n-id="game__start_dialogue_start_game"></button>
                     </div>
@@ -100,10 +101,11 @@
                         <button class="carousel__btn-floaty carousel__info">
                             <i class="material-icons">info_outline</i>
                         </button>
-                        <picture>
-                            <source media="(prefers-color-scheme: dark)" srcset="assets/images/game_configs/dark/config_vertical_dark.PNG">
-                            <img src="assets/images/game_configs/config_vertical.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical" class="img-mode-vertical">
-                        </picture>
+                        <div class="img-group">
+                            <img src="assets/images/game_configs/retro/config_vertical.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical" class="img-mode-vertical retro-img">
+                            <img src="assets/images/game_configs/dark/config_vertical_dark.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical" class="img-mode-vertical dark-img">
+                            <img src="assets/images/game_configs/config_vertical.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical" class="img-mode-vertical light-img">
+                        </div>
                         <p class="carousel__desc" data-i18n-id="game__start_dialogue_option_vertical_desc"></p>
                         <button id="config-vertical" class="carousel__begin carousel__btn can-animate-hover" data-i18n-id="game__start_dialogue_start_game"></button>
                     </div>
@@ -112,10 +114,11 @@
                         <button class="carousel__btn-floaty carousel__info">
                             <i class="material-icons">info_outline</i>
                         </button>
-                        <picture>
-                            <source media="(prefers-color-scheme: dark)" srcset="assets/images/game_configs/dark/config_standard_reverse_dark.PNG">
-                            <img src="assets/images/game_configs/config_standard_reverse.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard_reverse" class="img-mode-standard-reversed">
-                        </picture>
+                        <div class="img-group">
+                            <img src="assets/images/game_configs/retro/config_standard_reverse.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard_reverse" class="img-mode-standard-reversed retro-img">
+                            <img src="assets/images/game_configs/dark/config_standard_reverse_dark.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard_reverse" class="img-mode-standard-reversed dark-img">
+                            <img src="assets/images/game_configs/config_standard_reverse.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_standard_reverse" class="img-mode-standard-reversed light-img">
+                        </div>
                         <p class="carousel__desc" data-i18n-id="game__start_dialogue_option_standard_reverse_desc">
                         </p>
                         <button id="config-standard-reverse" class="carousel__begin carousel__btn can-animate-hover" data-i18n-id="game__start_dialogue_start_game"></button>
@@ -125,10 +128,11 @@
                         <button class="carousel__btn-floaty carousel__info">
                             <i class="material-icons">info_outline</i>
                         </button>
-                        <picture>
-                            <source media="(prefers-color-scheme: dark)" srcset="assets/images/game_configs/dark/config_vertical_reverse_dark.PNG">
-                            <img src="assets/images/game_configs/config_vertical_reverse.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical_reverse" class="img-mode-vertical-reversed">
-                        </picture>
+                        <div class="img-group">
+                            <img src="assets/images/game_configs/retro/config_vertical_reverse.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical_reverse" class="img-mode-vertical-reversed retro-img">
+                            <img src="assets/images/game_configs/dark/config_vertical_reverse_dark.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical_reverse" class="img-mode-vertical-reversed dark-img">
+                            <img src="assets/images/game_configs/config_vertical_reverse.PNG" data-i18n-id="a11y__start_dialogue_alt_picture_vertical_reverse" class="img-mode-vertical-reversed light-img">
+                        </div>
                         <p class="carousel__desc" data-i18n-id="game__start_dialogue_option_vertical_reverse_desc"></p>
                         <button id="config-vertical-reverse" class="carousel__begin carousel__btn can-animate-hover" data-i18n-id="game__start_dialogue_start_game"></button>
                     </div>
@@ -137,7 +141,7 @@
                     <i class="material-icons" aria-hidden="true">chevron_right</i>
                 </button>
             </div>
+            <div id="a11y-alert" class="for-screen-readers" aria-live="polite" role="alert"></div>
         </main>
-        <div id="a11y-alert" class="for-screen-readers" aria-live="polite" role="alert"></div>
     </body>
 </html>

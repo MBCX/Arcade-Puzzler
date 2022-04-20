@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" options-page>
+<html lang="en" options-page data-theme="light">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
@@ -8,7 +8,7 @@
         <meta name="color-scheme" content="light dark">
         <meta name="application-name" content="Arcade Puzzle">
         <meta name="battery-savings" content="allow-reduced-framerate">
-        <title>Arcade Puzzle - Main</title>
+        <title>Arcade Puzzle - Options</title>
         
         <!-- Page icons. -->
         <link rel="shortcut icon" href="assets/icons/game-icon.ico" type="image/x-icon">
@@ -60,7 +60,10 @@
     </head>
     <body>
         <main id="swup" class="main-content">
-            <div id="config-dialogue" role="dialog">
+            <a href="/index.html" class="btn move-and-fade-left" id="back-to-main-menu" data-i18n-id="game__back_to_main_menu_button">
+                <i class="material-icons" aria-hidden="true">arrow_back</i>
+            </a>
+            <div id="config-dialogue" role="dialog" class="transition-move-and-fade-down">
                 <h1 data-i18n-id="game__goto_options"></h1>
                 <div>
                     <h2 class="text-align-left" data-i18n-id="game__options_title_gameplay"></h2>
@@ -73,20 +76,20 @@
                     <hr class="divider">
                     <div class="options-group flex-col align-start">
                         <div class="value-wrapper">
-                            <input type="checkbox" id="check-colour-light">
-                            <p class="carousel__desc" data-i18n-id="game__options_colour_scheme_light"></p>
+                            <input type="radio" id="check-colour-light" name="colour-theme-mode">
+                            <label for="check-colour-light" class="carousel__desc" data-i18n-id="game__options_colour_scheme_light"></label>
                         </div>
                         <div class="value-wrapper">
-                            <input type="checkbox" id="check-colour-dark">
-                            <p class="carousel__desc" data-i18n-id="game__options_colour_scheme_dark"></p>
+                            <input type="radio" id="check-colour-dark" name="colour-theme-mode">
+                            <label for="check-colour-dark" class="carousel__desc" data-i18n-id="game__options_colour_scheme_dark"></label>
                         </div>
                         <div class="value-wrapper">
-                            <input type="checkbox" id="check-colour-retro">
-                            <p class="carousel__desc" data-i18n-id="game__options_colour_scheme_retro"></p>
+                            <input type="radio" id="check-colour-retro" name="colour-theme-mode">
+                            <label for="check-colour-retro" class="carousel__desc" data-i18n-id="game__options_colour_scheme_retro"></label>
                         </div>
                         <div class="value-wrapper">
-                            <input type="checkbox" id="check-colour-auto">
-                            <p class="carousel__desc" data-i18n-id="game__options_colour_scheme_auto"></p>
+                            <input type="radio" id="check-colour-auto" name="colour-theme-mode" checked>
+                            <label for="check-colour-auto" class="carousel__desc" data-i18n-id="game__options_colour_scheme_auto"></label>
                         </div>
                     </div>
                 </div>

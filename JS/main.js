@@ -4,12 +4,18 @@ import "../assets/libraries/swup/plugins/SwupDebugPlugin.min.js";
 import {
     wrap,
     clamp,
-    setDarkMode,
+    setGameTheme,
     setGameLanguageBasedOn,
     roll_dice,
     playSound,
     detectBrowser,
     BROWSER_STRINGS,
+    getLocalStorageKey,
+    GAME_KEYS,
+    COLOUR_THEMES,
+    setLocalStorageItem,
+    stopAllAudio,
+    setGameCubesAnimated,
 } from "./utils/utils.js";
 import { setAndUpdatei18nString, updatei18nAria } from "./i18n/i18nManager.js";
 import {
@@ -18,7 +24,6 @@ import {
     game_i18n_lang,
     i18nmanager,
 } from "./shared/shared.js";
-import i18nManager from "./i18n/i18nClass.js";
 
 const GRID_POSITION = {
     FIRST_ROW_COLUMN: 0,
@@ -63,6 +68,7 @@ let player_won;
 let time_amount;
 let current_config_mode;
 let current_column = 0;
+let started_playing = false;
 
 // Used for moving with the arrow or
 // W or S in the main menu buttons.
@@ -86,8 +92,13 @@ function getCurrentGameConfig(mode) {
     }
 }
 
-function enableOrDisableDarkMode() {
-    setDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
+function initGameSettings() {
+    setGameTheme(getLocalStorageKey(GAME_KEYS.THEME));
+    setGameCubesAnimated(getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE));
+}
+
+function getGameTheme() {
+    setGameTheme(getLocalStorageKey(GAME_KEYS.THEME));
 }
 
 function checkWinningCondition() {
@@ -100,7 +111,7 @@ function checkWinningCondition() {
             number_container_lis[i].getAttribute("btn-pos")
         );
         if (li_pos_value !== i) {
-            return;
+            return false;
         }
     }
 
@@ -145,6 +156,7 @@ function checkWinningCondition() {
                 }
             );
         });
+        stopAllAudio();
         playSound(AUDIO_TYPES.FX.WIN);
 
         window.setTimeout(() => {
@@ -153,6 +165,7 @@ function checkWinningCondition() {
             });
         }, 4000);
         player_won = true;
+        return true;
     }
 }
 
@@ -175,6 +188,7 @@ function reset() {
     blank_btn_at_grid = GRID_POSITION.LAST_ROW_COLUMN;
     player_won = false;
     time_amount = "";
+    started_playing = false;
 
     if (document.querySelector("#number-container")) {
         // Allow keyboard play and navigation of grid.
@@ -210,14 +224,12 @@ function correctCurrentIndexGrid(type) {
                 current_index + 4
             );
             current_index = current_index + 4;
-            console.log(element_down_blank_btn);
             break;
         case "up":
             const element_up_blank_btn = number_container.children.item(
                 current_index - 4
             );
             current_index = current_index - 4;
-            console.log(element_up_blank_btn);
             break;
         // case "up":
         //     if (
@@ -268,10 +280,12 @@ function handleGridKeyboardMovement(e) {
             current_column++;
             playSound(AUDIO_TYPES.FX.MOVE_IN_GRID);
         } else if ("ArrowUp" === e.key || "W" === e.key || "w" === e.key) {
-            correctCurrentIndexGrid("up");
+            // correctCurrentIndexGrid("up");
+            current_index = current_index - 4;
             playSound(AUDIO_TYPES.FX.MOVE_IN_GRID);
         } else if ("ArrowDown" === e.key || "S" === e.key || "s" === e.key) {
-            correctCurrentIndexGrid("down");
+            // correctCurrentIndexGrid("down");
+            current_index = current_index + 4;
             playSound(AUDIO_TYPES.FX.MOVE_IN_GRID);
         }
         current_index = clamp(current_index, 0, buttons.length - 1);
@@ -447,21 +461,28 @@ function tellA11yWichButtonToMove() {
 }
 
 function gameUpdateLoop(time) {
-    // Set light or dark mode.
-    enableOrDisableDarkMode();
+    function removeAnimation(target, name) {
+        if ("" != name) {
+            target.classList.remove(name);
+        }
+        target.removeEventListener("animationend", removeAnimation.bind(this));
+    }
 
     function handleButtonMovement(e) {
-        checkWinningCondition();
-
-        function removeAnimation(target) {
-            target.classList.remove("animation_button_wrong");
-        }
-
         if (can_play) {
             const li_target = e.target.offsetParent;
+            let block_animation_name = "";
 
             // Left and right movement.
             if (checkIfWeCanMove(MOVE_RQST.LEFT, li_target)) {
+                if (
+                    current_config_mode === CONFIG_MODE.VERTICAL_REVERSE ||
+                    current_config_mode === CONFIG_MODE.VERTICAL
+                ) {
+                    block_animation_name = "block-animate-down";
+                } else {
+                    block_animation_name = "block-animate-right";
+                }
                 li_target.before(blank_btn);
                 move_amount++;
                 current_column++;
@@ -469,10 +490,28 @@ function gameUpdateLoop(time) {
                 setAndUpdatei18nString(true, {
                     a11y__button_moved_right: e.target.innerText,
                 });
-                playSound(AUDIO_TYPES.FX.MOVE_PIECE);
                 blank_btn_at_grid -= 1;
-                checkWinningCondition();
+                const has_won = checkWinningCondition();
+
+                if (has_won === false) {
+                    if (
+                        getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE) === "true"
+                    ) {
+                        li_target.classList.add(block_animation_name);
+                        playSound(AUDIO_TYPES.FX.MOVE_PIECE);
+                    } else {
+                        playSound(AUDIO_TYPES.FX.MOVE_PIECE_INSTANT);
+                    }
+                }
             } else if (checkIfWeCanMove(MOVE_RQST.RIGHT, li_target)) {
+                if (
+                    current_config_mode === CONFIG_MODE.VERTICAL_REVERSE ||
+                    current_config_mode === CONFIG_MODE.VERTICAL
+                ) {
+                    block_animation_name = "block-animate-up";
+                } else {
+                    block_animation_name = "block-animate-left";
+                }
                 li_target.after(blank_btn);
                 move_amount++;
                 current_column--;
@@ -480,11 +519,29 @@ function gameUpdateLoop(time) {
                     a11y__button_moved_left: e.target.innerText,
                 });
                 a11y_btn_say_delay = A11Y_DELAY_BETWEEN_BTN_NUMBERS;
-                playSound(AUDIO_TYPES.FX.MOVE_PIECE);
                 blank_btn_at_grid += 1;
-                checkWinningCondition();
+                const has_won = checkWinningCondition();
+
+                if (has_won === false) {
+                    if (
+                        getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE) === "true"
+                    ) {
+                        li_target.classList.add(block_animation_name);
+                        playSound(AUDIO_TYPES.FX.MOVE_PIECE);
+                    } else {
+                        playSound(AUDIO_TYPES.FX.MOVE_PIECE_INSTANT);
+                    }
+                }
             } else if (checkIfWeCanMove(MOVE_RQST.UP, li_target)) {
                 // Up and down movement.
+                if (
+                    current_config_mode === CONFIG_MODE.VERTICAL_REVERSE ||
+                    current_config_mode === CONFIG_MODE.VERTICAL
+                ) {
+                    block_animation_name = "block-animate-right";
+                } else {
+                    block_animation_name = "block-animate-down";
+                }
                 const new_blank_btn = document.createElement("li");
                 const new_li_target = e.target.offsetParent.nextElementSibling;
                 blank_btn.before(li_target);
@@ -501,10 +558,28 @@ function gameUpdateLoop(time) {
                 });
                 a11y_btn_say_delay = A11Y_DELAY_BETWEEN_BTN_NUMBERS;
                 e.target.focus();
-                playSound(AUDIO_TYPES.FX.MOVE_PIECE);
                 correctCurrentIndexGrid("down");
-                checkWinningCondition();
+                const has_won = checkWinningCondition();
+
+                if (has_won === false) {
+                    if (
+                        getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE) === "true"
+                    ) {
+                        li_target.classList.add(block_animation_name);
+                        playSound(AUDIO_TYPES.FX.MOVE_PIECE);
+                    } else {
+                        playSound(AUDIO_TYPES.FX.MOVE_PIECE_INSTANT);
+                    }
+                }
             } else if (checkIfWeCanMove(MOVE_RQST.DOWN, li_target)) {
+                if (
+                    current_config_mode === CONFIG_MODE.VERTICAL_REVERSE ||
+                    current_config_mode === CONFIG_MODE.VERTICAL
+                ) {
+                    block_animation_name = "block-animate-left";
+                } else {
+                    block_animation_name = "block-animate-up";
+                }
                 const new_blank_btn = document.createElement("li");
                 const new_li_target = document.querySelector(
                     `[btn-pos="${parseInt(
@@ -531,9 +606,19 @@ function gameUpdateLoop(time) {
                 });
                 a11y_btn_say_delay = A11Y_DELAY_BETWEEN_BTN_NUMBERS;
                 e.target.focus();
-                playSound(AUDIO_TYPES.FX.MOVE_PIECE);
                 correctCurrentIndexGrid("up");
-                checkWinningCondition();
+                const has_won = checkWinningCondition();
+
+                if (has_won === false) {
+                    if (
+                        getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE) === "true"
+                    ) {
+                        li_target.classList.add(block_animation_name);
+                        playSound(AUDIO_TYPES.FX.MOVE_PIECE);
+                    } else {
+                        playSound(AUDIO_TYPES.FX.MOVE_PIECE_INSTANT);
+                    }
+                }
             } else {
                 setAndUpdatei18nString(
                     true,
@@ -546,7 +631,18 @@ function gameUpdateLoop(time) {
                 e.target.classList.add("animation_button_wrong");
                 e.target.addEventListener(
                     "animationend",
-                    removeAnimation.bind(this, e.target)
+                    removeAnimation.bind(
+                        this,
+                        e.target,
+                        "animation_button_wrong"
+                    )
+                );
+            }
+
+            if (getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE)) {
+                li_target.addEventListener(
+                    "animationend",
+                    removeAnimation.bind(this, li_target, block_animation_name)
                 );
             }
         }
@@ -722,7 +818,7 @@ function moveBetweenMenuButtons(e) {
 
 function registerAllSounds() {
     return new Promise((resolve, reject) => {
-        const MAX_SOUNDS_TO_LOAD = 8;
+        const MAX_SOUNDS_TO_LOAD = 12;
         let sounds_loaded = 0;
 
         for (const audio_name in AUDIO_TYPES.FX) {
@@ -750,15 +846,15 @@ function registerAllSounds() {
     });
 }
 
-function enableSoundByClicking() {
+async function enableSoundByClicking() {
     document.querySelector("#enable-sound").remove();
     document.removeEventListener("click", enableSoundByClicking);
     document.removeEventListener("keydown", enableSoundByClicking);
 
-    registerAllSounds()
+    await registerAllSounds()
         .then(initMainMenu)
         .catch(() => {
-            console.error(
+            console.warn(
                 "Some sounds may or may not have loaded properly, expect sound de-sync."
             );
             initMainMenu();
@@ -887,6 +983,10 @@ function playEnterSound() {
     playSound(AUDIO_TYPES.FX.ENTER);
 }
 
+function playBackSound() {
+    playSound(AUDIO_TYPES.FX.BACK_BUTTON);
+}
+
 function addAgainEventListenerForMenuGroup() {
     menu_button_index = 0;
     document
@@ -910,17 +1010,53 @@ function handleGameExit(e) {
             window.confirm(i18nmanager.i18n("game__goto_main_menu_confirm"))
         ) {
             e.target.setAttribute("href", "#");
-            playSound(AUDIO_TYPES.FX.BACK_BUTTON);
+            playBackSound();
             return false;
         } else {
             e.target.setAttribute("href", "/index.html");
-            playSound(AUDIO_TYPES.FX.BACK_BUTTON);
+            playBackSound();
         }
     });
 }
 
 function controlGameConfigOptions() {
+    function radioEditTheme(radioElement) {
+        playSound(AUDIO_TYPES.FX.RADIO_BUTTON_CLICKED);
+        const id = String(radioElement.getAttribute("id")).split("-")[2];
+        switch (id) {
+            case "light":
+                setGameTheme(COLOUR_THEMES.LIGHT);
+                break;
+            case "dark":
+                setGameTheme(COLOUR_THEMES.DARK);
+                break;
+            case "retro":
+                setGameTheme(COLOUR_THEMES.RETRO);
+                break;
+            case "auto":
+                setGameTheme(COLOUR_THEMES.AUTO);
+                break;
+        }
+        radioElement.removeEventListener(
+            "click",
+            radioEditTheme.bind(this, radioElement)
+        );
+    }
+
+    function animteMovingTiles() {
+        const checkbox = document.querySelector("input[type='checkbox']");
+        if (!checkbox.checked) {
+            playSound(AUDIO_TYPES.FX.TICKBOX_TICKED);
+        } else {
+            playSound(AUDIO_TYPES.FX.TICKBOX_NOT_TICKED);
+        }
+        setLocalStorageItem(GAME_KEYS.BLOCKS_ANIMATE, checkbox.checked);
+    }
+
     game_i18n_lang.then(() => {
+        const all_radios = document.querySelectorAll(".value-wrapper input");
+        const checkbox = document.querySelector("input[type='checkbox']");
+
         document.querySelector(
             "[data-i18n-id='game__goto_options']"
         ).innerText = i18nmanager.i18n("game__goto_options");
@@ -930,7 +1066,7 @@ function controlGameConfigOptions() {
         document.querySelector(
             "[data-i18n-id='game__options_animate_tiles']"
         ).innerText = i18nmanager.i18n("game__options_animate_tiles");
-        
+
         // Colour schemes.
         document.querySelector(
             "[data-i18n-id='game__options_title_colour_skins']"
@@ -947,6 +1083,23 @@ function controlGameConfigOptions() {
         document.querySelector(
             "[data-i18n-id='game__options_colour_scheme_auto']"
         ).innerText = i18nmanager.i18n("game__options_colour_scheme_auto");
+        document
+            .querySelector("#back-to-main-menu")
+            .addEventListener("click", playBackSound);
+
+        all_radios.forEach((radio) => {
+            const curr_theme = getLocalStorageKey(GAME_KEYS.THEME);
+            const id = String(radio.getAttribute("id")).split("-")[2];
+            if (id === curr_theme) {
+                radio.checked = true;
+            }
+            radio.addEventListener("click", radioEditTheme.bind(this, radio));
+        });
+        const value = getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE);
+        if (value === "true") {
+            checkbox.checked = true;
+        }
+        checkbox.addEventListener("click", animteMovingTiles);
     });
 }
 
@@ -973,16 +1126,18 @@ function controlGameConfigDialogue() {
                 }
             } else if (e.target.nodeName.toLowerCase() === "img") {
                 const img_class = e.target.getAttribute("class");
-                if (img_class === "img-mode-standard") {
+                const split = img_class.split(" ");
+
+                if (split[0] === "img-mode-standard") {
                     num_container.classList.add("config-standard");
                     current_config_mode = CONFIG_MODE.STANDARD;
-                } else if (img_class === "img-mode-vertical") {
+                } else if (split[0] === "img-mode-vertical") {
                     num_container.classList.add("config-vertical");
                     current_config_mode = CONFIG_MODE.VERTICAL;
-                } else if (img_class === "img-mode-reverse") {
+                } else if (split[0] === "img-mode-reverse") {
                     num_container.classList.add("config-standard-reverse");
                     current_config_mode = CONFIG_MODE.STANDARD_REVERSE;
-                } else if (img_class === "img-mode-reverse") {
+                } else if (split[0] === "img-mode-reverse") {
                     num_container.classList.add("config-vertical-reverse");
                     current_config_mode = CONFIG_MODE.VERTICAL_REVERSE;
                 }
@@ -990,18 +1145,21 @@ function controlGameConfigDialogue() {
             num_container.setAttribute("id", "number-container");
             num_container.classList.add("transition-move-and-fade-down");
 
-            dialogue_container
-                .animate([{ opacity: 0, transform: "translateY(48px)" }], {
-                    duration: 400,
-                    easing: "ease",
-                })
-                .addEventListener("finish", () => {
-                    dialogue_container.remove();
-                    document.querySelector("#swup").append(num_container);
-                    reset();
-                    window.requestAnimationFrame(gameUpdateLoop);
-                });
-            playSound(AUDIO_TYPES.FX.ENTER);
+            if (!started_playing) {
+                dialogue_container
+                    .animate([{ opacity: 0, transform: "translateY(48px)" }], {
+                        duration: 400,
+                        easing: "ease",
+                    })
+                    .addEventListener("finish", () => {
+                        dialogue_container.remove();
+                        document.querySelector("#swup").append(num_container);
+                        reset();
+                        window.requestAnimationFrame(gameUpdateLoop);
+                    });
+                playSound(AUDIO_TYPES.FX.ENTER);
+                started_playing = true;
+            }
         }
 
         function showInfo(index) {
@@ -1021,7 +1179,7 @@ function controlGameConfigDialogue() {
         const all_dialogues_amount =
             document.querySelectorAll(".carousel__item").length;
         const all_images = document.querySelectorAll(
-            "#config-dialogue picture img"
+            "#config-dialogue .img-group img"
         );
         const all_info_btns = document.querySelectorAll(".carousel__info");
 
@@ -1149,8 +1307,7 @@ function controlGameConfigDialogue() {
 
 // Swup specific listeners.
 document.addEventListener("swup:pageView", function () {
-    // Set light or dark mode.
-    enableOrDisableDarkMode();
+    getGameTheme();
     if ("/game.html" === window.location.pathname) {
         controlGameConfigDialogue();
         document
@@ -1165,6 +1322,7 @@ document.addEventListener("swup:pageView", function () {
     ) {
         window.cancelAnimationFrame(gameUpdateLoop);
         config_dialogue_selected_config = 0;
+        document.documentElement.removeAttribute("options-page");
         document.documentElement.removeAttribute("results-page");
         document.documentElement.setAttribute("is-main-page", "");
         game_i18n_lang.then(() => {
@@ -1215,13 +1373,17 @@ document.addEventListener("swup:pageView", function () {
             btn_link.addEventListener("click", playEnterSound);
         });
     } else if ("/options.html" === window.location.pathname) {
+        document
+            .querySelector("#back-to-main-menu")
+            .removeEventListener("click", playBackSound);
+        document.documentElement.removeAttribute("is-main-page");
+        document.documentElement.setAttribute("options-page", "");
         controlGameConfigOptions();
     }
 });
 
 document.addEventListener("swup:contentReplaced", function () {
-    // Set light or dark mode.
-    enableOrDisableDarkMode();
+    getGameTheme();
     if (
         "/" === window.location.pathname ||
         "/index.html" === window.location.pathname
@@ -1234,7 +1396,7 @@ document.addEventListener("swup:contentReplaced", function () {
 
 document.addEventListener("DOMContentLoaded", function () {
     // Set light or dark mode.
-    enableOrDisableDarkMode();
+    initGameSettings();
     if ("/game.html" === window.location.pathname) {
         controlGameConfigDialogue();
         document
@@ -1256,7 +1418,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 if (document.querySelector("#enable-sound")) {
     // Set light or dark mode.
-    enableOrDisableDarkMode();
+    initGameSettings();
     game_i18n_lang.then(() => {
         if (navigator.userAgent.includes("Mobile")) {
             document

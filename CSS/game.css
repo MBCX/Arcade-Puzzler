@@ -6,13 +6,6 @@
 @import url("./animations/page-transitions.css");
 @import url("./utils.css");
 
-body::before
-{
-    z-index: -1;
-    background-size: 4rem;
-    animation: moveBG 49000ms linear infinite
-}
-
 .link-group a:focus-visible
 {
     outline-offset: 0.35em;
@@ -101,7 +94,7 @@ html[is-main-page] #intro-cutscene .animated-text-container .fire
 #game-config-container
 {
     background-color: hsl(var(--game-board-background-colour));
-    outline: 2px solid hsl(var(--game-board-text-colour));
+    outline: var(--game-border-w, 2px) solid hsl(var(--game-border-colour, var(--game-board-text-colour)));
     color: hsl(var(--game-board-text-colour));
     padding: 0.5em;
 }
@@ -123,7 +116,7 @@ html[is-main-page] #intro-cutscene .animated-text-container .fire
     height: auto;
 
     padding: 0.5em;
-    outline: 2px solid hsl(var(--game-board-text-colour));
+    outline: var(--game-border-w, 2px) solid hsl(var(--game-border-colour, var(--game-board-text-colour)));
     display: grid;
     grid-template-columns: repeat(var(--game-board-grid-size), 1fr);
     gap: 0.25em;
@@ -152,7 +145,7 @@ li#blank
 #title-mini-grid li
 {
     background-color: transparent;
-    border: 2px solid hsl(var(--game-board-text-colour));
+    border: var(--game-border-w, 2px) solid hsl(var(--game-border-colour, var(--game-board-text-colour)));
     color: hsl(var(--game-board-text-colour));
     width: inherit;
     height: inherit;
@@ -165,9 +158,10 @@ li#blank
 /* Game configuration carousel dialogue. */
 #config-dialogue
 {
+    position: relative;
     background-color: hsl(var(--game-board-background-colour));
     color: hsl(var(--game-board-text-colour));
-    outline: 2px solid hsl(var(--game-board-text-colour));
+    outline: var(--game-border-w, 2px) solid hsl(var(--game-border-colour, var(--game-board-text-colour)));
     max-height: 70vh;
     max-width: 80vw;
     text-align: -webkit-center;
@@ -213,7 +207,7 @@ li#blank
     position: absolute;
     background-color: hsl(var(--game-board-background-colour));
     opacity: 1;
-    border: 2px solid hsl(var(--game-board-text-colour));
+    border: var(--game-border-w, 2px) solid hsl(var(--game-border-colour, var(--game-board-text-colour)));
     border-radius: 100rem;
     color: hsl(var(--game-board-text-colour));
     width: 2.5rem;
@@ -276,7 +270,7 @@ li#blank
     padding: 0.40em 1em;
     margin: 0.75em;
     background-color: transparent;
-    border: 2px solid hsl(var(--game-board-text-colour));
+    border: var(--game-border-w, 2px) solid hsl(var(--game-board-text-colour));
     color: inherit;
     cursor: pointer;
 }
@@ -335,7 +329,7 @@ li#blank
     left: 0;
     top: 0;
     margin: 2rem;
-    border: 0.2px solid hsl(var(--game-board-text-colour));
+    border: 0.2px solid hsl(var(--game-border-colour, var(--game-board-text-colour)));
     background-color: hsl(var(--game-board-background-colour));
     color: hsl(var(--game-board-text-colour));
 
@@ -475,17 +469,21 @@ html[results-page] #config-dialogue .carousel
 
 
 /* Options page. */
-html[options-page] input[type="checkbox"]
+html[options-page] input[type="checkbox"],
+html[options-page] input[type="radio"]
 {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     position: relative;
+    cursor: pointer;
+}
 
-    border: 2px solid hsl(var(--game-board-text-colour));
+html[options-page] input[type="checkbox"]
+{
+    border: var(--game-border-w, 2px) solid hsl(var(--game-board-text-colour));
     width: 1.5rem;
     height: 1.5rem;
-    cursor: pointer;
 }
 
 html[options-page] input[type="checkbox"]:checked
@@ -495,12 +493,33 @@ html[options-page] input[type="checkbox"]:checked
 
 html[options-page] input[type="checkbox"]:checked::after
 {
-    content: '§';
+    content: "\2714";
     display: block;
     text-align: -webkit-center;
     text-align: center;
     color: hsl(var(--game-board-background-colour));
-    margin-top: 1px;
+}
+
+html[options-page] input[type="radio"]
+{
+    --radio-w-h: 1rem;
+    border: var(--game-border-w, 2px) solid hsl(var(--game-board-text-colour));
+    width: var(--radio-w-h);
+    height: var(--radio-w-h);
+    border-radius: 100rem;
+}
+
+html[options-page] input[type="radio"]:checked::after
+{
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    border-radius: 100rem;
+    width: calc(var(--radio-w-h) * 0.5);
+    height: calc(var(--radio-w-h) * 0.5);
+    background-color: hsl(var(--game-board-text-colour));
+    transform: translate(-50%, -50%);
 }
 
 html[options-page] #config-dialogue
@@ -541,6 +560,14 @@ html[options-page] #config-dialogue .options-group.flex-col .value-wrapper
 {
     display: flex;
     gap: 1em;
+}
+
+/* Configuration images (gameplay) */
+html[data-theme="light"] .carousel__item .img-group img:not([class*="light-"]),
+html[data-theme="dark"] .carousel__item .img-group img:not([class*="dark-"]),
+html[data-theme="retro"] .carousel__item .img-group img:not([class*="retro-"])
+{
+    display: none;
 }
 
 /* Modification of game config dialogue. */
@@ -675,6 +702,14 @@ html[options-page] #config-dialogue .options-group.flex-col .value-wrapper
     .carousel__desc
     {
         display: block !important;
+    }
+}
+
+@media only screen and (min-width: 80em) and (max-height: 80em)
+{
+    html[data-theme="retro"] #data-container
+    {
+        font-size: 1.2rem;
     }
 }
 

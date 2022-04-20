@@ -1,108 +1,204 @@
-@keyframes generic_floatUp
-{
-    from { opacity: 0; transform: translateY(110%); }
-    to { opacity: 1; transform: translateY(0%);}
+@keyframes generic_floatUp {
+    from {
+        opacity: 0;
+        transform: translateY(110%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0%);
+    }
 }
 
-@keyframes floatUpBoardEl
-{
-    from
-    {
+@keyframes block_animate_up {
+    from {
+        transform: translateY(110%);
+    }
+    to {
+        transform: translateY(0%);
+    }
+}
+
+@keyframes block_animate_down {
+    from {
+        transform: translateY(-110%);
+    }
+    to {
+        transform: translateY(0%);
+    }
+}
+
+@keyframes block_animate_left {
+    from {
+        transform: translateX(110%);
+    }
+    to {
+        transform: translateX(0%);
+    }
+}
+
+@keyframes block_animate_right {
+    from {
+        transform: translateX(-110%);
+    }
+    to {
+        transform: translateX(0%);
+    }
+}
+
+@keyframes floatUpBoardEl {
+    from {
         opacity: 0;
         transform: translateY(3rem);
     }
 
-    to
-    {
+    to {
         opacity: 1;
         transform: translateY(0);
     }
 }
 
-@keyframes generic_fadeout
-{
-    from { opacity: 1; }
-    to { opacity: 0; }
+@keyframes generic_fadeout {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
 }
 
-@keyframes generic_fadein
-{
-    from { opacity: 0; }
-    to { opacity: 1; }
+@keyframes generic_fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
-@keyframes animate_fire
-{
-    to { background-position-x: 297px; }
+@keyframes animate_fire {
+    to {
+        background-position-x: 297px;
+    }
 }
 
-@keyframes moveBG
-{
-    to { background-position: 100%; }
+@keyframes moveBG {
+    to {
+        background-position: 100%;
+    }
 }
 
-@keyframes animate_move_mini_board_square
-{
-    from, to { transform: translate(0%, 0%); }
-    25% { transform: translate(0%, 105%); }
-    50% { transform: translate(-106%, 105%); }
-    75% { transform: translate(-106%, 0%); }
+@keyframes animate_move_mini_board_square {
+    from,
+    to {
+        transform: translate(0%, 0%);
+    }
+    25% {
+        transform: translate(0%, 105%);
+    }
+    50% {
+        transform: translate(-106%, 105%);
+    }
+    75% {
+        transform: translate(-106%, 0%);
+    }
 }
 
-@keyframes animate_move_mini_board_square_2
-{
-    from, to { transform: translate(0%, 0%); }
-    25% { transform: translate(106%, 0%); }
-    50% { transform: translate(106%, 106%); }
-    75% { transform: translate(0%, 106%);}
+@keyframes animate_move_mini_board_square_2 {
+    from,
+    to {
+        transform: translate(0%, 0%);
+    }
+    25% {
+        transform: translate(106%, 0%);
+    }
+    50% {
+        transform: translate(106%, 106%);
+    }
+    75% {
+        transform: translate(0%, 106%);
+    }
 }
 
-@keyframes animate_move_mini_board_square_3
-{
-    from, to { transform: translate(0%, 0%); }
-    25% { transform: translate(0%, -106%); }
-    50% { transform: translate(106%, -106%); }
-    75% { transform: translate(106%, 0%);}
+@keyframes animate_move_mini_board_square_3 {
+    from,
+    to {
+        transform: translate(0%, 0%);
+    }
+    25% {
+        transform: translate(0%, -106%);
+    }
+    50% {
+        transform: translate(106%, -106%);
+    }
+    75% {
+        transform: translate(106%, 0%);
+    }
 }
 
-@keyframes game_button_move_wrong
-{
-    from
-    {
+@keyframes game_button_move_wrong {
+    from {
         background-color: rgba(255, 0, 0, 0.7);
         transform: translateX(-10px);
     }
-    25% { transform: translateX(10px); }
-    50% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-    to
-    {
+    25% {
+        transform: translateX(10px);
+    }
+    50% {
+        transform: translateX(-5px);
+    }
+    75% {
+        transform: translateX(5px);
+    }
+    to {
         background-color: hsl(var(--game-board-background-colour));
     }
 }
 
-@keyframes game_button_move_wrong_inverse
-{
-    from
-    {
+@keyframes game_button_move_wrong_inverse {
+    from {
         background-color: rgba(255, 0, 0, 0.7);
         transform: translateX(-10px) scaleX(-1);
     }
-    25% { transform: translateX(10px) scaleX(-1); }
-    50% { transform: translateX(-5px) scaleX(-1); }
-    75% { transform: translateX(5px) scaleX(-1); }
-    to
-    {
+    25% {
+        transform: translateX(10px) scaleX(-1);
+    }
+    50% {
+        transform: translateX(-5px) scaleX(-1);
+    }
+    75% {
+        transform: translateX(5px) scaleX(-1);
+    }
+    to {
         background-color: hsl(var(--game-board-background-colour));
     }
 }
 
-.animation_button_wrong
-{
-    animation: game_button_move_wrong 300ms ease forwards;
+@keyframes aura_flash {
+    to {
+        opacity: 0.75;
+    }
 }
 
-.config-standard-reverse .animation_button_wrong
-{
-    animation: game_button_move_wrong_inverse 300ms ease forwards;
+.animation_button_wrong {
+    animation: game_button_move_wrong 300ms linear forwards;
+}
+
+.config-standard-reverse .animation_button_wrong {
+    animation: game_button_move_wrong_inverse 300ms linear forwards;
+}
+
+.block-animate-left {
+    animation: block_animate_left 125ms cubic-bezier(0.26, 0.79, 0.29, 1);
+}
+
+.block-animate-right {
+    animation: block_animate_right 125ms cubic-bezier(0.26, 0.79, 0.29, 1);
+}
+
+.block-animate-up {
+    animation: block_animate_up 125ms cubic-bezier(0.26, 0.79, 0.29, 1);
+}
+
+.block-animate-down {
+    animation: block_animate_down 125ms cubic-bezier(0.26, 0.79, 0.29, 1);
 }
