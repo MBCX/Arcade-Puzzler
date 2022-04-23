@@ -69,7 +69,6 @@ let time_amount;
 let current_config_mode;
 let current_column = 0;
 let started_playing = false;
-let enable_bug = false;
 
 // Used for moving with the arrow or
 // W or S in the main menu buttons.
@@ -190,7 +189,6 @@ function reset() {
     player_won = false;
     time_amount = "";
     started_playing = false;
-    enable_bug = false;
 
     if (document.querySelector("#number-container")) {
         // Allow keyboard play and navigation of grid.
@@ -1433,6 +1431,12 @@ document.addEventListener("swup:pageView", function () {
             document.querySelector(
                 "[data-i18n-id='game__results_title']"
             ).innerText = i18nmanager.i18n("game__results_title");
+            setAndUpdatei18nString(
+                false,
+                getCurrentGameConfig(current_config_mode),
+                false,
+                document.querySelector(`[data-i18n-id="game__config_mode"]`)
+            );
         });
 
         document.querySelectorAll(".btn-container .btn").forEach((btn_link) => {
