@@ -5,72 +5,73 @@
     "display": "fullscreen",
     "scope": "/",
     "start_url": "../index.html",
+    "id": "../index.html",
     "icons": [
         {
             "src": "./icons/game-icon-16.png",
             "sizes": "96x96",
             "type": "image/png",
-            "purpose": "maskable any"
+            "purpose": "maskable"
         },
         {
             "src": "./icons/game-icon-32.png",
             "sizes": "96x96",
             "type": "image/png",
-            "purpose": "maskable any"
+            "purpose": "maskable"
         },
         {
             "src": "./icons/game-icon-48.png",
             "sizes": "96x96",
             "type": "image/png",
-            "purpose": "maskable any"
+            "purpose": "maskable"
         },
         {
             "src": "./icons/game-icon-72.png",
             "sizes": "72x72",
             "type": "image/png",
-            "purpose": "maskable any"
+            "purpose": "maskable"
         },
         {
             "src": "./icons/game-icon-96.png",
             "sizes": "96x96",
             "type": "image/png",
-            "purpose": "maskable any"
+            "purpose": "maskable"
         },
         {
             "src": "./icons/game-icon-128.png",
             "sizes": "128x128",
             "type": "image/png",
-            "purpose": "maskable any"
+            "purpose": "maskable"
         },
         {
             "src": "./icons/game-icon-144.png",
             "sizes": "144x144",
             "type": "image/png",
-            "purpose": "maskable any"
+            "purpose": "maskable"
         },
         {
             "src": "./icons/game-icon-152.png",
             "sizes": "152x152",
             "type": "image/png",
-            "purpose": "maskable any"
+            "purpose": "maskable"
         },
         {
             "src": "./icons/game-icon-192.png",
             "sizes": "192x192",
             "type": "image/png",
-            "purpose": "maskable any"
+            "purpose": "maskable"
         },
         {
             "src": "./icons/game-icon-384.png",
             "sizes": "384x384",
             "type": "image/png",
-            "purpose": "maskable any"
+            "purpose": "maskable"
         },
         {
             "src": "./icons/game-icon-512.png",
             "sizes": "512x512",
             "type": "image/png",
-            "purpose": "maskable any"
+            "purpose": "maskable"
         }
     ],
     "theme_color": "#5AC54F",
