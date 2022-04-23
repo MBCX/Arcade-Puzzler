@@ -4,7 +4,7 @@ loadTimeData.data = {
     "game__sound_please_enable_mobile": "Please tap anywhere in this screen to allow the game to play sound.",
     "game__time": "Time: $1",
     "game__moves": "Moves: $1",
-    "game__title": "Arcade Puzzle",
+    "game__title": "Arcade Puzzle (DEV)",
     "game__back_to_main_menu_button": "Back to main menu.",
     "game__goto_play": "Start game",
     "game__goto_origins": "Game origins",
@@ -42,6 +42,7 @@ loadTimeData.data = {
     "game__options_title_music": "Music",
     "game__options_title_gameplay": "Gameplay",
     "game__options_title_sounds": "Sounds",
+    "game__options_cheat_mode": "Cheat mode",
     "a11y__generating_grid_numbers": "Generating grid numbers...",
     "a11y__generated_grid_numbers": "Numbers generated!",
     "a11y__how_to_play": `

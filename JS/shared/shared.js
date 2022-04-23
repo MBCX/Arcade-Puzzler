@@ -28,4 +28,22 @@ export const AUDIO_TYPES = {
     MUSIC: {
 
     }
-}
+};
+export const BROWSER_STRINGS = {
+    CHROMIUM: "Chromium",
+    FIREFOX: "Firefox",
+    SAFARI: "Safari",
+    SAFARI_MOBILE: "Safari Mobile",
+    IE: "Internet Explorer",
+};
+export const COLOUR_THEMES = {
+    LIGHT: "light",
+    DARK: "dark",
+    RETRO: "retro",
+    AUTO: "automatic",
+};
+export const GAME_KEYS = {
+    THEME: "game-theme",
+    BLOCKS_ANIMATE: "animate-blocks",
+    CHEAT_MODE: "cheat-mode",
+};

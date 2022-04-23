@@ -580,11 +580,6 @@ html[data-theme="retro"] .carousel__item .img-group img:not([class*="retro-"])
         overflow: hidden;
     }
 
-    #config-dialogue p
-    {
-        margin-bottom: 1em;
-    }
-
     .carousel .carousel__item
     {
         position: relative;

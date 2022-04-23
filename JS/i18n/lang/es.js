@@ -42,6 +42,7 @@ loadTimeData.data = {
     "game__options_title_music": "Música",
     "game__options_title_gameplay": "Juego",
     "game__options_title_sounds": "Sonidos",
+    "game__options_cheat_mode": "Modo tramposo",
     "a11y__generating_grid_numbers": "Generando los números en la rejilla...",
     "a11y__generated_grid_numbers": "Numeros generados!",
     "a11y__how_to_play": `
