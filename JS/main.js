@@ -9,10 +9,7 @@ import {
     roll_dice,
     playSound,
     detectBrowser,
-    BROWSER_STRINGS,
     getLocalStorageKey,
-    GAME_KEYS,
-    COLOUR_THEMES,
     setLocalStorageItem,
     stopAllAudio,
     setGameCubesAnimated,
@@ -23,6 +20,9 @@ import {
     AUDIO_TYPES,
     game_i18n_lang,
     i18nmanager,
+    BROWSER_STRINGS,
+    GAME_KEYS,
+    COLOUR_THEMES
 } from "./shared/shared.js";
 
 const GRID_POSITION = {
@@ -205,14 +205,23 @@ function reset() {
 }
 
 function checkBlankPosInBoard() {
-    for (let i = number_container.children.length; 0 < i; --i) {
-        if (
-            document.querySelector("#blank") ==
-            number_container.children.item(i)
-        ) {
+    const container_children = number_container.children;
+    for (let i = container_children.length; 0 < i; --i) {
+        const item = container_children.item(i);
+        if (null != item && item.getAttribute("id")) {
             return i;
         }
     }
+
+    // @MBCX: Second search attempt
+    // (partial bug fix for Safari)
+    let index;
+    [...container_children].forEach((child, i) => {
+        if (child.getAttribute("id")) {
+            index = i;
+        }
+    });
+    return index;
 }
 
 function correctCurrentIndexGrid(type) {
@@ -340,22 +349,44 @@ function checkIfWeCanMove(move_request, element) {
     element_down_blank_btn = number_container.children.item(
         blank_btn_pos_index + 4
     );
-
+    
     // The blank button can only move if
     // the requested element target is the
     // one needed to actually move (and it
     // exists).
     switch (move_request) {
-        case MOVE_RQST.LEFT:
+        case MOVE_RQST.LEFT: {
+            const pos = (blank_btn_pos_index - 1) % (GRID_POSITION.LAST_ROW_COLUMN + 1);
+            const safe_to_move = pos !== GRID_POSITION.LAST_ROW_COLUMN;
+
+            if (getLocalStorageKey(GAME_KEYS.CHEAT_MODE) === "true") {
+                return (
+                    null != blank_btn.previousElementSibling &&
+                    element == element_left_blank_btn
+                );
+            }
             return (
+                safe_to_move &&
                 null != blank_btn.previousElementSibling &&
                 element == element_left_blank_btn
             );
-        case MOVE_RQST.RIGHT:
+        }
+        case MOVE_RQST.RIGHT: {
+            const pos = (blank_btn_pos_index + 1) % (GRID_POSITION.LAST_ROW_COLUMN + 1);
+            const safe_to_move = pos !== GRID_POSITION.FIRST_ROW_COLUMN;
+
+            if (getLocalStorageKey(GAME_KEYS.CHEAT_MODE) === "true") {
+                return (
+                    null != blank_btn.previousElementSibling &&
+                    element == element_right_blank_btn
+                );
+            }
             return (
+                safe_to_move &&
                 null != blank_btn.nextElementSibling &&
                 element == element_right_blank_btn
             );
+        }
         case MOVE_RQST.UP:
             return (
                 null != element_up_blank_btn && element == element_up_blank_btn
@@ -465,7 +496,6 @@ function gameUpdateLoop(time) {
         if ("" != name) {
             target.classList.remove(name);
         }
-        target.removeEventListener("animationend", removeAnimation.bind(this));
     }
 
     function handleButtonMovement(e) {
@@ -635,14 +665,20 @@ function gameUpdateLoop(time) {
                         this,
                         e.target,
                         "animation_button_wrong"
-                    )
+                    ),
+                    {
+                        once: true,
+                    }
                 );
             }
 
             if (getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE)) {
                 li_target.addEventListener(
                     "animationend",
-                    removeAnimation.bind(this, li_target, block_animation_name)
+                    removeAnimation.bind(this, li_target, block_animation_name),
+                    {
+                        once: true,
+                    }
                 );
             }
         }
@@ -1020,31 +1056,38 @@ function handleGameExit(e) {
 }
 
 function controlGameConfigOptions() {
+    const values = {
+        MOVE_TILES: getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE),
+        CHEAT: getLocalStorageKey(GAME_KEYS.CHEAT_MODE),
+    };
+    const checkboxes = {
+        MOVE_TILES: document.querySelector("#check-moving-titles"),
+        CHEAT: document.querySelector("#check-cheat-mode"),
+    };
     function radioEditTheme(radioElement) {
-        playSound(AUDIO_TYPES.FX.RADIO_BUTTON_CLICKED);
         const id = String(radioElement.getAttribute("id")).split("-")[2];
         switch (id) {
             case "light":
+                playSound(AUDIO_TYPES.FX.RADIO_BUTTON_CLICKED);
                 setGameTheme(COLOUR_THEMES.LIGHT);
                 break;
             case "dark":
+                playSound(AUDIO_TYPES.FX.RADIO_BUTTON_CLICKED);
                 setGameTheme(COLOUR_THEMES.DARK);
                 break;
             case "retro":
+                playSound(AUDIO_TYPES.FX.RADIO_BUTTON_CLICKED);
                 setGameTheme(COLOUR_THEMES.RETRO);
                 break;
             case "auto":
+                playSound(AUDIO_TYPES.FX.RADIO_BUTTON_CLICKED);
                 setGameTheme(COLOUR_THEMES.AUTO);
                 break;
         }
-        radioElement.removeEventListener(
-            "click",
-            radioEditTheme.bind(this, radioElement)
-        );
     }
 
     function animteMovingTiles() {
-        const checkbox = document.querySelector("input[type='checkbox']");
+        const checkbox = checkboxes.MOVE_TILES;
         if (!checkbox.checked) {
             playSound(AUDIO_TYPES.FX.TICKBOX_TICKED);
         } else {
@@ -1053,9 +1096,30 @@ function controlGameConfigOptions() {
         setLocalStorageItem(GAME_KEYS.BLOCKS_ANIMATE, checkbox.checked);
     }
 
+    function enableCheatMode()
+    {
+        const checkbox = checkboxes.CHEAT;
+        if (!checkbox.checked) {
+            playSound(AUDIO_TYPES.FX.TICKBOX_TICKED);
+        } else {
+            playSound(AUDIO_TYPES.FX.TICKBOX_NOT_TICKED);
+        }
+        setLocalStorageItem(GAME_KEYS.CHEAT_MODE, checkbox.checked);
+    }
+
+    function setCheckState()
+    {
+        if (values.MOVE_TILES === "true") {
+            checkboxes.MOVE_TILES.checked = true;
+        }
+
+        if (values.CHEAT === "true") {
+            checkboxes.CHEAT.checked = true;
+        }
+    }
+
     game_i18n_lang.then(() => {
         const all_radios = document.querySelectorAll(".value-wrapper input");
-        const checkbox = document.querySelector("input[type='checkbox']");
 
         document.querySelector(
             "[data-i18n-id='game__goto_options']"
@@ -1066,6 +1130,9 @@ function controlGameConfigOptions() {
         document.querySelector(
             "[data-i18n-id='game__options_animate_tiles']"
         ).innerText = i18nmanager.i18n("game__options_animate_tiles");
+        document.querySelector(
+            "[data-i18n-id='game__options_cheat_mode']"
+        ).innerText = i18nmanager.i18n("game__options_cheat_mode");
 
         // Colour schemes.
         document.querySelector(
@@ -1093,13 +1160,11 @@ function controlGameConfigOptions() {
             if (id === curr_theme) {
                 radio.checked = true;
             }
-            radio.addEventListener("click", radioEditTheme.bind(this, radio));
+            radio.addEventListener("click", radioEditTheme.bind(this, radio), { once: true });
         });
-        const value = getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE);
-        if (value === "true") {
-            checkbox.checked = true;
-        }
-        checkbox.addEventListener("click", animteMovingTiles);
+        setCheckState();
+        checkboxes.MOVE_TILES.addEventListener("click", animteMovingTiles, { once: true });
+        checkboxes.CHEAT.addEventListener("click", enableCheatMode, { once: true });
     });
 }
 
@@ -1366,6 +1431,12 @@ document.addEventListener("swup:pageView", function () {
             document.querySelector(
                 "[data-i18n-id='game__results_title']"
             ).innerText = i18nmanager.i18n("game__results_title");
+            setAndUpdatei18nString(
+                false,
+                getCurrentGameConfig(current_config_mode),
+                false,
+                document.querySelector(`[data-i18n-id="game__config_mode"]`)
+            );
         });
 
         document.querySelectorAll(".btn-container .btn").forEach((btn_link) => {

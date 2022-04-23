@@ -580,11 +580,6 @@ html[data-theme="retro"] .carousel__item .img-group img:not([class*="retro-"])
         overflow: hidden;
     }
 
-    #config-dialogue p
-    {
-        margin-bottom: 1em;
-    }
-
     .carousel .carousel__item
     {
         position: relative;
@@ -705,21 +700,11 @@ html[data-theme="retro"] .carousel__item .img-group img:not([class*="retro-"])
     }
 }
 
+/* Increase font size of the configuration mode text. */
 @media only screen and (min-width: 80em) and (max-height: 80em)
 {
     html[data-theme="retro"] #data-container
     {
         font-size: 1.2rem;
-    }
-}
-
-/* Firefox solutions. */
-@supports (-moz-animation: none)
-{
-    #number-container.config-vertical li button div,
-    #number-container.config-vertical-reverse li button div
-    {
-        pointer-events: none;
-        transform: rotate(-90deg);
     }
 }

@@ -1,22 +1,7 @@
+import { BROWSER_STRINGS, COLOUR_THEMES, GAME_KEYS } from "../shared/shared.js";
+
 let current_a11y_string = "";
 let MASTER_AUDIO = new Audio();
-export const BROWSER_STRINGS = {
-    CHROMIUM: "Chromium",
-    FIREFOX: "Firefox",
-    SAFARI: "Safari",
-    SAFARI_MOBILE: "Safari Mobile",
-    IE: "Internet Explorer",
-};
-export const COLOUR_THEMES = {
-    LIGHT: "light",
-    DARK: "dark",
-    RETRO: "retro",
-    AUTO: "automatic",
-};
-export const GAME_KEYS = {
-    THEME: "game-theme",
-    BLOCKS_ANIMATE: "animate-blocks",
-};
 
 export function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
@@ -52,6 +37,7 @@ export function setGameLanguageBasedOn(lang) {
             return "en";
     }
 }
+
 
 export function setGameTheme(themeKey) {
     switch (themeKey) {
