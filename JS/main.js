@@ -205,14 +205,23 @@ function reset() {
 }
 
 function checkBlankPosInBoard() {
-    for (let i = number_container.children.length; 0 < i; --i) {
-        if (
-            document.querySelector("#blank") ==
-            number_container.children.item(i)
-        ) {
+    const container_children = number_container.children;
+    for (let i = container_children.length; 0 < i; --i) {
+        const item = container_children.item(i);
+        if (null != item && item.getAttribute("id")) {
             return i;
         }
     }
+
+    // @MBCX: Second search attempt
+    // (partial bug fix for Safari)
+    let index;
+    [...container_children].forEach((child, i) => {
+        if (child.getAttribute("id")) {
+            index = i;
+        }
+    });
+    return index;
 }
 
 function correctCurrentIndexGrid(type) {

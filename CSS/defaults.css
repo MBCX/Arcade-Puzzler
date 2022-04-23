@@ -24,6 +24,7 @@ html[data-theme="retro"]
 {
     --game-font-current: "Noto Sans Mono";
     --game-font: var(--game-font-current), "system-ui", -apple-system, BlinkMacSystemFont, sans-serif;
+    --game-mode-config-breakpoint: 50em;
 
     --game-background-colour: hsl(216, 75%, 78%);
     --game-background-image-invert: 0;
