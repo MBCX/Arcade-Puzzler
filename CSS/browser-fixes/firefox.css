@@ -1,7 +1,0 @@
-/* Firefox solutions. */
-#number-container.config-vertical li button div,
-#number-container.config-vertical-reverse li button div
-{
-    pointer-events: none;
-    transform: rotate(-90deg);
-}
