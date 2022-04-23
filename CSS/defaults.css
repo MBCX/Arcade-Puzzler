@@ -14,16 +14,13 @@
 
 *:focus-visible
 {
-    outline: 3px solid hsl(var(--outline-focus-colour, var(--game-board-text-colour)), 0.9);
+    outline: 3px solid hsl(var(--game-board-text-colour), 0.9);
     outline-offset: 0.10rem;
 }
 
-html[data-theme="light"],
-html[data-theme="dark"],
-html[data-theme="retro"]
+:root
 {
-    --game-font-current: "Noto Sans Mono";
-    --game-font: var(--game-font-current), "system-ui", -apple-system, BlinkMacSystemFont, sans-serif;
+    --game-font: "Noto Sans Mono", "system-ui", -apple-system, BlinkMacSystemFont, sans-serif;
 
     --game-background-colour: hsl(216, 75%, 78%);
     --game-background-image-invert: 0;
@@ -35,49 +32,6 @@ html[data-theme="retro"]
     --game-board-text-colour: 0, 0%, 0%;
 
     --game-page-transition-duration: 400ms;
-    --outline-focus-colour: 0, 0%, 0%;
-}
-
-html[data-theme="light"]
-{
-    --game-background-image-invert: 0;
-    --game-background-colour: hsl(216, 75%, 78%);
-
-    /* HSL format. */
-    --game-board-background-colour: 0, 0%, 97%;
-    --game-board-text-colour: 0, 0%, 0%;
-    --outline-focus-colour: 0, 0%, 0%;
-}
-
-/* Dark mode. */
-html[data-theme="dark"]
-{
-    --game-background-image-invert: 0.8;
-    --game-background-colour: hsl(216, 39%, 65%);
-
-    /* HSL format. */
-    --game-board-background-colour: 0, 0%, 10%;
-    --game-board-text-colour: 0, 0%, 100%;
-    --outline-focus-colour: 0, 0%, 0%;
-}
-
-/* Dark mode. */
-html[data-theme="retro"]
-{
-    --game-font-current: "8 Bit Operator";
-    --game-background-image-invert: 1;
-    --game-background-colour: hsl(247, 89%, 61%);
-
-    /* HSL format. */
-    --game-board-aura: 0, 0%, 0%;
-    --game-border-colour: 0, 0%, 0%;
-    --game-border-w: 4px;
-    --game-board-background-colour: 247, 89%, 61%;
-    --game-board-text-colour: 0, 0%, 100%;
-    --bg-opacity: 0.3;
-    --aura-size: 1.7rem;
-    --aura-animation-dur: 1ms;
-    --outline-focus-colour: 6, 89%, 61%;
 }
 
 html, body
@@ -101,17 +55,11 @@ body::before
     background-image: url("../assets/images/GameBG.png");
     width: 100%;
     min-height: inherit;
-    opacity: var(--bg-opacity, 0.5);
+    z-index: -1;
+    opacity: 0.5;
 
     -webkit-filter: invert(var(--game-background-image-invert));
     filter: invert(var(--game-background-image-invert));
-}
-
-body::before
-{
-    z-index: -1;
-    background-size: 4rem;
-    animation: moveBG 49000ms linear infinite;
 }
 
 body::after
@@ -125,10 +73,8 @@ body::after
     width: 100%;
     min-height: inherit;
 
-    -webkit-box-shadow: inset 0px 0px 2px var(--aura-size, 1rem) hsl(var(--game-board-background-colour));
-    box-shadow: inset 0px 0px 2px var(--aura-size, 1rem) hsl(
-        var(--game-board-aura, var(--game-board-background-colour))
-    );
+    -webkit-box-shadow: inset 0px 0px 2px 1rem hsl(var(--game-board-background-colour));
+    box-shadow: inset 0px 0px 2px 1rem hsl(var(--game-board-background-colour));
     z-index: -1;
 }
 
@@ -151,7 +97,7 @@ a[class]
     padding: 0.5em;
     background-color: hsl(var(--game-board-background-colour));
     color: hsl(var(--game-board-text-colour));
-    border: var(--game-border-w, 2px) solid hsl(var(--game-border-colour, var(--game-board-text-colour)));
+    border: 2px solid hsl(var(--game-board-text-colour));
 }
 
 button,
@@ -160,82 +106,15 @@ button,
     transition: transform 300ms ease;
 }
 
-button.can-animate-hover:hover,
+button:hover,
 .btn:hover
 {
     transform: scale(1.1);
 }
 
-.divider
+#number-container li button:hover
 {
-    position: relative;
-    margin-top: 0.25em;
-    margin-bottom: 1.25em;
-    border: none;
-    height: 2px;
-    border-radius: 100rem;
-    background-color: hsl(var(--game-board-text-colour));
-}
-
-html[data-theme="retro"] body::before
-{
-    background-size: auto;
-    animation: none;
-}
-
-html[data-theme="retro"] ::-webkit-scrollbar
-{
-    width: 1rem;
-}
-
-html[data-theme="retro"] ::-webkit-scrollbar-track
-{
-    background-color: #252525;
-}
-
-html[data-theme="retro"] ::-webkit-scrollbar-thumb
-{
-    background-color: #FFFFFF;
-    border: 2px solid #011010;
-    height: 1rem;
-}
-
-html[data-theme="retro"] ::-webkit-scrollbar-thumb:hover
-{
-    background-color: #CCCCCC;
-}
-
-html[data-theme="retro"] ::-webkit-scrollbar-button
-{
-    background-color: #FFFFFF;
-    width: 1rem;
-    height: 1rem;
-    border: 2px solid #011010
-}
-
-/* Up. */
-html[data-theme="retro"] ::-webkit-scrollbar-button:single-button:vertical:decrement
-{
-    width: 8px;
-    height: 1rem;
-    background-image: url("../assets/images/retro_arrow.png");
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-/* Down. */
-html[data-theme="retro"] ::-webkit-scrollbar-button:single-button:vertical:increment
-{
-    width: 8px;
-    height: 1rem;
-    background-image: url("../assets/images/retro_arrow_down.png");
-    background-position: center -1px;
-    background-repeat: no-repeat;
-}
-
-html[data-theme="retro"] body::after
-{
-    animation: aura_flash var(--aura-animation-dur, 0ms) linear infinite alternate;
+    transform: scale(1.0);
 }
 
 /* Disable all animations. */
@@ -261,4 +140,15 @@ html[data-theme="retro"] body::after
         -webkit-transition-delay: 0ms !important;
         transition-delay: 0ms !important;
     }
+}
+
+/* Dark mode. */
+html.dark-mode
+{
+    --game-background-image-invert: 0.8;
+    --game-background-colour: hsl(216, 39%, 65%);
+
+    /* HSL format. */
+    --game-board-background-colour: 0, 0%, 10%;
+    --game-board-text-colour: 0, 0%, 100%;
 }
