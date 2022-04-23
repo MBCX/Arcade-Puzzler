@@ -1,35 +1,29 @@
-[] Juego
+[X ] Juego
     [ X ] Preguntar como quisiera ganar (configuracion antes del juego (horizontal - vertical))
-    [ X ] Calcular y guardar el tiempo de cada partida y presentarlo.
-
-[] Estadisticas
-    [] Calcular la cantidad minima de pasos por partida.
-
-[] ERRORES CONOCIDOS (DAR A DECIR ANTES DE LANZAR)
-    [] A veces el moviemiento del teclado en el grid no es preciso.
 
 [] What's new in version 1.1.00?
     [ ] BUG fixes:
-        [ ] Firefox: 
+        [ X ] Firefox: 
             [ X ] Fixed issue where the number table didn't look correct while playing in vertical or vertical reversed.
 
-        [ ] Safari:
-            [ ] Fixed issue where the time and movements made was not centred horizontally.
+        [ X ] Safari:
+            [ X ] Fixed issue where the time, movements and configuration mode were not centred horizontally.
+            [ X ] Fixed dangerous bug where moving certain pieces in the number table would softlock the game.
         
         [ ] All browsers:
             [ X ] Fix most sound issues.
             [ X ] Fix issue in standard reversed. The number table would click to the correct look once all pieces loaded.
             [ ] Fix keyboard navigation through the number table (for keyboard users).
             [ X ] Fix mode selection issue where sometimes, the buttons for going through each configuration may dissapear.
-            [ X ] Changed game icon.
             [ X ] Fixed issue where after enough time, some pages may not load. Therefore breaking the game.
-            [ X ] Fixed issue where the carousel buttons when picking a configuration, may appear later, or never dissapear or never appear.
+            [ X ] Fixed issue where the carousel buttons when picking a configuration, may appear later, or never dissapear or never appear. 
 
-    [ ] NEW Features:
-        [ ] General:
+    [ X ] NEW Features:
+        [ X ] General:
             [ X ] Replace "Exit Game" button with the new Options menu.
-            [ X ] Customise the game's appearance with 4 diferent colour themes! (Light, dark, retro and automatic)
+            [ X ] Changed game icon.
+            [ X ] Customise the game's appearance with 4 diferent colour themes! (Light, dark, retro and automatic).
         [ X ] Gameplay:
             [ X ] Added which game mode you're playing.
             [ X ] Changed sound of moving tiles.
-            [ X ] Tiles are now animated when moved (default behaviour, but can be changed in the options menu).
+            [ X ] Tiles are now animated when moved (default behaviour, but can be changed in the new options menu).
