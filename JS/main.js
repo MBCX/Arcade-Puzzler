@@ -18,11 +18,11 @@ import { setAndUpdatei18nString, updatei18nAria } from "./i18n/i18nManager.js";
 import {
     ARIA_TYPES,
     AUDIO_TYPES,
-    game_i18n_lang,
-    i18nmanager,
     BROWSER_STRINGS,
     GAME_KEYS,
-    COLOUR_THEMES
+    COLOUR_THEMES,
+    game_i18n_lang,
+    i18nmanager,
 } from "./shared/shared.js";
 
 const GRID_POSITION = {
