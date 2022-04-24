@@ -230,8 +230,7 @@ li#blank
 
 .carousel__info
 {
-    top: 2em;
-    right: 0;
+    left: 1rem;
     background-color: transparent;
     border: none;
     color: currentColor;

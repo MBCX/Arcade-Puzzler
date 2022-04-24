@@ -1,7 +1,6 @@
 import { BROWSER_STRINGS, COLOUR_THEMES, GAME_KEYS } from "../shared/shared.js";
 
 let current_a11y_string = "";
-let MASTER_AUDIO = new Audio();
 
 export function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
@@ -128,35 +127,6 @@ export function roll_dice(roll_amount, sides) {
         sum += Math.floor(Math.random() * sides) + 1;
     }
     return sum;
-}
-
-export function playSound(sound_type, volume = 0.5) {
-    return new Promise((resolve, reject) => {
-        if (sound_type.includes("wav")) {
-            MASTER_AUDIO.src = `../../assets/audio/${sound_type}`;
-        } else {
-            MASTER_AUDIO.src = `../../assets/audio/${sound_type}.wav`;
-        }
-        MASTER_AUDIO.volume = volume;
-        MASTER_AUDIO.play()
-            .then(() => {
-                resolve(true);
-            })
-            .catch((err) => {
-                reject(err);
-            });
-    });
-}
-
-export function stopAllAudio() {
-    MASTER_AUDIO.pause();
-    MASTER_AUDIO.currentTime = 0;
-}
-
-export function isAudioPlaying(audio) {
-    const time_curr = audio.currentTime;
-    const time_dur = audio.duration;
-    return 0 < time_curr && time_curr != time_dur;
 }
 
 export function detectBrowser() {

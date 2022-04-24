@@ -3,6 +3,7 @@ import { setGameLanguageBasedOn } from "../utils/utils.js";
 
 export const game_i18n_lang = import(`../i18n/lang/${setGameLanguageBasedOn(navigator.language)}.js`);
 export const i18nmanager = new i18nManager();
+export const DEV_MODE = true;
 export const ARIA_TYPES = {
     NONE: 0,
     ARIA_LABEL: 1,

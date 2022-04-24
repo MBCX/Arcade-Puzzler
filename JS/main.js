@@ -21,6 +21,7 @@ import {
     game_i18n_lang,
     i18nmanager,
     SOUND_DEFAULTS,
+    DEV_MODE,
 } from "./shared/shared.js";
 import { TWODJSSound } from "../assets/libraries/TWODJS/TWODJSound.js";
 
@@ -237,45 +238,13 @@ function checkBlankPosInBoard() {
 }
 
 function correctCurrentIndexGrid(type) {
-    let button_offset = 2;
-    const index_mod = current_column % (GRID_POSITION.LAST_ROW_COLUMN + 1);
     switch (type) {
         case "down":
-            const element_down_blank_btn = number_container.children.item(
-                current_index + 4
-            );
             current_index = current_index + 4;
             break;
         case "up":
-            const element_up_blank_btn = number_container.children.item(
-                current_index - 4
-            );
             current_index = current_index - 4;
             break;
-        // case "up":
-        //     if (
-        //         index_mod === GRID_POSITION.FIRST_ROW_COLUMN ||
-        //         index_mod === GRID_POSITION.SECOND_ROW_COLUMN ||
-        //         index_mod === GRID_POSITION.THIRD_ROW_COLUMN
-        //     ) {
-        //         current_index = current_index - button_offset * 2;
-        //     } else {
-        //         button_offset = 0;
-        //         current_index = current_index - (index_mod + button_offset);
-        //     }
-        //     break;
-        // case "down":
-        //     if (
-        //         index_mod === GRID_POSITION.FIRST_ROW_COLUMN ||
-        //         index_mod === GRID_POSITION.SECOND_ROW_COLUMN ||
-        //         index_mod === GRID_POSITION.THIRD_ROW_COLUMN
-        //     ) {
-        //         current_index = current_index + button_offset * 2;
-        //     } else {
-        //         button_offset = 1;
-        //         current_index = current_index + (index_mod + button_offset);
-        //     }
-        //     break;
     }
 }
 
@@ -1094,51 +1063,98 @@ function controlGameConfigOptions() {
 
     game_i18n_lang.then(() => {
         const all_radios = document.querySelectorAll(".value-wrapper input");
-
-        document.querySelector(
-            "[data-i18n-id='game__goto_options']"
-        ).innerText = i18nmanager.i18n("game__goto_options");
-        document.querySelector(
-            "[data-i18n-id='game__options_title_gameplay']"
-        ).innerText = i18nmanager.i18n("game__options_title_gameplay");
-        document.querySelector(
-            "[data-i18n-id='game__options_animate_tiles']"
-        ).innerText = i18nmanager.i18n("game__options_animate_tiles");
-        document.querySelector(
-            "[data-i18n-id='game__options_cheat_mode']"
-        ).innerText = i18nmanager.i18n("game__options_cheat_mode");
-
-        // Colour schemes.
-        document.querySelector(
-            "[data-i18n-id='game__options_title_colour_skins']"
-        ).innerText = i18nmanager.i18n("game__options_title_colour_skins");
-        document.querySelector(
-            "[data-i18n-id='game__options_colour_scheme_light']"
-        ).innerText = i18nmanager.i18n("game__options_colour_scheme_light");
-        document.querySelector(
-            "[data-i18n-id='game__options_colour_scheme_dark']"
-        ).innerText = i18nmanager.i18n("game__options_colour_scheme_dark");
-        document.querySelector(
-            "[data-i18n-id='game__options_colour_scheme_retro']"
-        ).innerText = i18nmanager.i18n("game__options_colour_scheme_retro");
-        document.querySelector(
-            "[data-i18n-id='game__options_colour_scheme_auto']"
-        ).innerText = i18nmanager.i18n("game__options_colour_scheme_auto");
-        document
-            .querySelector("#back-to-main-menu")
-            .addEventListener("click", playBackSound);
-
-        all_radios.forEach((radio) => {
-            const curr_theme = getLocalStorageKey(GAME_KEYS.THEME);
-            const id = String(radio.getAttribute("id")).split("-")[2];
-            if (id === curr_theme) {
-                radio.checked = true;
-            }
-            radio.addEventListener("click", radioEditTheme.bind(this, radio));
-        });
-        setCheckState();
-        checkboxes.MOVE_TILES.addEventListener("click", animteMovingTiles);
-        checkboxes.CHEAT.addEventListener("click", enableCheatMode);
+        if (!DEV_MODE) {
+            checkboxes.CHEAT.remove();
+            document.querySelector("[data-i18n-id='game__options_cheat_mode']").remove();
+            
+            
+            document.querySelector(
+                "[data-i18n-id='game__goto_options']"
+            ).innerText = i18nmanager.i18n("game__goto_options");
+            document.querySelector(
+                "[data-i18n-id='game__options_title_gameplay']"
+            ).innerText = i18nmanager.i18n("game__options_title_gameplay");
+            document.querySelector(
+                "[data-i18n-id='game__options_animate_tiles']"
+            ).innerText = i18nmanager.i18n("game__options_animate_tiles");
+    
+            // Colour schemes.
+            document.querySelector(
+                "[data-i18n-id='game__options_title_colour_skins']"
+            ).innerText = i18nmanager.i18n("game__options_title_colour_skins");
+            document.querySelector(
+                "[data-i18n-id='game__options_colour_scheme_light']"
+            ).innerText = i18nmanager.i18n("game__options_colour_scheme_light");
+            document.querySelector(
+                "[data-i18n-id='game__options_colour_scheme_dark']"
+            ).innerText = i18nmanager.i18n("game__options_colour_scheme_dark");
+            document.querySelector(
+                "[data-i18n-id='game__options_colour_scheme_retro']"
+            ).innerText = i18nmanager.i18n("game__options_colour_scheme_retro");
+            document.querySelector(
+                "[data-i18n-id='game__options_colour_scheme_auto']"
+            ).innerText = i18nmanager.i18n("game__options_colour_scheme_auto");
+            document
+                .querySelector("#back-to-main-menu")
+                .addEventListener("click", playBackSound);
+    
+            all_radios.forEach((radio) => {
+                const curr_theme = getLocalStorageKey(GAME_KEYS.THEME);
+                const id = String(radio.getAttribute("id")).split("-")[2];
+                if (id === curr_theme) {
+                    radio.checked = true;
+                }
+                radio.addEventListener("click", radioEditTheme.bind(this, radio));
+            });
+            setCheckState();
+            checkboxes.MOVE_TILES.addEventListener("click", animteMovingTiles);
+        } else {
+            
+            document.querySelector(
+                "[data-i18n-id='game__goto_options']"
+            ).innerText = i18nmanager.i18n("game__goto_options");
+            document.querySelector(
+                "[data-i18n-id='game__options_title_gameplay']"
+            ).innerText = i18nmanager.i18n("game__options_title_gameplay");
+            document.querySelector(
+                "[data-i18n-id='game__options_animate_tiles']"
+            ).innerText = i18nmanager.i18n("game__options_animate_tiles");
+            document.querySelector(
+                "[data-i18n-id='game__options_cheat_mode']"
+            ).innerText = i18nmanager.i18n("game__options_cheat_mode");
+    
+            // Colour schemes.
+            document.querySelector(
+                "[data-i18n-id='game__options_title_colour_skins']"
+            ).innerText = i18nmanager.i18n("game__options_title_colour_skins");
+            document.querySelector(
+                "[data-i18n-id='game__options_colour_scheme_light']"
+            ).innerText = i18nmanager.i18n("game__options_colour_scheme_light");
+            document.querySelector(
+                "[data-i18n-id='game__options_colour_scheme_dark']"
+            ).innerText = i18nmanager.i18n("game__options_colour_scheme_dark");
+            document.querySelector(
+                "[data-i18n-id='game__options_colour_scheme_retro']"
+            ).innerText = i18nmanager.i18n("game__options_colour_scheme_retro");
+            document.querySelector(
+                "[data-i18n-id='game__options_colour_scheme_auto']"
+            ).innerText = i18nmanager.i18n("game__options_colour_scheme_auto");
+            document
+                .querySelector("#back-to-main-menu")
+                .addEventListener("click", playBackSound);
+    
+            all_radios.forEach((radio) => {
+                const curr_theme = getLocalStorageKey(GAME_KEYS.THEME);
+                const id = String(radio.getAttribute("id")).split("-")[2];
+                if (id === curr_theme) {
+                    radio.checked = true;
+                }
+                radio.addEventListener("click", radioEditTheme.bind(this, radio));
+            });
+            setCheckState();
+            checkboxes.MOVE_TILES.addEventListener("click", animteMovingTiles);
+            checkboxes.CHEAT.addEventListener("click", enableCheatMode);
+        }
     });
 }
 
@@ -1201,16 +1217,17 @@ function controlGameConfigDialogue() {
             }
         }
 
-        function showInfo(index) {
+        function showInfo() {
             const all_desc = document.querySelectorAll(".carousel__desc");
             if (
-                all_desc[index].style.display === "none" ||
-                all_desc[index].style.display === ""
+                all_desc[config_dialogue_selected_config].style.display === "none" ||
+                all_desc[config_dialogue_selected_config].style.display === ""
             ) {
-                all_desc[index].style.display = "block";
+                all_desc[config_dialogue_selected_config].style.display = "block";
             } else {
-                all_desc[index].style.display = "none";
+                all_desc[config_dialogue_selected_config].style.display = "none";
             }
+            TWODJSSound.play_sound("select");
         }
 
         const dialogue_btn_prev = document.querySelector("#carousel-btn-prev");
@@ -1220,8 +1237,7 @@ function controlGameConfigDialogue() {
         const all_images = document.querySelectorAll(
             "#config-dialogue .img-group img"
         );
-        const all_info_btns = document.querySelectorAll(".carousel__info");
-
+        
         // Set element aria labels and i18n strings.
         updatei18nAria(
             document.querySelector("#back-to-main-menu"),
@@ -1280,9 +1296,7 @@ function controlGameConfigDialogue() {
             img.addEventListener("click", handleGameConfig);
         });
 
-        all_info_btns.forEach((btn, i) => {
-            btn.addEventListener("click", showInfo.bind(this, i));
-        });
+        document.querySelector("#config-description-button").addEventListener("click", showInfo);
 
         dialogue_btn_next.addEventListener("click", () => {
             const current_carousel = document.querySelector(
