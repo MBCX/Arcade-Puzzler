@@ -79,6 +79,8 @@ export const swup = new Swup({
     cache: false,
 });
 
+TWODJSSound.init();
+
 function getCurrentGameConfig(mode) {
     switch (mode) {
         case CONFIG_MODE.STANDARD:
@@ -1455,7 +1457,7 @@ document.addEventListener("swup:contentReplaced", function () {
     }
 });
 
-document.addEventListener("DOMContentLoaded", function () {
+function loadOnLoad() {
     // Set light or dark mode.
     initGameSettings();
     if ("/game.html" === window.location.pathname) {
@@ -1475,6 +1477,10 @@ document.addEventListener("DOMContentLoaded", function () {
         window.cancelAnimationFrame(gameUpdateLoop);
         addAgainEventListenerForMenuGroup();
     }
+}
+
+document.addEventListener("load", function () {
+    loadOnLoad();
 });
 
 if (document.querySelector("#enable-sound")) {
@@ -1524,4 +1530,6 @@ if (document.querySelector("#enable-sound")) {
         );
     });
 }
-TWODJSSound.init();
+
+// For SW.
+loadOnLoad();

@@ -1,11 +1,17 @@
 var sw_url = { url: "./sw.js" };
 
-function loadMainJS()
+async function loadMainJS(src)
 {
-    const script = document.createElement("script");
-    script.src = "JS/main.js";
-    script.type = "module";
-    document.body.append(script);
+    return new Promise((resolve, reject) => {
+        const script = document.createElement("script");
+        script.src = src;
+        script.type = "module";
+        script.addEventListener("load", function() {
+           resolve(script); 
+        });
+        script.onerror = reject;
+        document.head.append(script);
+    });
 }
 
 if ("serviceWorker" in navigator) {
@@ -24,13 +30,13 @@ if ("serviceWorker" in navigator) {
             });
         });
 
-        this.navigator.serviceWorker.register(sw_url.url).then((reg) => {
+        this.navigator.serviceWorker.register(sw_url.url).then(async (reg) => {
             console.log("Arcade Puzzle PWA service worker ready.");
             reg.update();
-            loadMainJS();
-        }).catch((err) => {
+            await loadMainJS("JS/main.js");
+        }).catch(async (err) => {
             console.error("PWA Registration failed with error: " + err);
-            loadMainJS();
+            await loadMainJS("JS/main.js");
         });
     });
 } else {
