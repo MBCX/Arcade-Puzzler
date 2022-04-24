@@ -336,34 +336,37 @@ function checkIfWeCanMove(move_request, element) {
     // exists).
     switch (move_request) {
         case MOVE_RQST.LEFT: {
+            if (null == blank_btn.previousElementSibling) {
+                return false;
+            }
             const pos = (blank_btn_pos_index - 1) % (GRID_POSITION.LAST_ROW_COLUMN + 1);
             const safe_to_move = pos !== GRID_POSITION.LAST_ROW_COLUMN;
 
             if (getLocalStorageKey(GAME_KEYS.CHEAT_MODE) === "true") {
                 return (
-                    null != blank_btn.previousElementSibling &&
                     element == element_left_blank_btn
                 );
             }
             return (
                 safe_to_move &&
-                null != blank_btn.previousElementSibling &&
                 element == element_left_blank_btn
             );
         }
         case MOVE_RQST.RIGHT: {
+            if (null == blank_btn.nextElementSibling) {
+                return false;
+            }
+            
             const pos = (blank_btn_pos_index + 1) % (GRID_POSITION.LAST_ROW_COLUMN + 1);
             const safe_to_move = pos !== GRID_POSITION.FIRST_ROW_COLUMN;
 
             if (getLocalStorageKey(GAME_KEYS.CHEAT_MODE) === "true") {
                 return (
-                    null != blank_btn.previousElementSibling &&
                     element == element_right_blank_btn
                 );
             }
             return (
                 safe_to_move &&
-                null != blank_btn.nextElementSibling &&
                 element == element_right_blank_btn
             );
         }
