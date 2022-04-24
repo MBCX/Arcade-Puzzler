@@ -10,24 +10,8 @@ export const ARIA_TYPES = {
     ALT_IMAGES: 3,
     INSIDE_ELEMENT: -1
 }
-export const AUDIO_TYPES = {
-    FX: {
-        TITLE: "sn_title_screen.wav",
-        MOVE_PIECE: "sn_move_piece.wav",
-        MOVE_PIECE_INSTANT: "sn_move_piece_instant.wav",
-        BAD_MOVE_PIECE: "sn_bad_move_piece.wav",
-        MOVE_IN_GRID: "sn_move_grid.wav",
-        WIN: "sn_win.wav",
-        ENTER: "sn_enter_click.wav",
-        SELECTING: "sn_select.wav",
-        BACK_BUTTON: "sn_back_button_click.wav",
-        TICKBOX_TICKED: "tickbox_ticked.wav",
-        TICKBOX_NOT_TICKED: "tickbox_not_ticked.wav",
-        RADIO_BUTTON_CLICKED: "radio_button_clicked.wav"
-    },
-    MUSIC: {
-
-    }
+export const SOUND_DEFAULTS = {
+    DEFAULT_VOLUME: 0.5,
 };
 export const BROWSER_STRINGS = {
     CHROMIUM: "Chromium",

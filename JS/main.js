@@ -7,23 +7,22 @@ import {
     setGameTheme,
     setGameLanguageBasedOn,
     roll_dice,
-    playSound,
     detectBrowser,
     getLocalStorageKey,
     setLocalStorageItem,
-    stopAllAudio,
     setGameCubesAnimated,
 } from "./utils/utils.js";
 import { setAndUpdatei18nString, updatei18nAria } from "./i18n/i18nManager.js";
 import {
     ARIA_TYPES,
-    AUDIO_TYPES,
     BROWSER_STRINGS,
     GAME_KEYS,
     COLOUR_THEMES,
     game_i18n_lang,
     i18nmanager,
+    SOUND_DEFAULTS,
 } from "./shared/shared.js";
+import { TWODJSSound } from "../assets/libraries/TWODJS/TWODJSound.js";
 
 const GRID_POSITION = {
     FIRST_ROW_COLUMN: 0,
@@ -95,6 +94,19 @@ function getCurrentGameConfig(mode) {
 function initGameSettings() {
     setGameTheme(getLocalStorageKey(GAME_KEYS.THEME));
     setGameCubesAnimated(getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE));
+
+    TWODJSSound.add_sound("../assets/audio/sn_title_screen.wav", "titlescreen");
+    TWODJSSound.add_sound("../assets/audio/sn_radio_button_clicked.wav", "radiobuttonclick");
+    TWODJSSound.add_sound("../assets/audio/sn_back_button_click.wav", "backbutton");
+    TWODJSSound.add_sound("../assets/audio/sn_bad_move_piece.wav", "badmovepiece");
+    TWODJSSound.add_sound("../assets/audio/sn_enter_click.wav", "enter");
+    TWODJSSound.add_sound("../assets/audio/sn_move_grid.wav", "moveingrid");
+    TWODJSSound.add_sound("../assets/audio/sn_move_piece.wav", "movepiece");
+    TWODJSSound.add_sound("../assets/audio/sn_move_piece_instant.wav", "movepieceinstant");
+    TWODJSSound.add_sound("../assets/audio/sn_select.wav", "select");
+    TWODJSSound.add_sound("../assets/audio/sn_win.wav", "win");
+    TWODJSSound.add_sound("../assets/audio/sn_tickbox_not_ticked.wav", "tickboxnot");
+    TWODJSSound.add_sound("../assets/audio/sn_tickbox_ticked.wav", "tickbox");
 }
 
 function getGameTheme() {
@@ -157,7 +169,7 @@ function checkWinningCondition() {
             );
         });
         stopAllAudio();
-        playSound(AUDIO_TYPES.FX.WIN);
+        TWODJSSound.play_sound("win");
 
         window.setTimeout(() => {
             swup.loadPage({
@@ -283,19 +295,19 @@ function handleGridKeyboardMovement(e) {
         if ("ArrowLeft" === e.key || "a" === e.key || "A" === e.key) {
             current_index--;
             current_column--;
-            playSound(AUDIO_TYPES.FX.MOVE_IN_GRID);
+            TWODJSSound.play_sound("moveingrid");
         } else if ("ArrowRight" === e.key || "d" === e.key || "D" === e.key) {
             current_index++;
             current_column++;
-            playSound(AUDIO_TYPES.FX.MOVE_IN_GRID);
+            TWODJSSound.play_sound("moveingrid");
         } else if ("ArrowUp" === e.key || "W" === e.key || "w" === e.key) {
             // correctCurrentIndexGrid("up");
             current_index = current_index - 4;
-            playSound(AUDIO_TYPES.FX.MOVE_IN_GRID);
+            TWODJSSound.play_sound("moveingrid");
         } else if ("ArrowDown" === e.key || "S" === e.key || "s" === e.key) {
             // correctCurrentIndexGrid("down");
             current_index = current_index + 4;
-            playSound(AUDIO_TYPES.FX.MOVE_IN_GRID);
+            TWODJSSound.play_sound("moveingrid");
         }
         current_index = clamp(current_index, 0, buttons.length - 1);
         current_column = wrap(
@@ -528,9 +540,9 @@ function gameUpdateLoop(time) {
                         getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE) === "true"
                     ) {
                         li_target.classList.add(block_animation_name);
-                        playSound(AUDIO_TYPES.FX.MOVE_PIECE);
+                        TWODJSSound.play_sound("movepiece", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
                     } else {
-                        playSound(AUDIO_TYPES.FX.MOVE_PIECE_INSTANT);
+                        TWODJSSound.play_sound("movepieceinstant", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
                     }
                 }
             } else if (checkIfWeCanMove(MOVE_RQST.RIGHT, li_target)) {
@@ -557,9 +569,9 @@ function gameUpdateLoop(time) {
                         getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE) === "true"
                     ) {
                         li_target.classList.add(block_animation_name);
-                        playSound(AUDIO_TYPES.FX.MOVE_PIECE);
+                        TWODJSSound.play_sound("movepiece", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
                     } else {
-                        playSound(AUDIO_TYPES.FX.MOVE_PIECE_INSTANT);
+                        TWODJSSound.play_sound("movepieceinstant", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
                     }
                 }
             } else if (checkIfWeCanMove(MOVE_RQST.UP, li_target)) {
@@ -596,9 +608,9 @@ function gameUpdateLoop(time) {
                         getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE) === "true"
                     ) {
                         li_target.classList.add(block_animation_name);
-                        playSound(AUDIO_TYPES.FX.MOVE_PIECE);
+                        TWODJSSound.play_sound("movepiece", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
                     } else {
-                        playSound(AUDIO_TYPES.FX.MOVE_PIECE_INSTANT);
+                        TWODJSSound.play_sound("movepieceinstant", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
                     }
                 }
             } else if (checkIfWeCanMove(MOVE_RQST.DOWN, li_target)) {
@@ -644,9 +656,9 @@ function gameUpdateLoop(time) {
                         getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE) === "true"
                     ) {
                         li_target.classList.add(block_animation_name);
-                        playSound(AUDIO_TYPES.FX.MOVE_PIECE);
+                        TWODJSSound.play_sound("movepiece", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
                     } else {
-                        playSound(AUDIO_TYPES.FX.MOVE_PIECE_INSTANT);
+                        TWODJSSound.play_sound("movepieceinstant", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
                     }
                 }
             } else {
@@ -657,7 +669,7 @@ function gameUpdateLoop(time) {
                     },
                     true
                 );
-                playSound(AUDIO_TYPES.FX.BAD_MOVE_PIECE);
+                TWODJSSound.play_sound("badmovepiece", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
                 e.target.classList.add("animation_button_wrong");
                 e.target.addEventListener(
                     "animationend",
@@ -847,54 +859,16 @@ function moveBetweenMenuButtons(e) {
     ) {
         menu_button_index++;
     }
-    playSound(AUDIO_TYPES.FX.SELECTING);
+    TWODJSSound.play_sound("select");
     menu_button_index = wrap(menu_button_index, 0, all_links.length);
     all_links[menu_button_index].focus();
-}
-
-function registerAllSounds() {
-    return new Promise((resolve, reject) => {
-        const MAX_SOUNDS_TO_LOAD = 12;
-        let sounds_loaded = 0;
-
-        for (const audio_name in AUDIO_TYPES.FX) {
-            const audio = new Audio(
-                `../assets/audio/${AUDIO_TYPES.FX[audio_name]}`
-            );
-            audio.volume = 0;
-
-            audio
-                .play()
-                .then(() => {
-                    let name = audio_name;
-                    console.log(`Audio (${name}) loaded with success.`);
-                    sounds_loaded++;
-                    console.log(sounds_loaded);
-                })
-                .then(() => {
-                    if (sounds_loaded === MAX_SOUNDS_TO_LOAD) {
-                        console.log("All sounds loaded! The game is ready.");
-                        resolve(true);
-                    }
-                });
-        }
-        reject(false);
-    });
 }
 
 async function enableSoundByClicking() {
     document.querySelector("#enable-sound").remove();
     document.removeEventListener("click", enableSoundByClicking);
     document.removeEventListener("keydown", enableSoundByClicking);
-
-    await registerAllSounds()
-        .then(initMainMenu)
-        .catch(() => {
-            console.warn(
-                "Some sounds may or may not have loaded properly, expect sound de-sync."
-            );
-            initMainMenu();
-        });
+    initMainMenu();
 }
 
 function initMainMenu() {
@@ -939,7 +913,7 @@ function initMainMenu() {
                             animation: animate_fire 1000ms steps(9) reverse forwards, generic_fadeout 800ms linear forwards;
                         `
                         );
-                        playSound(AUDIO_TYPES.FX.TITLE);
+                        TWODJSSound.play_sound("titlescreen");
                         fire.addEventListener("animationend", () => {
                             animated_container.setAttribute(
                                 "style",
@@ -1016,11 +990,11 @@ function initMainMenu() {
 }
 
 function playEnterSound() {
-    playSound(AUDIO_TYPES.FX.ENTER);
+    TWODJSSound.play_sound("enter")
 }
 
 function playBackSound() {
-    playSound(AUDIO_TYPES.FX.BACK_BUTTON);
+    TWODJSSound.play_sound("backbutton")
 }
 
 function addAgainEventListenerForMenuGroup() {
@@ -1068,19 +1042,19 @@ function controlGameConfigOptions() {
         const id = String(radioElement.getAttribute("id")).split("-")[2];
         switch (id) {
             case "light":
-                playSound(AUDIO_TYPES.FX.RADIO_BUTTON_CLICKED);
+                TWODJSSound.play_sound("radiobuttonclick");
                 setGameTheme(COLOUR_THEMES.LIGHT);
                 break;
             case "dark":
-                playSound(AUDIO_TYPES.FX.RADIO_BUTTON_CLICKED);
+                TWODJSSound.play_sound("radiobuttonclick");
                 setGameTheme(COLOUR_THEMES.DARK);
                 break;
             case "retro":
-                playSound(AUDIO_TYPES.FX.RADIO_BUTTON_CLICKED);
+                TWODJSSound.play_sound("radiobuttonclick");
                 setGameTheme(COLOUR_THEMES.RETRO);
                 break;
             case "auto":
-                playSound(AUDIO_TYPES.FX.RADIO_BUTTON_CLICKED);
+                TWODJSSound.play_sound("radiobuttonclick");
                 setGameTheme(COLOUR_THEMES.AUTO);
                 break;
         }
@@ -1089,9 +1063,9 @@ function controlGameConfigOptions() {
     function animteMovingTiles() {
         const checkbox = checkboxes.MOVE_TILES;
         if (!checkbox.checked) {
-            playSound(AUDIO_TYPES.FX.TICKBOX_TICKED);
+            TWODJSSound.play_sound("tickbox");
         } else {
-            playSound(AUDIO_TYPES.FX.TICKBOX_NOT_TICKED);
+            TWODJSSound.play_sound("tickboxnot");
         }
         setLocalStorageItem(GAME_KEYS.BLOCKS_ANIMATE, checkbox.checked);
     }
@@ -1100,9 +1074,9 @@ function controlGameConfigOptions() {
     {
         const checkbox = checkboxes.CHEAT;
         if (!checkbox.checked) {
-            playSound(AUDIO_TYPES.FX.TICKBOX_TICKED);
+            TWODJSSound.play_sound("tickbox");
         } else {
-            playSound(AUDIO_TYPES.FX.TICKBOX_NOT_TICKED);
+            TWODJSSound.play_sound("tickboxnot");
         }
         setLocalStorageItem(GAME_KEYS.CHEAT_MODE, checkbox.checked);
     }
@@ -1160,11 +1134,11 @@ function controlGameConfigOptions() {
             if (id === curr_theme) {
                 radio.checked = true;
             }
-            radio.addEventListener("click", radioEditTheme.bind(this, radio), { once: true });
+            radio.addEventListener("click", radioEditTheme.bind(this, radio));
         });
         setCheckState();
-        checkboxes.MOVE_TILES.addEventListener("click", animteMovingTiles, { once: true });
-        checkboxes.CHEAT.addEventListener("click", enableCheatMode, { once: true });
+        checkboxes.MOVE_TILES.addEventListener("click", animteMovingTiles);
+        checkboxes.CHEAT.addEventListener("click", enableCheatMode);
     });
 }
 
@@ -1222,7 +1196,7 @@ function controlGameConfigDialogue() {
                         reset();
                         window.requestAnimationFrame(gameUpdateLoop);
                     });
-                playSound(AUDIO_TYPES.FX.ENTER);
+                TWODJSSound.play_sound("enter");
                 started_playing = true;
             }
         }
@@ -1329,7 +1303,7 @@ function controlGameConfigDialogue() {
             ) {
                 current_carousel.classList.remove("selected");
                 current_carousel.nextElementSibling.classList.add("selected");
-                playSound(AUDIO_TYPES.FX.SELECTING);
+                TWODJSSound.play_sound("select");
             }
             config_dialogue_selected_config = clamp(
                 config_dialogue_selected_config,
@@ -1359,7 +1333,7 @@ function controlGameConfigDialogue() {
                 current_carousel.previousElementSibling.classList.add(
                     "selected"
                 );
-                playSound(AUDIO_TYPES.FX.SELECTING);
+                TWODJSSound.play_sound("select");
             }
             config_dialogue_selected_config = clamp(
                 config_dialogue_selected_config,
@@ -1534,3 +1508,4 @@ if (document.querySelector("#enable-sound")) {
         );
     });
 }
+TWODJSSound.init();
