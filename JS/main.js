@@ -169,7 +169,6 @@ function checkWinningCondition() {
                 }
             );
         });
-        stopAllAudio();
         TWODJSSound.play_sound("win");
 
         window.setTimeout(() => {
