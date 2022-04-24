@@ -1,4 +1,4 @@
-const cache_name = "arcade-puzzler.comv1.0.11";
+const cache_name = "arcade-puzzler.comv1.1.00";
 const start_page = "index.html";
 const main_css = "CSS/game.css";
 
