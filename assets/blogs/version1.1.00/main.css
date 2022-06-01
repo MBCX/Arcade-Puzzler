@@ -120,14 +120,14 @@ body
 
 .background-images div:nth-child(1):after
 {
-    --text: "New";
+    /* --text: "New"; */
     --font: "8 Bit Operator";
     --bottom: 66%;
 }
 
 .background-images div:nth-child(2):after
 {
-    --text: "Theme";
+    /* --text: "Theme"; */
     --font: "Noto Sans Mono";
     --bottom: 66%;
     text-shadow: 2px 2px 2px #000000;
@@ -135,7 +135,7 @@ body
 
 .background-images div:nth-child(3):after
 {
-    --text: "Colours!";
+    /* --text: "Colours!"; */
     --font: "Noto Sans Mono";
     --bottom: 66%;
     text-shadow: 3px 3px 0px #424242;
