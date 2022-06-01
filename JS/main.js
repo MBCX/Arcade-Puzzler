@@ -1,9 +1,29 @@
 import "../assets/libraries/swup/swup.min.js";
 import "../assets/libraries/swup/plugins/SwupA11yPlugin.min.js";
 import "../assets/libraries/swup/plugins/SwupDebugPlugin.min.js";
-import {wrap, clamp, setDarkMode, setGameLanguageBasedOn, roll_dice, playSound, } from "./utils/utils.js";
-import {setAndUpdatei18nString, updatei18nAria} from "./i18n/i18nManager.js";
-import {ARIA_TYPES, AUDIO_TYPES, game_i18n_lang, i18nmanager} from "./shared/shared.js";
+import {
+    wrap,
+    clamp,
+    setGameTheme,
+    setGameLanguageBasedOn,
+    roll_dice,
+    detectBrowser,
+    getLocalStorageKey,
+    setLocalStorageItem,
+    setGameCubesAnimated,
+} from "./utils/utils.js";
+import { setAndUpdatei18nString, updatei18nAria } from "./i18n/i18nManager.js";
+import {
+    ARIA_TYPES,
+    BROWSER_STRINGS,
+    GAME_KEYS,
+    COLOUR_THEMES,
+    game_i18n_lang,
+    i18nmanager,
+    SOUND_DEFAULTS,
+    DEV_MODE,
+} from "./shared/shared.js";
+import { TWODJSSound } from "../assets/libraries/TWODJS/TWODJSound.js";
 
 const GRID_POSITION = {
     FIRST_ROW_COLUMN: 0,
@@ -46,76 +66,120 @@ let blank_btn_at_grid;
 let config_dialogue_selected_config = 0;
 let player_won;
 let time_amount;
+let current_config_mode;
+let current_column = 0;
+let started_playing = false;
 
 // Used for moving with the arrow or
 // W or S in the main menu buttons.
 let menu_button_index = 0;
 
 export const swup = new Swup({
-    linkSelector: 'a[href^="' +
-    window.location.origin +
-    '"]:not([data-no-swup]), a[href^="/"]:not([data-no-swup]), a[href^="#"]:not([data-no-swup]), a[href^="./"]:not([data-no-swup])',
     plugins: [new SwupA11yPlugin(), new SwupDebugPlugin()],
     cache: false,
 });
 
-function checkWinningCondition()
-{
-    const number_container_lis = document.querySelectorAll("#number-container li");
+TWODJSSound.init();
+
+function getCurrentGameConfig(mode) {
+    switch (mode) {
+        case CONFIG_MODE.STANDARD:
+            return i18nmanager.i18n("game__config_mode_standard");
+        case CONFIG_MODE.VERTICAL:
+            return i18nmanager.i18n("game__config_mode_vertical");
+        case CONFIG_MODE.STANDARD_REVERSE:
+            return i18nmanager.i18n("game__config_mode_standard_reversed");
+        case CONFIG_MODE.VERTICAL_REVERSE:
+            return i18nmanager.i18n("game__config_mode_vertical_reversed");
+    }
+}
+
+function initGameSettings() {
+    setGameTheme(getLocalStorageKey(GAME_KEYS.THEME));
+    setGameCubesAnimated(getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE));
+
+    TWODJSSound.add_sound("../assets/audio/sn_title_screen.wav", "titlescreen");
+    TWODJSSound.add_sound("../assets/audio/sn_radio_button_clicked.wav", "radiobuttonclick");
+    TWODJSSound.add_sound("../assets/audio/sn_back_button_click.wav", "backbutton");
+    TWODJSSound.add_sound("../assets/audio/sn_bad_move_piece.wav", "badmovepiece");
+    TWODJSSound.add_sound("../assets/audio/sn_enter_click.wav", "enter");
+    TWODJSSound.add_sound("../assets/audio/sn_move_grid.wav", "moveingrid");
+    TWODJSSound.add_sound("../assets/audio/sn_move_piece.wav", "movepiece");
+    TWODJSSound.add_sound("../assets/audio/sn_move_piece_instant.wav", "movepieceinstant");
+    TWODJSSound.add_sound("../assets/audio/sn_select.wav", "select");
+    TWODJSSound.add_sound("../assets/audio/sn_win.wav", "win");
+    TWODJSSound.add_sound("../assets/audio/sn_tickbox_not_ticked.wav", "tickboxnot");
+    TWODJSSound.add_sound("../assets/audio/sn_tickbox_ticked.wav", "tickbox");
+}
+
+function getGameTheme() {
+    setGameTheme(getLocalStorageKey(GAME_KEYS.THEME));
+}
+
+function checkWinningCondition() {
+    const number_container_lis = document.querySelectorAll(
+        "#number-container li"
+    );
 
     for (let i = 0; MAX_AMOUNT_ITEMS_GRID > i; ++i) {
-        const li_pos_value = Number(number_container_lis[i].getAttribute("btn-pos"));
+        const li_pos_value = Number(
+            number_container_lis[i].getAttribute("btn-pos")
+        );
         if (li_pos_value !== i) {
-            return;
+            return false;
         }
     }
-    
+
     // Player has won!
     can_play = false;
     if (!player_won) {
         number_container_lis.forEach((li, i) => {
-            li.animate([
-                { transform: "translateY(0px)" },
-                { transform: "translateY(-5px)" },
-                { transform: "translateY(-10px)" },
-                { transform: "translateY(-15px)" },
-                { transform: "translateY(-20px)" },
-                { transform: "translateY(-25px)" },
-                { transform: "translateY(-30px)" },
-                { transform: "translateY(-25px)" },
-                { transform: "translateY(-20px)" },
-                { transform: "translateY(-15px)" },
-                { transform: "translateY(-10px)" },
-                { transform: "translateY(-5px)" },
-                { transform: "translateY(0px)" },
-                { transform: "translateY(-5px)" },
-                { transform: "translateY(-10px)" },
-                { transform: "translateY(-15px)" },
-                { transform: "translateY(-20px)" },
-                { transform: "translateY(-15px)" },
-                { transform: "translateY(-10px)" },
-                { transform: "translateY(-5px)" },
-                { transform: "translateY(0px)" },
-                { transform: "translateY(-10px)" },
-                { transform: "translateY(-5px)" },
-                { transform: "translateY(0px)" },
-                { transform: "translateY(-5px)" },
-                { transform: "translateY(0px)" },
-            ], {
-                duration: 750,
-                easing: "ease",
-                delay: (i + 1) * 35,
-                fill: "auto"
-            });
+            li.animate(
+                [
+                    { transform: "translateY(0px)" },
+                    { transform: "translateY(-5px)" },
+                    { transform: "translateY(-10px)" },
+                    { transform: "translateY(-15px)" },
+                    { transform: "translateY(-20px)" },
+                    { transform: "translateY(-25px)" },
+                    { transform: "translateY(-30px)" },
+                    { transform: "translateY(-25px)" },
+                    { transform: "translateY(-20px)" },
+                    { transform: "translateY(-15px)" },
+                    { transform: "translateY(-10px)" },
+                    { transform: "translateY(-5px)" },
+                    { transform: "translateY(0px)" },
+                    { transform: "translateY(-5px)" },
+                    { transform: "translateY(-10px)" },
+                    { transform: "translateY(-15px)" },
+                    { transform: "translateY(-20px)" },
+                    { transform: "translateY(-15px)" },
+                    { transform: "translateY(-10px)" },
+                    { transform: "translateY(-5px)" },
+                    { transform: "translateY(0px)" },
+                    { transform: "translateY(-10px)" },
+                    { transform: "translateY(-5px)" },
+                    { transform: "translateY(0px)" },
+                    { transform: "translateY(-5px)" },
+                    { transform: "translateY(0px)" },
+                ],
+                {
+                    duration: 750,
+                    easing: "ease",
+                    delay: (i + 1) * 35,
+                    fill: "auto",
+                }
+            );
         });
-        playSound(AUDIO_TYPES.FX.WIN);
-        
+        TWODJSSound.play_sound("win");
+
         window.setTimeout(() => {
             swup.loadPage({
-                url: "./results.html"
+                url: "/results.html",
             });
         }, 4000);
         player_won = true;
+        return true;
     }
 }
 
@@ -137,56 +201,55 @@ function reset() {
     a11y_btn_say_delay = 0;
     blank_btn_at_grid = GRID_POSITION.LAST_ROW_COLUMN;
     player_won = false;
-    time_amount = '';
+    time_amount = "";
+    started_playing = false;
 
     if (document.querySelector("#number-container")) {
         // Allow keyboard play and navigation of grid.
-        number_container.removeEventListener("keydown", handleGridKeyboardMovement);
-        number_container.addEventListener("keydown", handleGridKeyboardMovement);
+        number_container.removeEventListener(
+            "keydown",
+            handleGridKeyboardMovement
+        );
+        number_container.addEventListener(
+            "keydown",
+            handleGridKeyboardMovement
+        );
     }
     window.requestAnimationFrame(gameUpdateLoop);
 }
 
 function checkBlankPosInBoard() {
-    for (let i = number_container.children.length; 0 < i; --i) {
-        if (document.querySelector("#blank") == number_container.children.item(i)) {
+    const container_children = number_container.children;
+    for (let i = container_children.length; 0 < i; --i) {
+        const item = container_children.item(i);
+        if (null != item && item.getAttribute("id")) {
             return i;
         }
     }
+
+    // @MBCX: Second search attempt
+    // (partial bug fix for Safari)
+    let index;
+    [...container_children].forEach((child, i) => {
+        if (child.getAttribute("id")) {
+            index = i;
+        }
+    });
+    return index;
 }
 
-function correctCurrentIndexGrid(type)
-{
-    const button_offset = 2;
-    const index_mod = current_index % (GRID_POSITION.LAST_ROW_COLUMN + 1);
+function correctCurrentIndexGrid(type) {
     switch (type) {
-        case "up":
-            if (
-                index_mod === GRID_POSITION.FIRST_ROW_COLUMN ||
-                index_mod === GRID_POSITION.SECOND_ROW_COLUMN ||
-                index_mod === GRID_POSITION.THIRD_ROW_COLUMN
-            ) {
-                current_index = current_index - (button_offset * 2);
-            } else {
-                current_index = current_index - (index_mod + button_offset);
-            }
-            break;
         case "down":
-            if (
-                index_mod === GRID_POSITION.FIRST_ROW_COLUMN ||
-                index_mod === GRID_POSITION.SECOND_ROW_COLUMN ||
-                index_mod === GRID_POSITION.THIRD_ROW_COLUMN
-            ) {
-                current_index = current_index + (button_offset * 2);
-            } else {
-                current_index = current_index + (index_mod + button_offset);
-            }
+            current_index = current_index + 4;
+            break;
+        case "up":
+            current_index = current_index - 4;
             break;
     }
 }
 
-function handleGridKeyboardMovement(e)
-{
+function handleGridKeyboardMovement(e) {
     const buttons = document.querySelectorAll("#number-container li button");
 
     // Allow the user to exit the game via the back button.
@@ -201,18 +264,27 @@ function handleGridKeyboardMovement(e)
     if (can_play) {
         if ("ArrowLeft" === e.key || "a" === e.key || "A" === e.key) {
             current_index--;
-            playSound(AUDIO_TYPES.FX.MOVE_IN_GRID);
+            current_column--;
+            TWODJSSound.play_sound("moveingrid");
         } else if ("ArrowRight" === e.key || "d" === e.key || "D" === e.key) {
             current_index++;
-            playSound(AUDIO_TYPES.FX.MOVE_IN_GRID);
+            current_column++;
+            TWODJSSound.play_sound("moveingrid");
         } else if ("ArrowUp" === e.key || "W" === e.key || "w" === e.key) {
-            correctCurrentIndexGrid("up");
-            playSound(AUDIO_TYPES.FX.MOVE_IN_GRID);
+            // correctCurrentIndexGrid("up");
+            current_index = current_index - 4;
+            TWODJSSound.play_sound("moveingrid");
         } else if ("ArrowDown" === e.key || "S" === e.key || "s" === e.key) {
-            correctCurrentIndexGrid("down");
-            playSound(AUDIO_TYPES.FX.MOVE_IN_GRID);
+            // correctCurrentIndexGrid("down");
+            current_index = current_index + 4;
+            TWODJSSound.play_sound("moveingrid");
         }
         current_index = clamp(current_index, 0, buttons.length - 1);
+        current_column = wrap(
+            current_column,
+            0,
+            GRID_POSITION.LAST_ROW_COLUMN + 1
+        );
         buttons[current_index].focus();
     }
 }
@@ -223,35 +295,92 @@ function handleGridKeyboardMovement(e)
 function getElementsAroundBlankBtn() {
     const pos = checkBlankPosInBoard();
     const blank_btn_pos_index = undefined == pos ? 0 : pos;
-    const element_left_blank_btn = number_container.children.item(blank_btn_pos_index - 1);
-    const element_right_blank_btn = number_container.children.item(blank_btn_pos_index + 1);
-    element_up_blank_btn = number_container.children.item(blank_btn_pos_index - 4);
-    element_down_blank_btn = number_container.children.item(blank_btn_pos_index + 4);
+    const element_left_blank_btn = number_container.children.item(
+        blank_btn_pos_index - 1
+    );
+    const element_right_blank_btn = number_container.children.item(
+        blank_btn_pos_index + 1
+    );
+    element_up_blank_btn = number_container.children.item(
+        blank_btn_pos_index - 4
+    );
+    element_down_blank_btn = number_container.children.item(
+        blank_btn_pos_index + 4
+    );
 
-    return [element_left_blank_btn, element_right_blank_btn, element_up_blank_btn, element_down_blank_btn, ];
+    return [
+        element_left_blank_btn,
+        element_right_blank_btn,
+        element_up_blank_btn,
+        element_down_blank_btn,
+    ];
 }
 
 function checkIfWeCanMove(move_request, element) {
     const pos = checkBlankPosInBoard();
     const blank_btn_pos_index = undefined == pos ? 0 : pos;
-    const element_left_blank_btn = number_container.children.item(blank_btn_pos_index - 1);
-    const element_right_blank_btn = number_container.children.item(blank_btn_pos_index + 1);
-    element_up_blank_btn = number_container.children.item(blank_btn_pos_index - 4);
-    element_down_blank_btn = number_container.children.item(blank_btn_pos_index + 4);
-
+    const element_left_blank_btn = number_container.children.item(
+        blank_btn_pos_index - 1
+    );
+    const element_right_blank_btn = number_container.children.item(
+        blank_btn_pos_index + 1
+    );
+    element_up_blank_btn = number_container.children.item(
+        blank_btn_pos_index - 4
+    );
+    element_down_blank_btn = number_container.children.item(
+        blank_btn_pos_index + 4
+    );
+    
     // The blank button can only move if
     // the requested element target is the
     // one needed to actually move (and it
     // exists).
     switch (move_request) {
-    case MOVE_RQST.LEFT:
-        return (null != blank_btn.previousElementSibling && element == element_left_blank_btn);
-    case MOVE_RQST.RIGHT:
-        return (null != blank_btn.nextElementSibling && element == element_right_blank_btn);
-    case MOVE_RQST.UP:
-        return (null != element_up_blank_btn && element == element_up_blank_btn);
-    case MOVE_RQST.DOWN:
-        return (null != element_down_blank_btn && element == element_down_blank_btn);
+        case MOVE_RQST.LEFT: {
+            if (null == blank_btn.previousElementSibling) {
+                return false;
+            }
+            const pos = (blank_btn_pos_index - 1) % (GRID_POSITION.LAST_ROW_COLUMN + 1);
+            const safe_to_move = pos !== GRID_POSITION.LAST_ROW_COLUMN;
+
+            if (getLocalStorageKey(GAME_KEYS.CHEAT_MODE) === "true") {
+                return (
+                    element == element_left_blank_btn
+                );
+            }
+            return (
+                safe_to_move &&
+                element == element_left_blank_btn
+            );
+        }
+        case MOVE_RQST.RIGHT: {
+            if (null == blank_btn.nextElementSibling) {
+                return false;
+            }
+            
+            const pos = (blank_btn_pos_index + 1) % (GRID_POSITION.LAST_ROW_COLUMN + 1);
+            const safe_to_move = pos !== GRID_POSITION.FIRST_ROW_COLUMN;
+
+            if (getLocalStorageKey(GAME_KEYS.CHEAT_MODE) === "true") {
+                return (
+                    element == element_right_blank_btn
+                );
+            }
+            return (
+                safe_to_move &&
+                element == element_right_blank_btn
+            );
+        }
+        case MOVE_RQST.UP:
+            return (
+                null != element_up_blank_btn && element == element_up_blank_btn
+            );
+        case MOVE_RQST.DOWN:
+            return (
+                null != element_down_blank_btn &&
+                element == element_down_blank_btn
+            );
     }
 }
 
@@ -265,48 +394,82 @@ function tellA11yWichButtonToMove() {
 
     if (a11y_mode) {
         for (let i = 0; elements_around_blank_btn.length > i; ++i) {
-            if (buttons[current_index].offsetParent == elements_around_blank_btn[i]) {
+            if (
+                buttons[current_index].offsetParent ==
+                elements_around_blank_btn[i]
+            ) {
                 switch (i) {
                     // left.
-                case 0:
-                    if (last_touched_element != elements_around_blank_btn[i]) {
-                        setAndUpdatei18nString(true, {
-                            a11y__button_can_move_right: target_inner_id,
-                        }, true);
-                        last_touched_element = buttons[current_index].offsetParent;
-                        a11y_btn_say_delay = A11Y_DELAY_BETWEEN_BTN_NUMBERS;
-                    }
-                    break;
+                    case 0:
+                        if (
+                            last_touched_element != elements_around_blank_btn[i]
+                        ) {
+                            setAndUpdatei18nString(
+                                true,
+                                {
+                                    a11y__button_can_move_right:
+                                        target_inner_id,
+                                },
+                                true
+                            );
+                            last_touched_element =
+                                buttons[current_index].offsetParent;
+                            a11y_btn_say_delay = A11Y_DELAY_BETWEEN_BTN_NUMBERS;
+                        }
+                        break;
                     // right.
-                case 1:
-                    if (last_touched_element != elements_around_blank_btn[i]) {
-                        setAndUpdatei18nString(true, {
-                            a11y__button_can_move_left: target_inner_id,
-                        }, true);
-                        last_touched_element = buttons[current_index].offsetParent;
-                        a11y_btn_say_delay = A11Y_DELAY_BETWEEN_BTN_NUMBERS;
-                    }
-                    break;
+                    case 1:
+                        if (
+                            last_touched_element != elements_around_blank_btn[i]
+                        ) {
+                            setAndUpdatei18nString(
+                                true,
+                                {
+                                    a11y__button_can_move_left: target_inner_id,
+                                },
+                                true
+                            );
+                            last_touched_element =
+                                buttons[current_index].offsetParent;
+                            a11y_btn_say_delay = A11Y_DELAY_BETWEEN_BTN_NUMBERS;
+                        }
+                        break;
                     // up.
-                case 2:
-                    if (last_touched_element != elements_around_blank_btn[i]) {
-                        setAndUpdatei18nString(true, {
-                            a11y__button_can_move_down: element_up_blank_btn.innerText,
-                        }, true);
-                        last_touched_element = buttons[current_index].offsetParent;
-                        a11y_btn_say_delay = A11Y_DELAY_BETWEEN_BTN_NUMBERS;
-                    }
-                    break;
+                    case 2:
+                        if (
+                            last_touched_element != elements_around_blank_btn[i]
+                        ) {
+                            setAndUpdatei18nString(
+                                true,
+                                {
+                                    a11y__button_can_move_down:
+                                        element_up_blank_btn.innerText,
+                                },
+                                true
+                            );
+                            last_touched_element =
+                                buttons[current_index].offsetParent;
+                            a11y_btn_say_delay = A11Y_DELAY_BETWEEN_BTN_NUMBERS;
+                        }
+                        break;
                     // down.
-                case 3:
-                    if (last_touched_element != elements_around_blank_btn[i]) {
-                        setAndUpdatei18nString(true, {
-                            a11y__button_can_move_up: element_down_blank_btn.innerText,
-                        }, true);
-                        last_touched_element = buttons[current_index].offsetParent;
-                        a11y_btn_say_delay = A11Y_DELAY_BETWEEN_BTN_NUMBERS;
-                    }
-                    break;
+                    case 3:
+                        if (
+                            last_touched_element != elements_around_blank_btn[i]
+                        ) {
+                            setAndUpdatei18nString(
+                                true,
+                                {
+                                    a11y__button_can_move_up:
+                                        element_down_blank_btn.innerText,
+                                },
+                                true
+                            );
+                            last_touched_element =
+                                buttons[current_index].offsetParent;
+                            a11y_btn_say_delay = A11Y_DELAY_BETWEEN_BTN_NUMBERS;
+                        }
+                        break;
                 }
             }
         }
@@ -314,42 +477,93 @@ function tellA11yWichButtonToMove() {
 }
 
 function gameUpdateLoop(time) {
-    function handleButtonMovement(e) {
-        checkWinningCondition();
+    function removeAnimation(target, name) {
+        if ("" != name) {
+            target.classList.remove(name);
+        }
+    }
 
+    function handleButtonMovement(e) {
         if (can_play) {
             const li_target = e.target.offsetParent;
-    
+            let block_animation_name = "";
+
             // Left and right movement.
             if (checkIfWeCanMove(MOVE_RQST.LEFT, li_target)) {
+                if (
+                    current_config_mode === CONFIG_MODE.VERTICAL_REVERSE ||
+                    current_config_mode === CONFIG_MODE.VERTICAL
+                ) {
+                    block_animation_name = "block-animate-down";
+                } else {
+                    block_animation_name = "block-animate-right";
+                }
                 li_target.before(blank_btn);
                 move_amount++;
+                current_column++;
                 a11y_btn_say_delay = A11Y_DELAY_BETWEEN_BTN_NUMBERS;
                 setAndUpdatei18nString(true, {
                     a11y__button_moved_right: e.target.innerText,
                 });
-                playSound(AUDIO_TYPES.FX.MOVE_PIECE);
                 blank_btn_at_grid -= 1;
-                checkWinningCondition();
+                const has_won = checkWinningCondition();
+
+                if (has_won === false) {
+                    if (
+                        getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE) === "true"
+                    ) {
+                        li_target.classList.add(block_animation_name);
+                        TWODJSSound.play_sound("movepiece", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
+                    } else {
+                        TWODJSSound.play_sound("movepieceinstant", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
+                    }
+                }
             } else if (checkIfWeCanMove(MOVE_RQST.RIGHT, li_target)) {
+                if (
+                    current_config_mode === CONFIG_MODE.VERTICAL_REVERSE ||
+                    current_config_mode === CONFIG_MODE.VERTICAL
+                ) {
+                    block_animation_name = "block-animate-up";
+                } else {
+                    block_animation_name = "block-animate-left";
+                }
                 li_target.after(blank_btn);
                 move_amount++;
+                current_column--;
                 setAndUpdatei18nString(true, {
                     a11y__button_moved_left: e.target.innerText,
                 });
                 a11y_btn_say_delay = A11Y_DELAY_BETWEEN_BTN_NUMBERS;
-                playSound(AUDIO_TYPES.FX.MOVE_PIECE);
                 blank_btn_at_grid += 1;
-                checkWinningCondition();
+                const has_won = checkWinningCondition();
+
+                if (has_won === false) {
+                    if (
+                        getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE) === "true"
+                    ) {
+                        li_target.classList.add(block_animation_name);
+                        TWODJSSound.play_sound("movepiece", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
+                    } else {
+                        TWODJSSound.play_sound("movepieceinstant", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
+                    }
+                }
             } else if (checkIfWeCanMove(MOVE_RQST.UP, li_target)) {
                 // Up and down movement.
+                if (
+                    current_config_mode === CONFIG_MODE.VERTICAL_REVERSE ||
+                    current_config_mode === CONFIG_MODE.VERTICAL
+                ) {
+                    block_animation_name = "block-animate-right";
+                } else {
+                    block_animation_name = "block-animate-down";
+                }
                 const new_blank_btn = document.createElement("li");
                 const new_li_target = e.target.offsetParent.nextElementSibling;
                 blank_btn.before(li_target);
-    
+
                 blank_btn.remove();
                 new_blank_btn.id = "blank";
-    
+
                 blank_btn = new_blank_btn;
                 number_container.append(new_blank_btn);
                 new_li_target.before(new_blank_btn);
@@ -359,20 +573,42 @@ function gameUpdateLoop(time) {
                 });
                 a11y_btn_say_delay = A11Y_DELAY_BETWEEN_BTN_NUMBERS;
                 e.target.focus();
-                playSound(AUDIO_TYPES.FX.MOVE_PIECE);
                 correctCurrentIndexGrid("down");
-                checkWinningCondition();
+                const has_won = checkWinningCondition();
+
+                if (has_won === false) {
+                    if (
+                        getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE) === "true"
+                    ) {
+                        li_target.classList.add(block_animation_name);
+                        TWODJSSound.play_sound("movepiece", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
+                    } else {
+                        TWODJSSound.play_sound("movepieceinstant", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
+                    }
+                }
             } else if (checkIfWeCanMove(MOVE_RQST.DOWN, li_target)) {
+                if (
+                    current_config_mode === CONFIG_MODE.VERTICAL_REVERSE ||
+                    current_config_mode === CONFIG_MODE.VERTICAL
+                ) {
+                    block_animation_name = "block-animate-left";
+                } else {
+                    block_animation_name = "block-animate-up";
+                }
                 const new_blank_btn = document.createElement("li");
-                const new_li_target = document.querySelector(`[btn-pos="${parseInt(e.target.innerText - 1)}"] + [btn-pos]`);
+                const new_li_target = document.querySelector(
+                    `[btn-pos="${parseInt(
+                        e.target.innerText - 1
+                    )}"] + [btn-pos]`
+                );
                 blank_btn.after(li_target);
-    
+
                 blank_btn.remove();
                 new_blank_btn.id = "blank";
-    
+
                 blank_btn = new_blank_btn;
                 number_container.append(new_blank_btn);
-    
+
                 // If this is null, it means that
                 // we're moving the very last item
                 // at the grid.
@@ -385,14 +621,50 @@ function gameUpdateLoop(time) {
                 });
                 a11y_btn_say_delay = A11Y_DELAY_BETWEEN_BTN_NUMBERS;
                 e.target.focus();
-                playSound(AUDIO_TYPES.FX.MOVE_PIECE);
                 correctCurrentIndexGrid("up");
-                checkWinningCondition();
+                const has_won = checkWinningCondition();
+
+                if (has_won === false) {
+                    if (
+                        getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE) === "true"
+                    ) {
+                        li_target.classList.add(block_animation_name);
+                        TWODJSSound.play_sound("movepiece", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
+                    } else {
+                        TWODJSSound.play_sound("movepieceinstant", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
+                    }
+                }
             } else {
-                setAndUpdatei18nString(true, {
-                    a11y__button_cant_move: e.target.innerText,
-                }, true);
-                playSound(AUDIO_TYPES.FX.BAD_MOVE_PIECE);
+                setAndUpdatei18nString(
+                    true,
+                    {
+                        a11y__button_cant_move: e.target.innerText,
+                    },
+                    true
+                );
+                TWODJSSound.play_sound("badmovepiece", SOUND_DEFAULTS.DEFAULT_VOLUME, true);
+                e.target.classList.add("animation_button_wrong");
+                e.target.addEventListener(
+                    "animationend",
+                    removeAnimation.bind(
+                        this,
+                        e.target,
+                        "animation_button_wrong"
+                    ),
+                    {
+                        once: true,
+                    }
+                );
+            }
+
+            if (getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE)) {
+                li_target.addEventListener(
+                    "animationend",
+                    removeAnimation.bind(this, li_target, block_animation_name),
+                    {
+                        once: true,
+                    }
+                );
             }
         }
     }
@@ -403,7 +675,10 @@ function gameUpdateLoop(time) {
                 const blank = document.createElement("li");
                 number_container.append(blank);
                 blank.setAttribute("id", "blank");
-                setAndUpdatei18nString(true, ["a11y__generated_grid_numbers", "a11y__how_to_play", ]);
+                setAndUpdatei18nString(true, [
+                    "a11y__generated_grid_numbers",
+                    "a11y__how_to_play",
+                ]);
             }
         }
 
@@ -417,19 +692,36 @@ function gameUpdateLoop(time) {
                 new_li.setAttribute("btn-pos", li_slot - 1);
                 number_container.append(new_li);
                 new_li.append(new_btn);
-                new_btn.innerText = li_slot;
+                if (
+                    (current_config_mode === CONFIG_MODE.STANDARD_REVERSE ||
+                        current_config_mode === CONFIG_MODE.VERTICAL ||
+                        current_config_mode === CONFIG_MODE.VERTICAL_REVERSE) &&
+                    detectBrowser() === BROWSER_STRINGS.FIREFOX
+                ) {
+                    const div = document.createElement("div");
+                    new_btn.append(div);
+                    div.innerText = li_slot;
+                } else {
+                    new_btn.innerText = li_slot;
+                }
                 new_btn.addEventListener("click", handleButtonMovement);
-                new_li.animate([{
-                    transform: "translateY(100%)",
-                    opacity: 0,
-                }, {
-                    transform: "translateY(0)",
-                    opacity: 1,
-                }, ], {
-                    duration: 500,
-                    easing: "ease",
-                    fill: "forwards",
-                });
+                new_li.animate(
+                    [
+                        {
+                            transform: "translateY(100%)",
+                            opacity: 0,
+                        },
+                        {
+                            transform: "translateY(0)",
+                            opacity: 1,
+                        },
+                    ],
+                    {
+                        duration: 500,
+                        easing: "ease",
+                        fill: "forwards",
+                    }
+                );
                 list_of_grid_numbers.push(li_slot);
             }
         } else {
@@ -443,9 +735,19 @@ function gameUpdateLoop(time) {
         if (can_play) {
             const now = new Date().getTime();
             const difference = date_current - now;
-            let hours = Math.abs(Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))) - 1;
-            let minutes = Math.abs(Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))) - 1;
-            let seconds = Math.abs(Math.floor((difference % (1000 * 60)) / 1000));
+            let hours =
+                Math.abs(
+                    Math.floor(
+                        (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+                    )
+                ) - 1;
+            let minutes =
+                Math.abs(
+                    Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))
+                ) - 1;
+            let seconds = Math.abs(
+                Math.floor((difference % (1000 * 60)) / 1000)
+            );
 
             seconds = 10 > seconds ? "0" + seconds : seconds;
             minutes = 10 > minutes ? "0" + minutes : minutes;
@@ -457,13 +759,34 @@ function gameUpdateLoop(time) {
 
     if (!player_won && null != last_time_render) {
         delta_time = time - last_time_render;
-        time_amount = calculateTimeAmount(delta_time);
+
+        if (can_play) {
+            time_amount = calculateTimeAmount(delta_time);
+        } else {
+            time_amount = "00:00:00";
+        }
         generateGridButtons();
 
         blank_btn = document.querySelector("#blank");
 
-        setAndUpdatei18nString(false, time_amount, false, document.querySelector(`[data-i18n-id="game__time"]`));
-        setAndUpdatei18nString(false, move_amount, false, document.querySelector(`[data-i18n-id="game__moves"]`));
+        setAndUpdatei18nString(
+            false,
+            time_amount,
+            false,
+            document.querySelector(`[data-i18n-id="game__time"]`)
+        );
+        setAndUpdatei18nString(
+            false,
+            move_amount,
+            false,
+            document.querySelector(`[data-i18n-id="game__moves"]`)
+        );
+        setAndUpdatei18nString(
+            false,
+            getCurrentGameConfig(current_config_mode),
+            false,
+            document.querySelector(`[data-i18n-id="game__config_mode"]`)
+        );
 
         if (a11y_btn_say_delay > 0) {
             a11y_btn_say_delay -= 1 / delta_time;
@@ -472,8 +795,16 @@ function gameUpdateLoop(time) {
         if (a11y_mode && a11y_btn_say_delay === 0) {
             tellA11yWichButtonToMove();
         }
-        a11y_btn_say_delay = clamp(a11y_btn_say_delay, 0, A11Y_DELAY_BETWEEN_BTN_NUMBERS);
-        blank_btn_at_grid = clamp(blank_btn_at_grid, 0, GRID_POSITION.LAST_ROW_COLUMN);
+        a11y_btn_say_delay = clamp(
+            a11y_btn_say_delay,
+            0,
+            A11Y_DELAY_BETWEEN_BTN_NUMBERS
+        );
+        blank_btn_at_grid = clamp(
+            blank_btn_at_grid,
+            0,
+            GRID_POSITION.LAST_ROW_COLUMN
+        );
     }
     last_time_render = time;
     window.requestAnimationFrame(gameUpdateLoop);
@@ -482,300 +813,723 @@ function gameUpdateLoop(time) {
 function moveBetweenMenuButtons(e) {
     const all_links = document.querySelectorAll(".link-group a");
     if (
-        ("ArrowUp" === e.key || "W" === e.key || "w" === e.key) ||
-        ("ArrowLeft" === e.key || "A" === e.key || "a" === e.key)
+        "ArrowUp" === e.key ||
+        "W" === e.key ||
+        "w" === e.key ||
+        "ArrowLeft" === e.key ||
+        "A" === e.key ||
+        "a" === e.key
     ) {
         menu_button_index--;
     } else if (
-        ("ArrowDown" === e.key || "S" === e.key || "s" === e.key) ||
-        ("ArrowRight" === e.key || "D" === e.key || "d" === e.key) ||
-        ("Tab" === e.key)
+        "ArrowDown" === e.key ||
+        "S" === e.key ||
+        "s" === e.key ||
+        "ArrowRight" === e.key ||
+        "D" === e.key ||
+        "d" === e.key ||
+        "Tab" === e.key
     ) {
         menu_button_index++;
     }
-    playSound(AUDIO_TYPES.FX.SELECTING);
+    TWODJSSound.play_sound("select");
     menu_button_index = wrap(menu_button_index, 0, all_links.length);
     all_links[menu_button_index].focus();
 }
 
-function enableSoundByClicking()
-{
-    initMainMenu();
+async function enableSoundByClicking() {
+    document.querySelector("#enable-sound").remove();
     document.removeEventListener("click", enableSoundByClicking);
     document.removeEventListener("keydown", enableSoundByClicking);
-    document.querySelector("#enable-sound").remove();
+    initMainMenu();
 }
 
-function initMainMenu()
-{
+function initMainMenu() {
     game_i18n_lang.then(() => {
-        document.documentElement.lang = setGameLanguageBasedOn(navigator.language);
-    
+        document.documentElement.lang = setGameLanguageBasedOn(
+            navigator.language
+        );
+
         if (document.querySelector("[is-main-page]")) {
-            const all_spans = document.querySelectorAll("#intro-cutscene .animated-text-container .text-wrapper span");
+            const all_spans = document.querySelectorAll(
+                "#intro-cutscene .animated-text-container .text-wrapper span"
+            );
             all_spans.forEach((span, i) => {
                 // span.style = `--delay: ${i + 1}`;
-                span.animate([
-                    {
-                        opacity: 0,
-                        transform: "translateY(110%)"
-                    },
-                    {
-                        opacity: 1,
-                        transform: "translateY(0%)"
-                    }],
+                span.animate(
+                    [
+                        {
+                            opacity: 0,
+                            transform: "translateY(110%)",
+                        },
+                        {
+                            opacity: 1,
+                            transform: "translateY(0%)",
+                        },
+                    ],
                     {
                         duration: 800,
                         easing: "linear",
                         delay: (i + 1) * 50,
-                        fill: "forwards"
+                        fill: "forwards",
                     }
                 ).addEventListener("finish", () => {
                     const fire = document.querySelector(".fire");
-                    const animated_container = document.querySelector(".animated-text-container");
+                    const animated_container = document.querySelector(
+                        ".animated-text-container"
+                    );
 
                     if (span == all_spans[all_spans.length - 1]) {
-                        fire.setAttribute("style", `
+                        fire.setAttribute(
+                            "style",
+                            `
                             animation: animate_fire 1000ms steps(9) reverse forwards, generic_fadeout 800ms linear forwards;
-                        `);
-                        playSound(AUDIO_TYPES.FX.TITLE);
+                        `
+                        );
+                        TWODJSSound.play_sound("titlescreen");
                         fire.addEventListener("animationend", () => {
-                            animated_container.setAttribute("style", `
+                            animated_container.setAttribute(
+                                "style",
+                                `
                                 animation: generic_fadeout 1000ms linear 3100ms forwards;
-                            `);
-                            animated_container.addEventListener("animationend", () => {
-                                document.querySelector("#intro-cutscene").animate([
-                                    { transform: "translateY(0%)", transform: "translateY(-100%)" }
-                                ], {
-                                    duration: 1000,
-                                    easing: "cubic-bezier(0.76, 0.02, 1, 1.01)",
-                                    delay: 4100,
-                                    fill: "forwards",
-                                }).addEventListener("finish", () => {
-                                    if (document.querySelector("#intro-cutscene")) {
-                                        document.querySelector("#intro-cutscene").remove();
-                                    }
-                                });
-                            });
+                            `
+                            );
+                            animated_container.addEventListener(
+                                "animationend",
+                                () => {
+                                    document
+                                        .querySelector("#intro-cutscene")
+                                        .animate(
+                                            [
+                                                {
+                                                    transform: "translateY(0%)",
+                                                    transform:
+                                                        "translateY(-100%)",
+                                                },
+                                            ],
+                                            {
+                                                duration: 1000,
+                                                easing: "cubic-bezier(0.76, 0.02, 1, 1.01)",
+                                                delay: 4100,
+                                                fill: "forwards",
+                                            }
+                                        )
+                                        .addEventListener("finish", () => {
+                                            if (
+                                                document.querySelector(
+                                                    "#intro-cutscene"
+                                                )
+                                            ) {
+                                                document
+                                                    .querySelector(
+                                                        "#intro-cutscene"
+                                                    )
+                                                    .remove();
+                                            }
+                                        });
+                                }
+                            );
                         });
                     }
                 });
             });
-    
-            updatei18nAria(document.querySelector("#game-title"), ARIA_TYPES.INSIDE_ELEMENT);
-    
+
+            updatei18nAria(
+                document.querySelector("#game-title"),
+                ARIA_TYPES.INSIDE_ELEMENT
+            );
+
             // Intro buttons.
-            updatei18nAria(document.querySelector("#game_btn"), ARIA_TYPES.INSIDE_ELEMENT);
-            document.querySelector(".link-group").addEventListener("keydown", moveBetweenMenuButtons);
-            document.querySelector(".link-group").addEventListener("click", playEnterSound);
+            updatei18nAria(
+                document.querySelector("#game_btn"),
+                ARIA_TYPES.INSIDE_ELEMENT
+            );
+            updatei18nAria(
+                document.querySelector("#options_btn"),
+                ARIA_TYPES.INSIDE_ELEMENT
+            );
+            updatei18nAria(
+                document.querySelector("#feedback_btn"),
+                ARIA_TYPES.INSIDE_ELEMENT
+            );
+            document
+                .querySelector(".link-group")
+                .addEventListener("keydown", moveBetweenMenuButtons);
+            document
+                .querySelector(".link-group")
+                .addEventListener("click", playEnterSound);
         }
     });
 }
 
-function playEnterSound()
-{
-    playSound(AUDIO_TYPES.FX.ENTER);
+function playEnterSound() {
+    TWODJSSound.play_sound("enter")
 }
 
-function addAgainEventListenerForMenuGroup()
-{
+function playBackSound() {
+    TWODJSSound.play_sound("backbutton")
+}
+
+function addAgainEventListenerForMenuGroup() {
     menu_button_index = 0;
-    if (null != document.querySelector(".link-group")) {
-        document.querySelector(".link-group").removeEventListener("keydown", moveBetweenMenuButtons);
-        document.querySelector(".link-group").removeEventListener("click", playEnterSound);
-        document.querySelector(".link-group").addEventListener("keydown", moveBetweenMenuButtons);
-        document.querySelector(".link-group").addEventListener("click", playEnterSound);
-    }
+    document
+        .querySelector(".link-group")
+        .removeEventListener("keydown", moveBetweenMenuButtons);
+    document
+        .querySelector(".link-group")
+        .removeEventListener("click", playEnterSound);
+    document
+        .querySelector(".link-group")
+        .addEventListener("keydown", moveBetweenMenuButtons);
+    document
+        .querySelector(".link-group")
+        .addEventListener("click", playEnterSound);
 }
 
-function handleGameExit(e)
-{
+function handleGameExit(e) {
     game_i18n_lang.then(() => {
-        if (false === window.confirm(i18nmanager.i18n("game__goto_main_menu_confirm"))) {
-            e.target.setAttribute("href", '#');
+        if (
+            false ===
+            window.confirm(i18nmanager.i18n("game__goto_main_menu_confirm"))
+        ) {
+            e.target.setAttribute("href", "#");
+            playBackSound();
             return false;
         } else {
-            e.target.setAttribute("href", "./index.html");
+            e.target.setAttribute("href", "/index.html");
+            playBackSound();
         }
     });
 }
 
-function controlGameConfigDialogue()
-{
-    function handleGameConfig(e)
-    {
-        const btn_config_id = e.target.getAttribute("id");
-        const dialogue_container = document.querySelector("#config-dialogue");
-        const num_container = document.createElement("ul");
-
-        num_container.setAttribute("id", "number-container");
-        num_container.classList.add("transition-move-and-fade-down");
-
-        if (btn_config_id === "config-standard") {
-            num_container.classList.add("config-standard");
-        } else if (btn_config_id === "config-vertical") {
-            num_container.classList.add("config-vertical");
-        } else if (btn_config_id === "config-standard-reverse") {
-            num_container.classList.add("config-standard-reverse");
-        } else if (btn_config_id === "config-vertical-reverse") {
-            num_container.classList.add("config-vertical-reverse");
+function controlGameConfigOptions() {
+    const values = {
+        MOVE_TILES: getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE),
+        CHEAT: getLocalStorageKey(GAME_KEYS.CHEAT_MODE),
+    };
+    const checkboxes = {
+        MOVE_TILES: document.querySelector("#check-moving-titles"),
+        CHEAT: document.querySelector("#check-cheat-mode"),
+    };
+    function radioEditTheme(radioElement) {
+        const id = String(radioElement.getAttribute("id")).split("-")[2];
+        switch (id) {
+            case "light":
+                TWODJSSound.play_sound("radiobuttonclick");
+                setGameTheme(COLOUR_THEMES.LIGHT);
+                break;
+            case "dark":
+                TWODJSSound.play_sound("radiobuttonclick");
+                setGameTheme(COLOUR_THEMES.DARK);
+                break;
+            case "retro":
+                TWODJSSound.play_sound("radiobuttonclick");
+                setGameTheme(COLOUR_THEMES.RETRO);
+                break;
+            case "auto":
+                TWODJSSound.play_sound("radiobuttonclick");
+                setGameTheme(COLOUR_THEMES.AUTO);
+                break;
         }
-
-        dialogue_container.animate([
-            { opacity: 0, transform: "translateY(48px)" }
-        ], {
-            duration: 400,
-            easing: "ease"
-        }).addEventListener("finish", () => {
-            dialogue_container.remove();
-            document.querySelector("#swup").append(num_container);
-            reset();
-            window.requestAnimationFrame(gameUpdateLoop);
-        });
-        playSound(AUDIO_TYPES.FX.ENTER);
     }
+
+    function animteMovingTiles() {
+        const checkbox = checkboxes.MOVE_TILES;
+        if (!checkbox.checked) {
+            TWODJSSound.play_sound("tickbox");
+        } else {
+            TWODJSSound.play_sound("tickboxnot");
+        }
+        setLocalStorageItem(GAME_KEYS.BLOCKS_ANIMATE, checkbox.checked);
+    }
+
+    function enableCheatMode()
+    {
+        const checkbox = checkboxes.CHEAT;
+        if (!checkbox.checked) {
+            TWODJSSound.play_sound("tickbox");
+        } else {
+            TWODJSSound.play_sound("tickboxnot");
+        }
+        setLocalStorageItem(GAME_KEYS.CHEAT_MODE, checkbox.checked);
+    }
+
+    function setCheckState()
+    {
+        if (values.MOVE_TILES === "true") {
+            checkboxes.MOVE_TILES.checked = true;
+        }
+
+        if (values.CHEAT === "true") {
+            checkboxes.CHEAT.checked = true;
+        }
+    }
+
+    game_i18n_lang.then(() => {
+        const all_radios = document.querySelectorAll(".value-wrapper input");
+        if (!DEV_MODE) {
+            checkboxes.CHEAT.remove();
+            document.querySelector("[data-i18n-id='game__options_cheat_mode']").remove();
+            
+            
+            document.querySelector(
+                "[data-i18n-id='game__goto_options']"
+            ).innerText = i18nmanager.i18n("game__goto_options");
+            document.querySelector(
+                "[data-i18n-id='game__options_title_gameplay']"
+            ).innerText = i18nmanager.i18n("game__options_title_gameplay");
+            document.querySelector(
+                "[data-i18n-id='game__options_animate_tiles']"
+            ).innerText = i18nmanager.i18n("game__options_animate_tiles");
     
-    const dialogue_btn_prev = document.querySelector("#carousel-btn-prev");
-    const dialogue_btn_next = document.querySelector("#carousel-btn-next");
-    const all_dialogues_amount = document.querySelectorAll(".carousel__item").length;
-    const all_images = document.querySelectorAll("#config-dialogue picture img");
-
-    // Set element aria labels and i18n strings.
-    updatei18nAria(document.querySelector("#back-to-main-menu"), ARIA_TYPES.ARIA_LABEL);
-    updatei18nAria(document.querySelector("#back-to-main-menu"), ARIA_TYPES.TITLE);
-    updatei18nAria(document.querySelector("#config-dialogue h1"), ARIA_TYPES.INSIDE_ELEMENT);
-    updatei18nAria(document.querySelector("#config-dialogue p"), ARIA_TYPES.INSIDE_ELEMENT);
-
-    updatei18nAria(document.querySelector("#carousel-btn-prev"), ARIA_TYPES.ARIA_LABEL);
-    updatei18nAria(document.querySelector("#carousel-btn-prev"), ARIA_TYPES.TITLE);
-    updatei18nAria(document.querySelector("#carousel-btn-next"), ARIA_TYPES.ARIA_LABEL);
-    updatei18nAria(document.querySelector("#carousel-btn-next"), ARIA_TYPES.TITLE);
-
-    // Sadly, need to update the alt desc of each individual image.
-    updatei18nAria(all_images[0], ARIA_TYPES.ALT_IMAGES);
-    updatei18nAria(all_images[1], ARIA_TYPES.ALT_IMAGES);
-    updatei18nAria(all_images[2], ARIA_TYPES.ALT_IMAGES);
-    updatei18nAria(all_images[3], ARIA_TYPES.ALT_IMAGES);
-
-    document.querySelectorAll(".carousel__title").forEach((title) => {
-        updatei18nAria(title, ARIA_TYPES.INSIDE_ELEMENT);
-    });
-
-    document.querySelectorAll(".carousel__desc").forEach((desc) => {
-        updatei18nAria(desc, ARIA_TYPES.INSIDE_ELEMENT);
-    });
+            // Colour schemes.
+            document.querySelector(
+                "[data-i18n-id='game__options_title_colour_skins']"
+            ).innerText = i18nmanager.i18n("game__options_title_colour_skins");
+            document.querySelector(
+                "[data-i18n-id='game__options_colour_scheme_light']"
+            ).innerText = i18nmanager.i18n("game__options_colour_scheme_light");
+            document.querySelector(
+                "[data-i18n-id='game__options_colour_scheme_dark']"
+            ).innerText = i18nmanager.i18n("game__options_colour_scheme_dark");
+            document.querySelector(
+                "[data-i18n-id='game__options_colour_scheme_retro']"
+            ).innerText = i18nmanager.i18n("game__options_colour_scheme_retro");
+            document.querySelector(
+                "[data-i18n-id='game__options_colour_scheme_auto']"
+            ).innerText = i18nmanager.i18n("game__options_colour_scheme_auto");
+            document
+                .querySelector("#back-to-main-menu")
+                .addEventListener("click", playBackSound);
     
-    document.querySelectorAll(".carousel__begin").forEach((btn) => {
-        updatei18nAria(btn, ARIA_TYPES.INSIDE_ELEMENT);
-        btn.addEventListener("click", handleGameConfig);
-    });
+            all_radios.forEach((radio) => {
+                const curr_theme = getLocalStorageKey(GAME_KEYS.THEME);
+                const id = String(radio.getAttribute("id")).split("-")[2];
+                if (id === curr_theme) {
+                    radio.checked = true;
+                }
+                radio.addEventListener("click", radioEditTheme.bind(this, radio));
+            });
+            setCheckState();
+            checkboxes.MOVE_TILES.addEventListener("click", animteMovingTiles);
+        } else {
+            
+            document.querySelector(
+                "[data-i18n-id='game__goto_options']"
+            ).innerText = i18nmanager.i18n("game__goto_options");
+            document.querySelector(
+                "[data-i18n-id='game__options_title_gameplay']"
+            ).innerText = i18nmanager.i18n("game__options_title_gameplay");
+            document.querySelector(
+                "[data-i18n-id='game__options_animate_tiles']"
+            ).innerText = i18nmanager.i18n("game__options_animate_tiles");
+            document.querySelector(
+                "[data-i18n-id='game__options_cheat_mode']"
+            ).innerText = i18nmanager.i18n("game__options_cheat_mode");
     
-    dialogue_btn_next.addEventListener("click", () => {
-        const current_carousel = document.querySelector(".carousel__item.selected");
-        config_dialogue_selected_config++;
-        dialogue_btn_prev.classList.remove("last");
-        
-        if (all_dialogues_amount - 1 === config_dialogue_selected_config) {
-            dialogue_btn_next.classList.add("last");
+            // Colour schemes.
+            document.querySelector(
+                "[data-i18n-id='game__options_title_colour_skins']"
+            ).innerText = i18nmanager.i18n("game__options_title_colour_skins");
+            document.querySelector(
+                "[data-i18n-id='game__options_colour_scheme_light']"
+            ).innerText = i18nmanager.i18n("game__options_colour_scheme_light");
+            document.querySelector(
+                "[data-i18n-id='game__options_colour_scheme_dark']"
+            ).innerText = i18nmanager.i18n("game__options_colour_scheme_dark");
+            document.querySelector(
+                "[data-i18n-id='game__options_colour_scheme_retro']"
+            ).innerText = i18nmanager.i18n("game__options_colour_scheme_retro");
+            document.querySelector(
+                "[data-i18n-id='game__options_colour_scheme_auto']"
+            ).innerText = i18nmanager.i18n("game__options_colour_scheme_auto");
+            document
+                .querySelector("#back-to-main-menu")
+                .addEventListener("click", playBackSound);
+    
+            all_radios.forEach((radio) => {
+                const curr_theme = getLocalStorageKey(GAME_KEYS.THEME);
+                const id = String(radio.getAttribute("id")).split("-")[2];
+                if (id === curr_theme) {
+                    radio.checked = true;
+                }
+                radio.addEventListener("click", radioEditTheme.bind(this, radio));
+            });
+            setCheckState();
+            checkboxes.MOVE_TILES.addEventListener("click", animteMovingTiles);
+            checkboxes.CHEAT.addEventListener("click", enableCheatMode);
         }
-        
-        if (null != current_carousel.nextElementSibling && current_carousel.nextElementSibling.classList.contains("carousel__item")) {
-            current_carousel.classList.remove("selected");
-            current_carousel.nextElementSibling.classList.add("selected");
-            playSound(AUDIO_TYPES.FX.SELECTING);
-        }
-        config_dialogue_selected_config = clamp(config_dialogue_selected_config, 0, all_dialogues_amount);
     });
+}
 
-    dialogue_btn_prev.addEventListener("click", () => {
-        const current_carousel = document.querySelector(".carousel__item.selected");
-        config_dialogue_selected_config--;
-        dialogue_btn_next.classList.remove("last");
+function controlGameConfigDialogue() {
+    game_i18n_lang.then(() => {
+        function handleGameConfig(e) {
+            const dialogue_container =
+                document.querySelector("#config-dialogue");
+            const num_container = document.createElement("ul");
+            if (e.target.nodeName.toLowerCase() === "button") {
+                const btn_config_id = e.target.getAttribute("id");
+                if (btn_config_id === "config-standard") {
+                    num_container.classList.add("config-standard");
+                    current_config_mode = CONFIG_MODE.STANDARD;
+                } else if (btn_config_id === "config-vertical") {
+                    num_container.classList.add("config-vertical");
+                    current_config_mode = CONFIG_MODE.VERTICAL;
+                } else if (btn_config_id === "config-standard-reverse") {
+                    num_container.classList.add("config-standard-reverse");
+                    current_config_mode = CONFIG_MODE.STANDARD_REVERSE;
+                } else if (btn_config_id === "config-vertical-reverse") {
+                    num_container.classList.add("config-vertical-reverse");
+                    current_config_mode = CONFIG_MODE.VERTICAL_REVERSE;
+                }
+            } else if (e.target.nodeName.toLowerCase() === "img") {
+                const img_class = e.target.getAttribute("class");
+                const split = img_class.split(" ");
+
+                if (split[0] === "img-mode-standard") {
+                    num_container.classList.add("config-standard");
+                    current_config_mode = CONFIG_MODE.STANDARD;
+                } else if (split[0] === "img-mode-vertical") {
+                    num_container.classList.add("config-vertical");
+                    current_config_mode = CONFIG_MODE.VERTICAL;
+                } else if (split[0] === "img-mode-reverse") {
+                    num_container.classList.add("config-standard-reverse");
+                    current_config_mode = CONFIG_MODE.STANDARD_REVERSE;
+                } else if (split[0] === "img-mode-reverse") {
+                    num_container.classList.add("config-vertical-reverse");
+                    current_config_mode = CONFIG_MODE.VERTICAL_REVERSE;
+                }
+            }
+            num_container.setAttribute("id", "number-container");
+            num_container.classList.add("transition-move-and-fade-down");
+
+            if (!started_playing) {
+                dialogue_container
+                    .animate([{ opacity: 0, transform: "translateY(48px)" }], {
+                        duration: 400,
+                        easing: "ease",
+                    })
+                    .addEventListener("finish", () => {
+                        dialogue_container.remove();
+                        document.querySelector("#swup").append(num_container);
+                        reset();
+                        window.requestAnimationFrame(gameUpdateLoop);
+                    });
+                TWODJSSound.play_sound("enter");
+                started_playing = true;
+            }
+        }
+
+        function showInfo() {
+            const all_desc = document.querySelectorAll(".carousel__desc");
+            if (
+                all_desc[config_dialogue_selected_config].style.display === "none" ||
+                all_desc[config_dialogue_selected_config].style.display === ""
+            ) {
+                all_desc[config_dialogue_selected_config].style.display = "block";
+            } else {
+                all_desc[config_dialogue_selected_config].style.display = "none";
+            }
+            TWODJSSound.play_sound("select");
+        }
+
+        const dialogue_btn_prev = document.querySelector("#carousel-btn-prev");
+        const dialogue_btn_next = document.querySelector("#carousel-btn-next");
+        const all_dialogues_amount =
+            document.querySelectorAll(".carousel__item").length;
+        const all_images = document.querySelectorAll(
+            "#config-dialogue .img-group img"
+        );
         
-        if (0 >= config_dialogue_selected_config) {
-            dialogue_btn_prev.classList.add("last");
-        }
+        // Set element aria labels and i18n strings.
+        updatei18nAria(
+            document.querySelector("#back-to-main-menu"),
+            ARIA_TYPES.ARIA_LABEL
+        );
+        updatei18nAria(
+            document.querySelector("#back-to-main-menu"),
+            ARIA_TYPES.TITLE
+        );
+        updatei18nAria(
+            document.querySelector("#config-dialogue h1"),
+            ARIA_TYPES.INSIDE_ELEMENT
+        );
+        updatei18nAria(
+            document.querySelector("#config-dialogue p"),
+            ARIA_TYPES.INSIDE_ELEMENT
+        );
 
-        if (null != current_carousel.previousElementSibling && current_carousel.previousElementSibling.classList.contains("carousel__item")) {
-            current_carousel.classList.remove("selected");
-            current_carousel.previousElementSibling.classList.add("selected");
-            playSound(AUDIO_TYPES.FX.SELECTING);
-        }
-        config_dialogue_selected_config = clamp(config_dialogue_selected_config, 0, all_dialogues_amount);
+        updatei18nAria(
+            document.querySelector("#carousel-btn-prev"),
+            ARIA_TYPES.ARIA_LABEL
+        );
+        updatei18nAria(
+            document.querySelector("#carousel-btn-prev"),
+            ARIA_TYPES.TITLE
+        );
+        updatei18nAria(
+            document.querySelector("#carousel-btn-next"),
+            ARIA_TYPES.ARIA_LABEL
+        );
+        updatei18nAria(
+            document.querySelector("#carousel-btn-next"),
+            ARIA_TYPES.TITLE
+        );
+
+        // Sadly, need to update the alt desc of each individual image.
+        updatei18nAria(all_images[0], ARIA_TYPES.ALT_IMAGES);
+        updatei18nAria(all_images[1], ARIA_TYPES.ALT_IMAGES);
+        updatei18nAria(all_images[2], ARIA_TYPES.ALT_IMAGES);
+        updatei18nAria(all_images[3], ARIA_TYPES.ALT_IMAGES);
+
+        document.querySelectorAll(".carousel__title").forEach((title) => {
+            updatei18nAria(title, ARIA_TYPES.INSIDE_ELEMENT);
+        });
+
+        document.querySelectorAll(".carousel__desc").forEach((desc) => {
+            updatei18nAria(desc, ARIA_TYPES.INSIDE_ELEMENT);
+        });
+
+        document.querySelectorAll(".carousel__begin").forEach((btn) => {
+            updatei18nAria(btn, ARIA_TYPES.INSIDE_ELEMENT);
+            btn.addEventListener("click", handleGameConfig);
+        });
+
+        all_images.forEach((img) => {
+            img.addEventListener("click", handleGameConfig);
+        });
+
+        document.querySelector("#config-description-button").addEventListener("click", showInfo);
+
+        dialogue_btn_next.addEventListener("click", () => {
+            const current_carousel = document.querySelector(
+                ".carousel__item.selected"
+            );
+            config_dialogue_selected_config++;
+            dialogue_btn_prev.classList.remove("last");
+
+            if (all_dialogues_amount - 1 == config_dialogue_selected_config) {
+                dialogue_btn_next.classList.add("last");
+            }
+
+            if (
+                null != current_carousel.nextElementSibling &&
+                current_carousel.nextElementSibling.classList.contains(
+                    "carousel__item"
+                )
+            ) {
+                current_carousel.classList.remove("selected");
+                current_carousel.nextElementSibling.classList.add("selected");
+                TWODJSSound.play_sound("select");
+            }
+            config_dialogue_selected_config = clamp(
+                config_dialogue_selected_config,
+                0,
+                all_dialogues_amount - 1
+            );
+        });
+
+        dialogue_btn_prev.addEventListener("click", () => {
+            const current_carousel = document.querySelector(
+                ".carousel__item.selected"
+            );
+            config_dialogue_selected_config--;
+            dialogue_btn_next.classList.remove("last");
+
+            if (0 >= config_dialogue_selected_config) {
+                dialogue_btn_prev.classList.add("last");
+            }
+
+            if (
+                null != current_carousel.previousElementSibling &&
+                current_carousel.previousElementSibling.classList.contains(
+                    "carousel__item"
+                )
+            ) {
+                current_carousel.classList.remove("selected");
+                current_carousel.previousElementSibling.classList.add(
+                    "selected"
+                );
+                TWODJSSound.play_sound("select");
+            }
+            config_dialogue_selected_config = clamp(
+                config_dialogue_selected_config,
+                0,
+                all_dialogues_amount - 1
+            );
+        });
     });
 }
 
 // Swup specific listeners.
-document.addEventListener("swup:pageView", function() {
-    // Set light or dark mode.
-    setDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
+document.addEventListener("swup:pageView", function () {
+    getGameTheme();
     if (window.location.pathname.includes("/game.html")) {
         controlGameConfigDialogue();
-        document.querySelector("#back-to-main-menu").addEventListener("click", handleGameExit);
+        document
+            .querySelector("#back-to-main-menu")
+            .addEventListener("click", handleGameExit);
         document.documentElement.removeAttribute("is-main-page");
         document.documentElement.removeAttribute("results-page");
-    } else if (window.location.pathname.includes("/index.html")) {
+        config_dialogue_selected_config = 0;
+    } else if (
+        window.location.pathname.includes("/") ||
+        window.location.pathname.includes("/index.html")
+    ) {
         window.cancelAnimationFrame(gameUpdateLoop);
+        config_dialogue_selected_config = 0;
+        document.documentElement.removeAttribute("options-page");
         document.documentElement.removeAttribute("results-page");
-        document.documentElement.setAttribute("is-main-page", '');
-        game_i18n_lang.then(()=>{
-            updatei18nAria(document.querySelector("#game-title"), ARIA_TYPES.INSIDE_ELEMENT);
+        document.documentElement.setAttribute("is-main-page", "");
+        game_i18n_lang.then(() => {
+            updatei18nAria(
+                document.querySelector("#game-title"),
+                ARIA_TYPES.INSIDE_ELEMENT
+            );
 
             // Intro buttons.
-            updatei18nAria(document.querySelector("#game_btn"), ARIA_TYPES.INSIDE_ELEMENT);
-            updatei18nAria(document.querySelector("#settings_btn"), ARIA_TYPES.INSIDE_ELEMENT);
-            updatei18nAria(document.querySelector("#exit_btn"), ARIA_TYPES.INSIDE_ELEMENT);
-            updatei18nAria(document.querySelector("#feedback_btn"), ARIA_TYPES.INSIDE_ELEMENT);
+            updatei18nAria(
+                document.querySelector("#game_btn"),
+                ARIA_TYPES.INSIDE_ELEMENT
+            );
+            updatei18nAria(
+                document.querySelector("#options_btn"),
+                ARIA_TYPES.INSIDE_ELEMENT
+            );
+            updatei18nAria(
+                document.querySelector("#feedback_btn"),
+                ARIA_TYPES.INSIDE_ELEMENT
+            );
             addAgainEventListenerForMenuGroup();
         });
     } else if (window.location.pathname.includes("/results.html")) {
+        config_dialogue_selected_config = 0;
         window.cancelAnimationFrame(gameUpdateLoop);
-        document.documentElement.setAttribute("results-page", '');
-        setAndUpdatei18nString(false, time_amount, false, document.querySelector(".carousel__title"));
-        setAndUpdatei18nString(false, move_amount, false, document.querySelector(".carousel__desc"));
-        
+        document.documentElement.setAttribute("results-page", "");
+        setAndUpdatei18nString(
+            false,
+            time_amount,
+            false,
+            document.querySelector(".carousel__title")
+        );
+        setAndUpdatei18nString(
+            false,
+            move_amount,
+            false,
+            document.querySelector(".carousel__desc")
+        );
+        game_i18n_lang.then(() => {
+            document.querySelector(
+                "[data-i18n-id='game__results_title']"
+            ).innerText = i18nmanager.i18n("game__results_title");
+            setAndUpdatei18nString(
+                false,
+                getCurrentGameConfig(current_config_mode),
+                false,
+                document.querySelector(`[data-i18n-id="game__config_mode"]`)
+            );
+        });
+
         document.querySelectorAll(".btn-container .btn").forEach((btn_link) => {
             updatei18nAria(btn_link, ARIA_TYPES.INSIDE_ELEMENT);
             btn_link.addEventListener("click", playEnterSound);
         });
+    } else if ("/options.html" === window.location.pathname) {
+        document
+            .querySelector("#back-to-main-menu")
+            .removeEventListener("click", playBackSound);
+        document.documentElement.removeAttribute("is-main-page");
+        document.documentElement.setAttribute("options-page", "");
+        controlGameConfigOptions();
     }
 });
 
-document.addEventListener("swup:contentReplaced", function() {
-    if (window.location.pathname.includes('/') || window.location.pathname.includes("/index.html")) {
-        document.documentElement.setAttribute("is-main-page", '');
+document.addEventListener("swup:contentReplaced", function () {
+    getGameTheme();
+    if (
+        window.location.pathname.includes("/") ||
+        window.location.pathname.includes("/index.html")
+    ) {
+        document.documentElement.setAttribute("is-main-page", "");
         window.cancelAnimationFrame(gameUpdateLoop);
         addAgainEventListenerForMenuGroup();
     }
 });
 
+function loadOnLoad() {
+    // Set light or dark mode.
+    initGameSettings();
+    if (window.location.pathname.includes("/game.html")) {
+        controlGameConfigDialogue();
+        document
+            .querySelector("#back-to-main-menu")
+            .addEventListener("click", handleGameExit);
+        document.documentElement.removeAttribute("is-main-page");
+        document.documentElement.removeAttribute("results-page");
+    } else if (window.location.pathname.includes("/options.html")) {
+        controlGameConfigOptions();
+    } else if (
+        window.location.pathname.includes("/") ||
+        window.location.pathname.includes("/index.html")
+    ) {
+        document.documentElement.setAttribute("is-main-page", "");
+        window.cancelAnimationFrame(gameUpdateLoop);
+        addAgainEventListenerForMenuGroup();
+    }
+}
+
+document.addEventListener("load", function () {
+    loadOnLoad();
+});
+
 if (document.querySelector("#enable-sound")) {
     // Set light or dark mode.
-    setDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
+    initGameSettings();
     game_i18n_lang.then(() => {
         if (navigator.userAgent.includes("Mobile")) {
-            document.querySelector("#enable-sound").setAttribute("data-i18n-id", "game__sound_please_enable_mobile");
+            document
+                .querySelector("#enable-sound")
+                .setAttribute(
+                    "data-i18n-id",
+                    "game__sound_please_enable_mobile"
+                );
             document.addEventListener("click", enableSoundByClicking);
-            updatei18nAria(document.querySelector("#enable-sound"), ARIA_TYPES.INSIDE_ELEMENT);
-            document.querySelector("#enable-sound").animate([
-                { opacity: 0, transform: "translateY(30px) " },
-                { opacity: 1, transform: "translateY(0px) " }
-            ], {
-                duration: 500,
-                easing: "ease"
-            });
+            updatei18nAria(
+                document.querySelector("#enable-sound"),
+                ARIA_TYPES.INSIDE_ELEMENT
+            );
+            document.querySelector("#enable-sound").animate(
+                [
+                    { opacity: 0, transform: "translateY(30px) " },
+                    { opacity: 1, transform: "translateY(0px) " },
+                ],
+                {
+                    duration: 500,
+                    easing: "ease",
+                }
+            );
             return;
         }
-        updatei18nAria(document.querySelector("#enable-sound"), ARIA_TYPES.INSIDE_ELEMENT);
+        updatei18nAria(
+            document.querySelector("#enable-sound"),
+            ARIA_TYPES.INSIDE_ELEMENT
+        );
         document.addEventListener("click", enableSoundByClicking);
         document.addEventListener("keydown", enableSoundByClicking);
 
-        document.querySelector("#enable-sound").animate([
-            { opacity: 0, transform: "translateY(30px) " },
-            { opacity: 1, transform: "translateY(0px) " }
-        ], {
-            duration: 500,
-            easing: "ease"
-        });
+        document.querySelector("#enable-sound").animate(
+            [
+                { opacity: 0, transform: "translateY(30px) " },
+                { opacity: 1, transform: "translateY(0px) " },
+            ],
+            {
+                duration: 500,
+                easing: "ease",
+            }
+        );
     });
 }
+
+// For SW.
+loadOnLoad();

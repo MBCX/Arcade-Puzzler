@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" results-page data-theme="light">
+<html lang="en" options-page data-theme="light">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
@@ -8,8 +8,8 @@
         <meta name="color-scheme" content="light dark">
         <meta name="application-name" content="Arcade Puzzle">
         <meta name="battery-savings" content="allow-reduced-framerate">
-        <title>Arcade Puzzle - Result</title>
-
+        <title>Arcade Puzzle - Options</title>
+        
         <!-- Page icons. -->
         <link rel="shortcut icon" href="assets/icons/game-icon.ico" type="image/x-icon">
         <link rel="icon" href="assets/icons/game-icon-16.png" sizes="16x16">
@@ -19,20 +19,20 @@
         <link rel="icon" href="assets/icons/game-icon-144.png" sizes="144x144">
         <link rel="icon" href="assets/icons/game-icon-512.png" sizes="512x512">
         <link rel="apple-touch-icon" href="assets/icons/game-icon-180.png" sizes="180x180">
-
+        
         <!-- Manifest. -->
         <link rel="manifest" href="assets/manifest.webmanifest" crossorigin="use-credentials">
-
+        
         <!-- CSS. -->
         <link rel="stylesheet" href="CSS/game.css">
-
+        
         <!-- Twitter -->
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="Arcade Puzzle">
         <meta name="twitter:description" content="A 15 numbered puzzle minigame in honour of the original puzzle desk accessory design for the original Macintosh in 1983.">
         <meta name="twitter:image" content="assets/icons/game-icon-144.png">
         <meta name="twitter:site" content="@sunflystudios">
-
+        
         <!-- OG types. -->
         <meta property="og:type" content="website">
         <meta property="og:title" content="Arcade Puzzle">
@@ -42,7 +42,7 @@
         <meta property="og:locale" content="en_GB">
         
         <!-- Obselete Microsoft meta tags. -->
-        <link rel="msapplication-starturl" href="/index.html">
+        <link rel="msapplication-starturl" href="/options.html">
         <meta name="msapplication-TileColor" content="#5642F4">
         <meta name="msapplication-TileImage" content="assets/icons/game-icon-144.png">
         <meta name="msapplication-tap-highlight" content="no">
@@ -53,24 +53,52 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="#5642F4">
         <meta name="HandheldFriendly" content="true">
 
+
         <!-- JS. -->
         <script src="JS/browsers.js" defer="defer"></script>
         <!-- <script src="JS/worker_init.js" defer="defer"></script> -->
         <script src="JS/main.js" type="module"></script>
     </head>
     <body>
-        <main id="swup" class="main-content transition-move-and-fade-down">
-            <div id="config-dialogue" role="dialog">
-                <h1 data-i18n-id="game__results_title"></h1>
-                <div class="carousel" role="group">
-                    <div class="carousel__item selected">
-                        <h2 class="carousel__title" data-i18n-id="game__goto_results_total_time"></h2>
-                        <p class="carousel__desc" data-i18n-id="game__goto_results_total_moves"></p>
+        <main id="swup" class="main-content">
+            <a href="/index.html" class="btn move-and-fade-left" id="back-to-main-menu" data-i18n-id="game__back_to_main_menu_button">
+                <i class="material-icons" aria-hidden="true">arrow_back</i>
+            </a>
+            <div id="config-dialogue" role="dialog" class="transition-move-and-fade-down">
+                <h1 data-i18n-id="game__goto_options"></h1>
+                <div>
+                    <h2 class="text-align-left" data-i18n-id="game__options_title_gameplay"></h2>
+                    <hr class="divider">
+                    <div class="options-group flex-col align-start">
+                        <div class="value-wrapper">
+                            <input type="checkbox" id="check-moving-titles">
+                            <p data-i18n-id="game__options_animate_tiles"></p>
+                        </div>
+                        <div class="value-wrapper">
+                            <input type="checkbox" id="check-cheat-mode">
+                            <p data-i18n-id="game__options_cheat_mode"></p>
+                        </div>
                     </div>
-                </div>
-                <div class="btn-container">
-                    <a class="btn" href="/game.html" data-i18n-id="game__goto_results_play_again"></a>
-                    <a class="btn" href="/index.html" data-i18n-id="game__goto_results_back_to_main_menu"></a>
+                    <h2 class="text-align-left" data-i18n-id="game__options_title_colour_skins"></h2>
+                    <hr class="divider">
+                    <div class="options-group flex-col align-start">
+                        <div class="value-wrapper">
+                            <input type="radio" id="check-colour-light" name="colour-theme-mode">
+                            <label for="check-colour-light" data-i18n-id="game__options_colour_scheme_light"></label>
+                        </div>
+                        <div class="value-wrapper">
+                            <input type="radio" id="check-colour-dark" name="colour-theme-mode">
+                            <label for="check-colour-dark" data-i18n-id="game__options_colour_scheme_dark"></label>
+                        </div>
+                        <div class="value-wrapper">
+                            <input type="radio" id="check-colour-retro" name="colour-theme-mode">
+                            <label for="check-colour-retro" data-i18n-id="game__options_colour_scheme_retro"></label>
+                        </div>
+                        <div class="value-wrapper">
+                            <input type="radio" id="check-colour-auto" name="colour-theme-mode" checked>
+                            <label for="check-colour-auto" data-i18n-id="game__options_colour_scheme_auto"></label>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
