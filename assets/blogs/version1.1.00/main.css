@@ -1,0 +1,184 @@
+@font-face {
+    font-family: "Noto Sans Mono";
+    src: url("../../fonts/Noto_Sans_Mono/NotoSansMono-Regular.ttf") format("truetype");
+    font-weight: normal;
+}
+
+@font-face {
+    font-family: "8 Bit Operator";
+    src: url("../../fonts/8BitOperator/8bitOperatorPlus8-Regular.ttf") format("truetype");
+    font-weight: normal;
+}
+
+*, *::before, *::after
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body
+{
+    background-color: black;
+    color: white;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+.logo-inline
+{
+    display: inline;
+}
+
+.font-noto-sans-mono
+{
+    font-family: "Noto Sans Mono";
+}
+
+.font-8-bit-operator
+{
+    font-family: "8 Bit Operator";
+}
+
+.logo
+{
+    font-size: 5rem;
+    z-index: 1;
+    filter: drop-shadow(2px 2px 1px #424242);
+}
+
+.ss-logo
+{
+    position: absolute;
+    bottom: 2rem;
+    width: 15rem;
+    transform: translateX(-50%);
+}
+
+.background-images
+{
+    position: absolute;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    place-items: center;
+    min-height: inherit;
+}
+
+.background-images::after
+{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+}
+
+.background-images div
+{
+    --text: "";
+    --font: inherit;
+    --bottom: 65%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: inherit;
+    width: 100%;
+    isolation: isolate;
+
+    border-inline-end: 10px solid black;
+}
+
+.background-images div::before
+{
+    --opacity: 1;
+    --invert: 0;
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("../../images/GameBG.png");
+    z-index: -1;
+
+    opacity: var(--opacity);
+    filter: invert(var(--invert));
+}
+
+.background-images div::after
+{
+    content: var(--text);
+    position: absolute;
+    bottom: var(--bottom);
+    font-family: var(--font);
+    font-size: 3rem;
+    text-align: center;
+}
+
+.background-images div:nth-child(1):after
+{
+    --text: "New";
+    --font: "8 Bit Operator";
+    --bottom: 66%;
+}
+
+.background-images div:nth-child(2):after
+{
+    --text: "Theme";
+    --font: "Noto Sans Mono";
+    --bottom: 66%;
+    text-shadow: 2px 2px 2px #000000;
+}
+
+.background-images div:nth-child(3):after
+{
+    --text: "Colours!";
+    --font: "Noto Sans Mono";
+    --bottom: 66%;
+    text-shadow: 3px 3px 0px #424242;
+}
+
+
+.background-images .retro::before
+{
+    --opacity: 0.5;
+    --invert: 1;
+}
+
+.background-images .dark::before
+{
+    --opacity: 0.5;
+    --invert: 0.8;
+}
+
+.background-images .light::before
+{
+    --opacity: 0.5;
+    --invert: 0;
+}
+
+.background-images div img
+{
+    width: 15rem;
+}
+
+.background-images .retro
+{
+    background-color: hsl(247, 89%, 61%);
+    
+}
+
+.background-images .dark
+{
+    background-color: hsl(216, 39%, 65%);
+    
+}
+
+.background-images .light
+{
+    background-color: hsl(216, 75%, 78%);
+    
+}
