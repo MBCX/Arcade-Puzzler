@@ -1,6 +1,6 @@
-import "/assets/libraries/swup/swup.min.js";
-import "/assets/libraries/swup/plugins/SwupA11yPlugin.min.js";
-import "/assets/libraries/swup/plugins/SwupDebugPlugin.min.js";
+import "../assets/libraries/swup/swup.min.js";
+import "../assets/libraries/swup/plugins/SwupA11yPlugin.min.js";
+import "../assets/libraries/swup/plugins/SwupDebugPlugin.min.js";
 import {
     wrap,
     clamp,
@@ -23,7 +23,7 @@ import {
     SOUND_DEFAULTS,
     DEV_MODE,
 } from "./shared/shared.js";
-import { TWODJSSound } from "/assets/libraries/TWODJS/TWODJSound.js";
+import { TWODJSSound } from "../assets/libraries/TWODJS/TWODJSound.js";
 
 const GRID_POSITION = {
     FIRST_ROW_COLUMN: 0,
@@ -75,7 +75,10 @@ let started_playing = false;
 let menu_button_index = 0;
 
 export const swup = new Swup({
-    plugins: [new SwupA11yPlugin(), new SwupDebugPlugin()],
+    linkSelector: 'a[href^="' +
+    window.location.origin +
+    '"]:not([data-no-swup]), a[href^="/"]:not([data-no-swup]), a[href^="#"]:not([data-no-swup]), a[href^="./"]:not([data-no-swup])',
+    plugins: [new SwupA11yPlugin()], //new SwupDebugPlugin()],
     cache: false,
 });
 
@@ -98,18 +101,18 @@ function initGameSettings() {
     setGameTheme(getLocalStorageKey(GAME_KEYS.THEME));
     setGameCubesAnimated(getLocalStorageKey(GAME_KEYS.BLOCKS_ANIMATE));
 
-    TWODJSSound.add_sound("/assets/audio/sn_title_screen.wav", "titlescreen");
-    TWODJSSound.add_sound("/assets/audio/sn_radio_button_clicked.wav", "radiobuttonclick");
-    TWODJSSound.add_sound("/assets/audio/sn_back_button_click.wav", "backbutton");
-    TWODJSSound.add_sound("/assets/audio/sn_bad_move_piece.wav", "badmovepiece");
-    TWODJSSound.add_sound("/assets/audio/sn_enter_click.wav", "enter");
-    TWODJSSound.add_sound("/assets/audio/sn_move_grid.wav", "moveingrid");
-    TWODJSSound.add_sound("/assets/audio/sn_move_piece.wav", "movepiece");
-    TWODJSSound.add_sound("/assets/audio/sn_move_piece_instant.wav", "movepieceinstant");
-    TWODJSSound.add_sound("/assets/audio/sn_select.wav", "select");
-    TWODJSSound.add_sound("/assets/audio/sn_win.wav", "win");
-    TWODJSSound.add_sound("/assets/audio/sn_tickbox_not_ticked.wav", "tickboxnot");
-    TWODJSSound.add_sound("/assets/audio/sn_tickbox_ticked.wav", "tickbox");
+    TWODJSSound.add_sound("assets/audio/sn_title_screen.wav", "titlescreen");
+    TWODJSSound.add_sound("assets/audio/sn_radio_button_clicked.wav", "radiobuttonclick");
+    TWODJSSound.add_sound("assets/audio/sn_back_button_click.wav", "backbutton");
+    TWODJSSound.add_sound("assets/audio/sn_bad_move_piece.wav", "badmovepiece");
+    TWODJSSound.add_sound("assets/audio/sn_enter_click.wav", "enter");
+    TWODJSSound.add_sound("assets/audio/sn_move_grid.wav", "moveingrid");
+    TWODJSSound.add_sound("assets/audio/sn_move_piece.wav", "movepiece");
+    TWODJSSound.add_sound("assets/audio/sn_move_piece_instant.wav", "movepieceinstant");
+    TWODJSSound.add_sound("assets/audio/sn_select.wav", "select");
+    TWODJSSound.add_sound("assets/audio/sn_win.wav", "win");
+    TWODJSSound.add_sound("assets/audio/sn_tickbox_not_ticked.wav", "tickboxnot");
+    TWODJSSound.add_sound("assets/audio/sn_tickbox_ticked.wav", "tickbox");
 }
 
 function getGameTheme() {
@@ -175,7 +178,7 @@ function checkWinningCondition() {
 
         window.setTimeout(() => {
             swup.loadPage({
-                url: "/results.html",
+                url: "./results.html",
             });
         }, 4000);
         player_won = true;
@@ -971,19 +974,23 @@ function playBackSound() {
 }
 
 function addAgainEventListenerForMenuGroup() {
+    const link = document.querySelector(".link-group");
     menu_button_index = 0;
-    document
-        .querySelector(".link-group")
-        .removeEventListener("keydown", moveBetweenMenuButtons);
-    document
-        .querySelector(".link-group")
-        .removeEventListener("click", playEnterSound);
-    document
-        .querySelector(".link-group")
-        .addEventListener("keydown", moveBetweenMenuButtons);
-    document
-        .querySelector(".link-group")
-        .addEventListener("click", playEnterSound);
+    
+    if (link != null) {
+        document
+            .querySelector(".link-group")
+            .removeEventListener("keydown", moveBetweenMenuButtons);
+        document
+            .querySelector(".link-group")
+            .removeEventListener("click", playEnterSound);
+        document
+            .querySelector(".link-group")
+            .addEventListener("keydown", moveBetweenMenuButtons);
+        document
+            .querySelector(".link-group")
+            .addEventListener("click", playEnterSound);
+    }
 }
 
 function handleGameExit(e) {
@@ -996,7 +1003,7 @@ function handleGameExit(e) {
             playBackSound();
             return false;
         } else {
-            e.target.setAttribute("href", "/index.html");
+            e.target.setAttribute("href", "./index.html");
             playBackSound();
         }
     });
@@ -1374,7 +1381,6 @@ document.addEventListener("swup:pageView", function () {
         document.documentElement.removeAttribute("results-page");
         config_dialogue_selected_config = 0;
     } else if (
-        window.location.pathname.includes("/") ||
         window.location.pathname.includes("/index.html")
     ) {
         window.cancelAnimationFrame(gameUpdateLoop);
@@ -1435,7 +1441,7 @@ document.addEventListener("swup:pageView", function () {
             updatei18nAria(btn_link, ARIA_TYPES.INSIDE_ELEMENT);
             btn_link.addEventListener("click", playEnterSound);
         });
-    } else if ("/options.html" === window.location.pathname) {
+    } else if (window.location.pathname.includes("/options.html")) {
         document
             .querySelector("#back-to-main-menu")
             .removeEventListener("click", playBackSound);
@@ -1448,7 +1454,6 @@ document.addEventListener("swup:pageView", function () {
 document.addEventListener("swup:contentReplaced", function () {
     getGameTheme();
     if (
-        window.location.pathname.includes("/") ||
         window.location.pathname.includes("/index.html")
     ) {
         document.documentElement.setAttribute("is-main-page", "");
@@ -1470,7 +1475,6 @@ function loadOnLoad() {
     } else if (window.location.pathname.includes("/options.html")) {
         controlGameConfigOptions();
     } else if (
-        window.location.pathname.includes("/") ||
         window.location.pathname.includes("/index.html")
     ) {
         document.documentElement.setAttribute("is-main-page", "");
